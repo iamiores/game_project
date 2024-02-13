@@ -34,7 +34,7 @@ while running:
         background_y -= speed
 
     text = font.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
-
+    #window
     window.fill((0, 0, 0))
 
     window.blit(background_image, (background_x, background_y))
