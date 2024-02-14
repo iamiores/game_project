@@ -24,6 +24,9 @@ class Wall(sprite.Sprite):
         self.rect.x = wall_x
         self.rect.y = wall_y
 
+    def update(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
 
 class Floor(sprite.Sprite):
     def __init__(self, floor_x, floor_y, image_name):
@@ -33,6 +36,9 @@ class Floor(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = floor_x
         self.rect.y = floor_y
+
+    def update(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
 
 
 # FONTS
