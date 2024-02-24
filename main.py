@@ -1,5 +1,6 @@
 import pygame
 from pygame import *
+pygame.init()
 
 
 class MainSprite(sprite.Sprite):
@@ -16,10 +17,10 @@ class MainSprite(sprite.Sprite):
 
 
 class Wall(sprite.Sprite):
-    def __init__(self, wall_x, wall_y, file_image):
+    def __init__(self, wall_x, wall_y, wall_width, wall_height, file_image):
         super().__init__()
         self.file = file_image
-        self.image = transform.scale(image.load(self.file), (65, 65))
+        self.image = transform.scale(image.load(self.file), (wall_width, wall_height))
         self.rect = self.image.get_rect()
         self.rect.x = wall_x
         self.rect.y = wall_y
@@ -47,19 +48,44 @@ font1 = pygame.font.Font(None, 20)
 # SETTINGS
 w_width, w_height = 1000, 700
 window = pygame.display.set_mode((w_width, w_height))
-
 clock = pygame.time.Clock()
 fps = 60
 game = True
-while game:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            game = False
 
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-    text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
+# FUNCTIONS
 
-    window.fill((0, 0, 0))
-    window.blit(text, (10, 10))
-    pygame.display.update()
-    clock.tick(fps)
+
+def walls_tut():
+    wall1_x = 50
+    for i in range(0, 2):
+        w1 = Wall(wall1_x, 450, 150, 10,'back_wall.jpg')
+        wall1_x += 50
+        w1.update()
+    wall2_y = 260
+    for i in range(1):
+        w2 = Wall(35, wall2_y, 15, 200, 'left_wall.jpg')
+        wall2_y += 50
+        w2.update()
+    for i in range()
+
+
+def tutorial():
+    global game
+    while game:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                game = False
+
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
+
+        window.fill((0, 0, 0))
+        window.blit(text, (10, 10))
+
+        walls_tut()
+
+        pygame.display.update()
+        clock.tick(fps)
+
+
+tutorial()
