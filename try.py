@@ -53,7 +53,7 @@ W, H = 800, 600
 window = pygame.display.set_mode((W, H))
 display.set_caption("roguelike")
 
-background_image = pygame.image.load('bg.jpg')
+background_image = pygame.image.load('images/walls/bg.jpg')
 background_rect = background_image.get_rect()
 
 font = pygame.font.Font(None, 20)

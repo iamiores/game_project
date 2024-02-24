@@ -52,21 +52,47 @@ clock = pygame.time.Clock()
 fps = 60
 game = True
 
+
 # FUNCTIONS
 
 
 def walls_tut():
-    wall1_x = 50
-    for i in range(0, 2):
-        w1 = Wall(wall1_x, 450, 150, 10,'back_wall.jpg')
-        wall1_x += 50
-        w1.update()
-    wall2_y = 260
-    for i in range(1):
-        w2 = Wall(35, wall2_y, 15, 200, 'left_wall.jpg')
-        wall2_y += 50
-        w2.update()
-    for i in range()
+    # spawn
+    w1 = Wall(50, 650, 200, 12, 'images/walls/back_wall.jpg')
+    w1.update()
+    w2 = Wall(35, 442, 15, 220, 'images/walls/left_wall.jpg')
+    w2.update()
+    w3 = Wall(50, 442, 200, 55, 'images/walls/front_wall.jpg')
+    w3.update()
+    w4 = Wall(250, 442, 15, 85, 'images/walls/half1-right_wall.jpg')
+    w4.update()
+    w5 = Wall(250, 578, 15, 85, 'images/walls/half2-right_wall.jpg')
+    w5.update()
+    # corridor 1
+    w6 = Wall(264, 482,  160, 45, 'images/walls/front_wall.jpg')
+    w6.update()
+    w7 = Wall(264, 578, 160, 12, 'images/walls/back_wall.jpg')
+    w7.update()
+    # corridor 2
+    w14 = Wall(540, 321, 15, 100, 'images/walls/half1-left_wall.jpg')
+    w14.update()
+    w15 = Wall(635, 321, 15, 100, 'images/walls/half1-right_wall.jpg')
+    w15.update()
+    # battle
+    w8 = Wall(420, 418, 15, 110, 'images/walls/half1-left_wall.jpg')
+    w8.update()
+    w9 = Wall(420, 577, 15, 110, 'images/walls/half2-left_wall.jpg')
+    w9.update()
+    w10 = Wall(435, 419, 120, 55, 'images/walls/left-front_wall.jpg')
+    w10.update()
+    w11 = Wall(635, 419, 120, 55, 'images/walls/right-front_wall.jpg')
+    w11.update()
+    w12 = Wall(755, 419, 15, 267, 'images/walls/right_wall.jpg')
+    w12.update()
+    w13 = Wall(435, 674, 320, 12, 'images/walls/back_wall.jpg')
+    w13.update()
+    #
+
 
 
 def tutorial():
