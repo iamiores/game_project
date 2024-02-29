@@ -124,25 +124,58 @@ def floor_tut():
         f2.update()
         f2_x += 89
 
+while game:
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
+            game = Falset
+
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
+
+    tutorial()
+
+    # collision on end level
+    # LEVEL_NUMBER = 0
+
+    # LEVEL_NAMES = [
+    # tutorial(),
+    # first_lvl(),
+    # second_lvl()
+    # ]
+
+    # if pygame.event == 'endlevel':
+    #    show two buttons: next_level and back
+    #    if next_level == 'pressed':
+    #        LEVEL_NUMBER += 1
+    #        loadnew level with
+    #           LEVEL_NAMES[LEVEL_NUMBER]
+    #    if back == 'pressed':
+    #        LEVEL_NUMBER = 0
+    #         return to menu
+    #
+
 
 def tutorial():
-    global game
-    while game:
-        for e in pygame.event.get():
-            if e.type == pygame.QUIT:
-                game = False
-
-        mouse_x, mouse_y = pygame.mouse.get_pos()
-        text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
 
         window.fill((0, 0, 0))
         window.blit(text, (10, 10))
 
         floor_tut()
         walls_tut()
-
         pygame.display.update()
         clock.tick(fps)
 
 
-tutorial()
+
+def first_lvl():
+
+        window.fill((0, 0, 0))
+        window.blit(text, (10, 10))
+
+        floor_tut()
+        walls_tut_2()
+        pygame.display.update()
+        clock.tick(fps)
+
+
+
