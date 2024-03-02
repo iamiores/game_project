@@ -1,4 +1,4 @@
-LEVEL_1 = {
+wall_tuts = {
     "1": [50, 650, 200, 12, "images/walls/back_wall.jpg"],
     "2": [35, 442, 15, 220, "images/walls/left_wall.jpg"],
     "3": [50, 442, 200, 55, "images/walls/front_wall.jpg"],
@@ -13,10 +13,61 @@ LEVEL_1 = {
     "12": [435, 419, 120, 55, "images/walls/left-front_wall.jpg"],
     "13": [635, 419, 120, 55, "images/walls/right-front_wall.jpg"],
     "14": [755, 419, 15, 267, "images/walls/right_wall.jpg"],
-    "15": [435, 674, 320, 12, "images/walls/back_wall.jpg"]
+    "15": [435, 674, 320, 12, "images/walls/back_wall.jpg"],
+    "16": [50, 311, 200, 12, "images/walls/back_wall.jpg"],
+    "17": [203, 311, 200, 12, "images/walls/back_wall.jpg"],
+    "18": [353, 311, 200, 12, "images/walls/back_wall.jpg"],
+    "19": [635, 311, 225, 12, "images/walls/back_wall.jpg"],
+    "20": [50, 75, 15, 247, "images/walls/left_wall.jpg"],
+    "21": [65, 75, 200, 55, "images/walls/front_wall.jpg"],
+    "22": [263, 75, 200, 55, "images/walls/front_wall.jpg"],
+    "23": [461, 75, 200, 55, "images/walls/front_wall.jpg"],
+    "24": [659, 75, 200, 55, "images/walls/front_wall.jpg"],
+    "25": [859, 75, 15, 248, "images/walls/right_wall.jpg"]
 }
 
 
-LEVEL_2 = {
+floor_tuts = {
+    '0': [50, 495, 110,  76, 'images/floor/floor.jpg'],
+    '1': [139, 495, 110, 76, 'images/floor/floor.jpg'],
+    '2': [50, 572, 110, 78, 'images/floor/floor.jpg'],
+    '3': [139, 572, 110, 78, 'images/floor/floor.jpg'],
+    '4': [435, 474, 122, 70, 'images/floor/floor.jpg'],
+    '5': [534, 474, 122, 70, 'images/floor/floor.jpg'],
+    '6': [633, 474, 122, 70, 'images/floor/floor.jpg'],
+    '7': [435, 545, 122, 70, 'images/floor/floor.jpg'],
+    '8': [534, 545, 122, 70, 'images/floor/floor.jpg'],
+    '9': [633, 545, 122, 70, 'images/floor/floor.jpg'],
+    '10': [435, 545, 122, 70, 'images/floor/floor.jpg'],
+    '11': [435,  616, 122, 70, 'images/floor/floor.jpg'],
+    '12': [534,  616, 122, 70, 'images/floor/floor.jpg'],
+    '13': [633,  616, 122, 70, 'images/floor/floor.jpg'],
+    '14': [251,  525,  91, 60, 'images/floor/floor.jpg'],
+    '15': [343,  525,  91, 60, 'images/floor/floor.jpg'],
+    '16': [550, 312, 91, 54, 'images/floor/floor.jpg'],
+    '17': [550, 419, 91, 54, 'images/floor/floor.jpg'],
+    '18': [65, 130, 100, 90, 'images/floor/floor.jpg'],
+    '19': [166, 130, 100, 90, 'images/floor/floor.jpg'],
+    '20': [267, 130, 100, 90, 'images/floor/floor.jpg'],
+    '21': [368, 130, 100, 90, 'images/floor/floor.jpg'],
+    '22': [469, 130, 100, 90, 'images/floor/floor.jpg'],
+    '23': [570, 130, 100, 90, 'images/floor/floor.jpg'],
+    '24': [671, 130, 100, 90, 'images/floor/floor.jpg'],
+    '25': [772, 130, 100, 90, 'images/floor/floor.jpg'],
+    '26': [65, 221, 100, 90, 'images/floor/floor.jpg'],
+    '27': [166, 221, 100, 90, 'images/floor/floor.jpg'],
+    '28': [267, 221, 100, 90, 'images/floor/floor.jpg'],
+    '29': [368, 221, 100, 90, 'images/floor/floor.jpg'],
+    '30': [469, 221, 100, 90, 'images/floor/floor.jpg'],
+    '31': [570, 221, 100, 90, 'images/floor/floor.jpg'],
+    '32': [671, 221, 100, 90, 'images/floor/floor.jpg'],
+    '33': [772, 221, 100, 90, 'images/floor/floor.jpg']
+}
 
+
+item_tuts ={
+    '0': [52, 600, 16, 50, 'images/items/lantern_1.png'],
+    '1': [230, 600, 16, 50, 'images/items/lantern_1.png'],
+    '2': [230, 460, 16, 50, 'images/items/lantern_1.png'],
+    '3': [52, 460, 16, 50, 'images/items/lantern_1.png'],
 }

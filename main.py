@@ -42,6 +42,19 @@ class Floor(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 
+class Item(sprite.Sprite):
+    def __init__(self, item_x, item_y, item_width, item_height, file_image):
+        super().__init__()
+        self.file = file_image
+        self.image = transform.scale(image.load(self.file), (item_width, item_height))
+        self.rect = self.image.get_rect()
+        self.rect.x = item_x
+        self.rect.y = item_y
+
+    def update(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+
 # FONTS
 font1 = pygame.font.Font(None, 20)
 
@@ -53,55 +66,66 @@ fps = 60
 game = True
 
 
-# FUNCTIONS
+# WALLS
+
+walls_tut_group = sprite.Group()
 
 
 def walls_tut():
-    # spawn
-    from levels import LEVEL_1
-
-    for key, value in LEVEL_1.items():
+    from levels import wall_tuts
+    for key, value in wall_tuts.items():
         w = Wall(*value)
+        walls_tut_group.add(w)
         w.update()
 
-    w16_x = 50
-    for i in range(3):
-        w16 = Wall(w16_x, 311, 200, 12, 'images/walls/back_wall.jpg')
-        w16.update()
-        w16_x += 153
-    w19 = Wall(635, 311, 225, 12, 'images/walls/back_wall.jpg')
-    w19.update()
-    w17 = Wall(50, 75, 15, 247, 'images/walls/left_wall.jpg')
-    w17.update()
-    w18_x = 65
-    for i in range(4):
-        w18 = Wall(w18_x, 75, 200, 55, 'images/walls/front_wall.jpg')
-        w18.update()
-        w18_x += 198
-    w20 = Wall(859, 75, 15, 248, 'images/walls/right_wall.jpg')
-    w20.update()
 
-
-
+# FLOORS
 
 def floor_tut():
-    # f1 = Floor(50, 495, 200, 156, 'images/floor/floor.jpg')
-    # f1.update()
-    f1_x = 50
-    for i in range(2):
-        f1 = Floor(f1_x, 495, 110, 76, 'images/floor/floor.jpg')
-        f1.update()
-        f1_x += 89
-    f2_x = 50
-    for i in range(2):
-        f2 = Floor(f2_x, 572, 110, 78, 'images/floor/floor.jpg')
-        f2.update()
-        f2_x += 89
+    from levels import floor_tuts
+    for key, value in floor_tuts.items():
+        f = Floor(*value)
+        f.update()
+    pygame.draw.rect(window, (43, 35, 52), (263, 525, 160, 60))
+    pygame.draw.rect(window, (43, 35, 52), (555, 323, 80, 140))
+
+
+# ITEMS
+def items_tut():
+    from levels import item_tuts
+    for key, values in item_tuts.items():
+        i = Item(*values)
+        i.update()
+
+
+# LEVELS
+
+def tutorial():
+
+    window.fill((0, 0, 0))
+    window.blit(text, (10, 10))
+
+    floor_tut()
+    walls_tut()
+    items_tut()
+    pygame.display.update()
+    clock.tick(fps)
+
+
+# def first_lvl():
+#     window.fill((0, 0, 0))
+#     window.blit(text, (10, 10))
+#
+#     floor_tut()
+#     walls_tut_2()
+#     pygame.display.update()
+#     clock.tick(fps)
+
 
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
-            game = Falset
+            game = False
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
@@ -127,31 +151,5 @@ while game:
     #        LEVEL_NUMBER = 0
     #         return to menu
     #
-
-
-def tutorial():
-
-        window.fill((0, 0, 0))
-        window.blit(text, (10, 10))
-
-        floor_tut()
-        walls_tut()
-        pygame.display.update()
-        clock.tick(fps)
-
-
-
-def first_lvl():
-
-        window.fill((0, 0, 0))
-        window.blit(text, (10, 10))
-
-        floor_tut()
-        walls_tut_2()
-        pygame.display.update()
-        clock.tick(fps)
-
-
-
 
 
