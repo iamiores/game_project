@@ -16,7 +16,7 @@ wall_tuts = {
     "15": [435, 674, 320, 12, "images/walls/back_wall.jpg"],
     "16": [50, 311, 200, 12, "images/walls/back_wall.jpg"],
     "17": [203, 311, 200, 12, "images/walls/back_wall.jpg"],
-    "18": [353, 311, 200, 12, "images/walls/back_wall.jpg"],
+    "18": [353, 311, 203, 12, "images/walls/back_wall.jpg"],
     "19": [635, 311, 225, 12, "images/walls/back_wall.jpg"],
     "20": [50, 75, 15, 247, "images/walls/left_wall.jpg"],
     "21": [65, 75, 200, 55, "images/walls/front_wall.jpg"],
@@ -70,4 +70,38 @@ item_tuts ={
     '1': [230, 600, 16, 50, 'images/items/lantern_1.png'],
     '2': [230, 460, 16, 50, 'images/items/lantern_1.png'],
     '3': [52, 460, 16, 50, 'images/items/lantern_1.png'],
+    '4': [270, 495, 18, 30, 'images/items/wall_decor2.png'],
+    '5': [398, 495, 18, 30, 'images/items/wall_decor2.png'],
+    '6': [485, 593, 23, 22, 'images/items/water.png'],
+    '7': [510, 593, 23, 22, 'images/items/water.png'],
+    '8': [535, 593, 23, 22, 'images/items/water.png'],
+    '9': [560, 593, 23, 22, 'images/items/water.png'],
+    '10': [560, 570, 23, 22, 'images/items/water.png'],
+    '11': [609, 593, 23, 22, 'images/items/water.png'],
+    '12': [634, 593, 23, 22, 'images/items/water.png'],
+    '13': [658, 593, 23, 22, 'images/items/water.png'],
+    '14': [683, 593, 23, 22, 'images/items/water.png'],
+    '15': [609, 570, 23, 22, 'images/items/water.png'],
+    '16': [636, 438, 16, 50, 'images/items/lantern_1.png'],
+    '17': [537, 438, 16, 50, 'images/items/lantern_1.png'],
+    # '18': [438, 572, 16, 50, 'images/items/lantern_1.png'],
+    # '19': [438, 480, 16, 50, 'images/items/lantern_1.png'],
+    '20': [729, 547, 27, 30, 'images/items/grave2.png'],
+    '21': [140, 175, 50, 80, 'images/items/portal.png'],
+    '22': [252, 90, 25, 40, 'images/items/wall_decor2.png'],
+    '23': [449, 90, 25, 40, 'images/items/wall_decor2.png'],
+    '24': [648, 90, 25, 40, 'images/items/wall_decor2.png'],
+    '25': [67, 100, 16, 50, 'images/items/lantern_1.png'],
+    '26': [835, 100, 16, 50, 'images/items/lantern_1.png'],
+    '27': [67, 260, 16, 50, 'images/items/lantern_1.png'],
+    '28': [835, 260, 16, 50, 'images/items/lantern_1.png'],
+    '29': [440, 640, 27, 30, 'images/items/grave1.png']
+}
+
+trap_tuts = {
+    '1': [536, 573, 20, 20, 'images/items/spikes.png'],
+    '2': [511, 573, 20, 20, 'images/items/spikes.png'],
+    '3': [634, 573, 20, 20, 'images/items/spikes.png'],
+    '4': [659, 573, 20, 20, 'images/items/spikes.png']
+
 }

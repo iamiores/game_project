@@ -64,13 +64,14 @@ window = pygame.display.set_mode((w_width, w_height))
 clock = pygame.time.Clock()
 fps = 60
 game = True
+hatch_num = 0
 
-
-# WALLS
-
+# GROUPS, LISTS ETC
+hatch = []
 walls_tut_group = sprite.Group()
 
 
+# WALLS
 def walls_tut():
     from levels import wall_tuts
     for key, value in wall_tuts.items():
@@ -80,7 +81,6 @@ def walls_tut():
 
 
 # FLOORS
-
 def floor_tut():
     from levels import floor_tuts
     for key, value in floor_tuts.items():
@@ -92,14 +92,21 @@ def floor_tut():
 
 # ITEMS
 def items_tut():
-    from levels import item_tuts
+    from levels import item_tuts, trap_tuts
     for key, values in item_tuts.items():
         i = Item(*values)
         i.update()
+        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
+    for key, values in trap_tuts.items():
+        s = Item(*values)
+        s.update()
+        # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
+    opened_hatch = Item(574, 205, 43, 35, 'images/items/closed_hatch.png')
+    hatch.append(opened_hatch)
+    window.blit(hatch[hatch_num].image, (hatch[hatch_num].rect.x, hatch[hatch_num].rect.y))
 
 
 # LEVELS
-
 def tutorial():
 
     window.fill((0, 0, 0))
@@ -122,6 +129,7 @@ def tutorial():
 #     clock.tick(fps)
 
 
+# MAIN CYCLE
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
