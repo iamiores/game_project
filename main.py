@@ -68,7 +68,8 @@ hatch_num = 0
 
 # GROUPS, LISTS ETC
 hatch = []
-walls_tut_group = sprite.Group()
+collide_group = sprite.Group()
+traps_group = sprite.Group()
 
 
 # WALLS
@@ -76,7 +77,15 @@ def walls_tut():
     from levels import wall_tuts
     for key, value in wall_tuts.items():
         w = Wall(*value)
-        walls_tut_group.add(w)
+        collide_group.add(w)
+        w.update()
+
+
+def walls_level1():
+    from levels import wall_lvl1
+    for key, value in wall_lvl1.items():
+        w = Wall(*value)
+        collide_group.add(w)
         w.update()
 
 
@@ -90,16 +99,25 @@ def floor_tut():
     pygame.draw.rect(window, (43, 35, 52), (555, 323, 80, 140))
 
 
+def floor_level1():
+    from levels import floor_lvl1
+    for key, value in floor_lvl1.items():
+        f = Floor(*value)
+        f.update()
+
+
 # ITEMS
 def items_tut():
     from levels import item_tuts, trap_tuts
     for key, values in item_tuts.items():
         i = Item(*values)
         i.update()
+        collide_group.add(i)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for key, values in trap_tuts.items():
         s = Item(*values)
         s.update()
+        traps_group.add(s)
         # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
     opened_hatch = Item(574, 205, 43, 35, 'images/items/closed_hatch.png')
     hatch.append(opened_hatch)
@@ -108,13 +126,21 @@ def items_tut():
 
 # LEVELS
 def tutorial():
-
     window.fill((0, 0, 0))
     window.blit(text, (10, 10))
 
     floor_tut()
     walls_tut()
     items_tut()
+    pygame.display.update()
+    clock.tick(fps)
+
+
+def level_1():
+    window.fill((0, 0, 0))
+    window.blit(text, (10, 10))
+
+    walls_level1()
     pygame.display.update()
     clock.tick(fps)
 
@@ -138,7 +164,8 @@ while game:
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
 
-    tutorial()
+    # tutorial()
+    level_1()
 
     # collision on end level
     # LEVEL_NUMBER = 0

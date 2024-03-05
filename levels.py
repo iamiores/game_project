@@ -1,3 +1,4 @@
+# TUTORIAL
 wall_tuts = {
     "1": [50, 650, 200, 12, "images/walls/back_wall.jpg"],
     "2": [35, 442, 15, 220, "images/walls/left_wall.jpg"],
@@ -25,7 +26,6 @@ wall_tuts = {
     "24": [659, 75, 200, 55, "images/walls/front_wall.jpg"],
     "25": [859, 75, 15, 248, "images/walls/right_wall.jpg"]
 }
-
 
 floor_tuts = {
     '0': [50, 495, 110,  76, 'images/floor/floor.jpg'],
@@ -63,7 +63,6 @@ floor_tuts = {
     '32': [671, 221, 100, 90, 'images/floor/floor.jpg'],
     '33': [772, 221, 100, 90, 'images/floor/floor.jpg']
 }
-
 
 item_tuts ={
     '0': [52, 600, 16, 50, 'images/items/lantern_1.png'],
@@ -103,5 +102,41 @@ trap_tuts = {
     '2': [511, 573, 20, 20, 'images/items/spikes.png'],
     '3': [634, 573, 20, 20, 'images/items/spikes.png'],
     '4': [659, 573, 20, 20, 'images/items/spikes.png']
+
+}
+
+# LEVEL 1
+wall_lvl1 = {
+    "1": [770, 550, 200, 12, "images/walls/back_wall.jpg"],
+    "2": [970, 342, 15, 220, "images/walls/right_wall.jpg"],
+    "14": [823, 265, 12, 100, "images/walls/half1-left_wall.jpg"],
+    "15": [904, 265, 12, 100, "images/walls/half1-right_wall.jpg"],
+    "3": [770, 342, 65, 55, "images/walls/left-front_wall.jpg"],
+    "4": [905, 342, 65, 55, "images/walls/right-front_wall.jpg"],
+    "5": [755, 342, 15, 85, "images/walls/half1-left_wall.jpg"],
+    "6": [755, 478, 15, 85, "images/walls/half2-left_wall.jpg"],
+    "7": [596, 377, 160, 50, "images/walls/front_wall.jpg"],
+    "8": [596, 478, 160, 12, "images/walls/back_wall.jpg"],
+    "9": [584, 296, 13, 130, "images/walls/half1-right_wall.jpg"],
+    "10": [584, 478, 13, 120, "images/walls/half2-right_wall.jpg"],
+    "11": [285, 586, 300, 12, "images/walls/back_wall.jpg"],
+    "12": [285, 297, 300, 55, "images/walls/front_wall.jpg"],
+    "13": [275, 297, 15, 301, "images/walls/left_wall.jpg"],
+    "16": [904, 254, 80, 12, "images/walls/half2-back_wall.jpg"],
+    "17": [665, 254, 170, 12, "images/walls/back_wall.jpg"],
+    "18": [980, 16, 15, 250, "images/walls/right_wall.jpg"],
+    "19": [665, 16, 315, 55, "images/walls/front_wall.jpg"],
+    "20": [650, 16, 15, 100, "images/walls/half1-left_wall.jpg"],
+    "21": [650, 177, 15, 90, "images/walls/half2-left_wall.jpg"],
+    "22": [512, 62, 140, 55, "images/walls/front_wall.jpg"],
+    "23": [512, 178, 140, 12, "images/walls/back_wall.jpg"],
+    "24": [498, 12, 15, 105, "images/walls/half1-right_wall.jpg"],
+    "25": [498, 177, 15, 85, "images/walls/half2-right_wall.jpg"],
+    "26": [128, 250, 370, 12, "images/walls/back_wall.jpg"],
+    "27": [128, 12, 370, 55, "images/walls/front_wall.jpg"],
+    "28": [115, 12, 15, 250, "images/walls/left_wall.jpg"]
+}
+
+floor_lvl1 = {
 
 }
