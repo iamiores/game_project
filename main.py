@@ -104,6 +104,9 @@ def floor_level1():
     for key, value in floor_lvl1.items():
         f = Floor(*value)
         f.update()
+    pygame.draw.rect(window, (43, 35, 52), (596, 427, 161, 60))
+    pygame.draw.rect(window, (43, 35, 52), (835, 266, 70, 121))
+    pygame.draw.rect(window, (43, 35, 52), (512, 113, 141, 67))
 
 
 # ITEMS
@@ -138,21 +141,12 @@ def tutorial():
 
 def level_1():
     window.fill((0, 0, 0))
-    window.blit(text, (10, 10))
+    window.blit(text, (10, 0))
 
+    floor_level1()
     walls_level1()
     pygame.display.update()
     clock.tick(fps)
-
-
-# def first_lvl():
-#     window.fill((0, 0, 0))
-#     window.blit(text, (10, 10))
-#
-#     floor_tut()
-#     walls_tut_2()
-#     pygame.display.update()
-#     clock.tick(fps)
 
 
 # MAIN CYCLE

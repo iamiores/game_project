@@ -138,5 +138,26 @@ wall_lvl1 = {
 }
 
 floor_lvl1 = {
-
+    "1": [771, 397, 99, 76, "images/floor/floor.jpg"],
+    "2": [871, 397, 99, 76, "images/floor/floor.jpg"],
+    "3": [771, 474, 99, 76, "images/floor/floor.jpg"],
+    "4": [871, 474, 99, 76, "images/floor/floor.jpg"],
+    "5": [290, 352, 145, 117, "images/floor/floor.jpg"],
+    "6": [437, 352, 146, 117, "images/floor/floor.jpg"],
+    "7": [290, 470, 145, 116, "images/floor/floor.jpg"],
+    "8": [437, 470, 146, 116, "images/floor/floor.jpg"],
+    "9": [694, 401, 76, 76, "images/floor/floor.jpg"],
+    "10": [585, 401, 76, 76, "images/floor/floor.jpg"],
+    "11": [832, 326, 72, 70, "images/floor/floor.jpg"],
+    "12": [832, 257, 72, 70, "images/floor/floor.jpg"],
+    "13": [589, 108, 76, 76, "images/floor/floor.jpg"],
+    "14": [499, 108, 76, 76, "images/floor/floor.jpg"],
+    "15": [666, 71, 155, 92, "images/floor/floor.jpg"],
+    "16": [823, 71, 155, 92, "images/floor/floor.jpg"],
+    "17": [666, 164, 155, 92, "images/floor/floor.jpg"],
+    "18": [823, 164, 155, 92, "images/floor/floor.jpg"],
+    "19": [130, 67, 182, 90, "images/floor/floor.jpg"],
+    "20": [314, 67, 183, 90, "images/floor/floor.jpg"],
+    "21": [130, 158, 182, 92, "images/floor/floor.jpg"],
+    "22": [314, 158, 183, 92, "images/floor/floor.jpg"],
 }
