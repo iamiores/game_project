@@ -161,3 +161,46 @@ floor_lvl1 = {
     "21": [130, 158, 182, 92, "images/floor/floor.jpg"],
     "22": [314, 158, 183, 92, "images/floor/floor.jpg"],
 }
+
+item_lvl1 = {
+    "1": [772, 362, 16, 48, "images/items/lantern_1.png"],
+    "2": [952, 362, 16, 48, "images/items/lantern_1.png"],
+    "3": [772, 500, 16, 48, "images/items/lantern_1.png"],
+    "4": [952, 500, 16, 48, "images/items/lantern_1.png"],
+    "5": [603, 393, 18, 30, "images/items/wall_decor2.png"],
+    "6": [733, 393, 18, 30, "images/items/wall_decor2.png"],
+    "7": [562, 378, 16, 50, "images/items/lantern_1.png"],
+    "8": [562, 480, 16, 50, "images/items/lantern_1.png"],
+    "9": [672, 65, 16, 50, "images/items/lantern_1.png"],
+    "10": [672, 179, 16, 50, "images/items/lantern_1.png"],
+    "11": [472, 30, 17, 55, "images/items/lantern_1.png"],
+    "12": [472, 198, 16, 50, "images/items/lantern_1.png"],
+    "13": [138, 30, 17, 55, "images/items/lantern_1.png"],
+    "14": [138, 198, 16, 50, "images/items/lantern_1.png"],
+    "15": [517, 80, 18, 30, "images/items/wall_decor2.png"],
+    "16": [630, 80, 18, 30, "images/items/wall_decor2.png"],
+    "17": [208, 25, 25, 40, "images/items/wall_decor2.png"],
+    "18": [398, 25, 25, 40, "images/items/wall_decor2.png"],
+    "19": [320, 471, 27, 37, 'images/items/water.png'],
+    "20": [350, 471, 27, 37, 'images/items/water.png'],
+    "21": [527, 471, 27, 37, 'images/items/water.png'],
+    "22": [497, 471, 27, 37, 'images/items/water.png'],
+    "23": [408, 353, 27, 37, 'images/items/water.png'],
+    "24": [438, 353, 27, 37, 'images/items/water.png'],
+    "25": [408, 550, 27, 37, 'images/items/water.png'],
+    "26": [438, 550, 27, 37, 'images/items/water.png'],
+    "27": [761, 134, 29, 29, 'images/items/water.png'],
+    "28": [792, 165, 29, 29, 'images/items/water.png'],
+    "29": [824, 165, 29, 29, 'images/items/water.png'],
+    "30": [855, 134, 29, 29, 'images/items/water.png'],
+    "31": [170, 110, 50, 80, 'images/items/portal.png']
+}
+
+trap_lvl1 = {
+    "1": [467, 472, 27, 30, 'images/items/spikes.png'],
+    "2": [378, 472, 27, 30, 'images/items/spikes.png'],
+    "3": [763, 171, 25, 25, 'images/items/spikes.png'],
+    "4": [857, 171, 25, 25, 'images/items/spikes.png'],
+    "5": [794, 140, 25, 25, 'images/items/spikes.png'],
+    "6": [826, 140, 25, 25, 'images/items/spikes.png'],
+}

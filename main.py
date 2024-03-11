@@ -67,7 +67,8 @@ game = True
 hatch_num = 0
 
 # GROUPS, LISTS ETC
-hatch = []
+hatch_tut = []
+hatch_lvl1 = []
 collide_group = sprite.Group()
 traps_group = sprite.Group()
 
@@ -123,8 +124,24 @@ def items_tut():
         traps_group.add(s)
         # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
     opened_hatch = Item(574, 205, 43, 35, 'images/items/closed_hatch.png')
-    hatch.append(opened_hatch)
-    window.blit(hatch[hatch_num].image, (hatch[hatch_num].rect.x, hatch[hatch_num].rect.y))
+    hatch_tut.append(opened_hatch)
+    window.blit(hatch_tut[hatch_num].image, (hatch_tut[hatch_num].rect.x, hatch_tut[hatch_num].rect.y))
+
+
+def items_level1():
+    from levels import item_lvl1, trap_lvl1
+    for key, values in item_lvl1.items():
+        i = Item(*values)
+        i.update()
+        collide_group.add(i)
+    for key, values in trap_lvl1.items():
+        s = Item(*values)
+        s.update()
+        traps_group.add(s)
+        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
+    opened_hatch = Item(370, 140, 43, 35, 'images/items/closed_hatch.png')
+    hatch_lvl1.append(opened_hatch)
+    window.blit(hatch_lvl1[hatch_num].image, (hatch_lvl1[hatch_num].rect.x, hatch_lvl1[hatch_num].rect.y))
 
 
 # LEVELS
@@ -145,6 +162,7 @@ def level_1():
 
     floor_level1()
     walls_level1()
+    items_level1()
     pygame.display.update()
     clock.tick(fps)
 
