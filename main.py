@@ -118,6 +118,16 @@ def floor_level1():
     pygame.draw.rect(window, (43, 35, 52), (512, 113, 141, 67))
 
 
+def floor_level2():
+    from levels import floor_lvl2
+    for key, value in floor_lvl2.items():
+        f = Floor(*value)
+        f.update()
+    pygame.draw.rect(window, (43, 35, 52), (180, 372, 80, 144))
+    pygame.draw.rect(window, (43, 35, 52), (422, 212, 150, 60))
+    pygame.draw.rect(window, (43, 35, 52), (720, 370, 85, 123))
+
+
 # ITEMS
 def items_tut():
     from levels import item_tuts, trap_tuts
@@ -179,6 +189,7 @@ def level_2():
     window.fill((0, 0, 0))
     window.blit(text, (10, 0))
 
+    floor_level2()
     walls_level2()
     pygame.display.update()
     clock.tick(fps)

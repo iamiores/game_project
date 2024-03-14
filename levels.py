@@ -240,3 +240,36 @@ wall_lvl2 = {
     '29': [463, 445, 14, 230, 'images/walls/left_wall.jpg'],
     '30': [475, 663, 449, 12, 'images/walls/back_wall.jpg']
 }
+
+floor_lvl2 = {
+    '1': [100, 527, 119, 71, 'images/floor/floor.jpg'],
+    '2': [221, 527, 119, 71, 'images/floor/floor.jpg'],
+    '3': [100, 599, 119, 70, 'images/floor/floor.jpg'],
+    '4': [221, 599, 119, 70, 'images/floor/floor.jpg'],
+
+    '5': [32, 160, 150, 100, 'images/floor/floor.jpg'],
+    '6': [260, 160, 150, 100, 'images/floor/floor.jpg'],
+    '7': [32, 261, 150, 100, 'images/floor/floor.jpg'],
+    '8': [260, 261, 150, 100, 'images/floor/floor.jpg'],
+    '9': [124, 160, 165, 100, 'images/floor/floor.jpg'],
+    '10': [124, 261, 165, 100, 'images/floor/floor.jpg'],
+
+    '11': [584, 136, 175, 110, 'images/floor/floor.jpg'],
+    '12': [584, 247, 175, 110, 'images/floor/floor.jpg'],
+    '13': [761, 136, 181, 110, 'images/floor/floor.jpg'],
+    '14': [761, 247, 181, 110, 'images/floor/floor.jpg'],
+
+    '15': [475, 505, 149, 83, 'images/floor/floor.jpg'],
+    '16': [626, 505, 149, 83, 'images/floor/floor.jpg'],
+    '17': [777, 505, 149, 83, 'images/floor/floor.jpg'],
+    '18': [475, 589, 149, 83, 'images/floor/floor.jpg'],
+    '19': [626, 589, 149, 83, 'images/floor/floor.jpg'],
+    '20': [777, 589, 149, 83, 'images/floor/floor.jpg'],
+
+    '21': [723, 358, 80, 60, 'images/floor/floor.jpg'],
+    '22': [723, 444, 80, 60, 'images/floor/floor.jpg'],
+    '23': [411, 210, 80, 60, 'images/floor/floor.jpg'],
+    '24': [503, 210, 80, 60, 'images/floor/floor.jpg'],
+    '25': [180, 362, 80, 60, 'images/floor/floor.jpg'],
+    '26': [180, 466, 80, 60, 'images/floor/floor.jpg']
+}
