@@ -193,7 +193,9 @@ item_lvl1 = {
     "28": [792, 165, 29, 29, 'images/items/water.png'],
     "29": [824, 165, 29, 29, 'images/items/water.png'],
     "30": [855, 134, 29, 29, 'images/items/water.png'],
-    "31": [170, 110, 50, 80, 'images/items/portal.png']
+    "31": [170, 110, 50, 80, 'images/items/portal.png'],
+    "32": [940, 70, 28, 31, 'images/items/grave1.png'],
+    "33": [305, 360, 25, 29, 'images/items/grave2.png']
 }
 
 trap_lvl1 = {
@@ -203,4 +205,38 @@ trap_lvl1 = {
     "4": [857, 171, 25, 25, 'images/items/spikes.png'],
     "5": [794, 140, 25, 25, 'images/items/spikes.png'],
     "6": [826, 140, 25, 25, 'images/items/spikes.png'],
+}
+
+# LEVEL 2
+wall_lvl2 = {
+    '1': [100, 670, 240, 12, 'images/walls/back_wall.jpg'],
+    '2': [340, 462, 15, 220, 'images/walls/right_wall.jpg'],
+    '3': [87, 462, 15, 220, 'images/walls/left_wall.jpg'],
+    '6': [167, 370, 12, 100, "images/walls/half1-left_wall.jpg"],
+    '7': [260, 370, 12, 100, "images/walls/half1-right_wall.jpg"],
+    '4': [100, 462, 80, 65, 'images/walls/left-front_wall.jpg'],
+    '5': [260, 462, 80, 65, 'images/walls/right-front_wall.jpg'],
+    '8': [260, 360, 150, 12, 'images/walls/back_wall.jpg'],
+    '9': [30, 360, 150, 12, 'images/walls/back_wall.jpg'],
+    '10': [17, 102, 15, 270, 'images/walls/left_wall.jpg'],
+    '11': [30, 102, 190, 60, 'images/walls/front_wall.jpg'],
+    '12': [220, 102, 190, 60, 'images/walls/front_wall.jpg'],
+    '13': [410, 102, 13, 110, 'images/walls/half1-right_wall.jpg'],
+    '14': [410, 272, 13, 100, 'images/walls/half2-right_wall.jpg'],
+    '15': [422, 157, 150, 55, 'images/walls/front_wall.jpg'],
+    '16': [422, 272, 150, 12, 'images/walls/back_wall.jpg'],
+    '17': [571, 76, 12, 135, 'images/walls/half1-left_wall.jpg'],
+    '18': [571, 272, 12, 98, 'images/walls/half2-left_wall.jpg'],
+    '19': [583, 77, 180, 60, 'images/walls/front_wall.jpg'],
+    '20': [763, 77, 180, 60, 'images/walls/front_wall.jpg'],
+    '21': [943, 77, 12, 292, 'images/walls/right_wall.jpg'],
+    '22': [583, 357, 140, 12, 'images/walls/half2-back_wall.jpg'],
+    '23': [803, 357, 140, 12, 'images/walls/half2-back_wall.jpg'],
+    '24': [711, 369, 12, 90, 'images/walls/half1-left_wall.jpg'],
+    '25': [803, 369, 12, 90, 'images/walls/half1-right_wall.jpg'],
+    '26': [473, 445, 250, 60, 'images/walls/front_wall.jpg'],
+    '27': [804, 445, 120, 60, 'images/walls/right-front_wall.jpg'],
+    '28': [923, 445, 14, 230, 'images/walls/right_wall.jpg'],
+    '29': [463, 445, 14, 230, 'images/walls/left_wall.jpg'],
+    '30': [475, 663, 449, 12, 'images/walls/back_wall.jpg']
 }

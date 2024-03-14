@@ -90,6 +90,14 @@ def walls_level1():
         w.update()
 
 
+def walls_level2():
+    from levels import wall_lvl2
+    for key, value in wall_lvl2.items():
+        w = Wall(*value)
+        collide_group.add(w)
+        w.update()
+
+
 # FLOORS
 def floor_tut():
     from levels import floor_tuts
@@ -167,6 +175,15 @@ def level_1():
     clock.tick(fps)
 
 
+def level_2():
+    window.fill((0, 0, 0))
+    window.blit(text, (10, 0))
+
+    walls_level2()
+    pygame.display.update()
+    clock.tick(fps)
+
+
 # MAIN CYCLE
 while game:
     for e in pygame.event.get():
@@ -177,7 +194,8 @@ while game:
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
 
     # tutorial()
-    level_1()
+    # level_1()
+    level_2()
 
     # collision on end level
     # LEVEL_NUMBER = 0
