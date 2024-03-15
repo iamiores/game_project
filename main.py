@@ -64,11 +64,14 @@ window = pygame.display.set_mode((w_width, w_height))
 clock = pygame.time.Clock()
 fps = 60
 game = True
-hatch_num = 0
+hatch_num_tut = 0
+hatch_num_lvl1 = 0
+hatch_num_lvl2 = 0
 
 # GROUPS, LISTS ETC
 hatch_tut = []
 hatch_lvl1 = []
+hatch_lvl2 = []
 collide_group = sprite.Group()
 traps_group = sprite.Group()
 
@@ -137,13 +140,16 @@ def items_tut():
         collide_group.add(i)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for key, values in trap_tuts.items():
-        s = Item(*values)
-        s.update()
-        traps_group.add(s)
+        t = Item(*values)
+        t.update()
+        traps_group.add(t)
         # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
-    opened_hatch = Item(574, 205, 43, 35, 'images/items/closed_hatch.png')
+    closed_hatch = Item(574, 205, 43, 35, 'images/items/closed_hatch.png')
+    opened_hatch = Item(574, 205, 43, 35, 'images/items/open_hatch.png')
+    hatch_tut.append(closed_hatch)
     hatch_tut.append(opened_hatch)
-    window.blit(hatch_tut[hatch_num].image, (hatch_tut[hatch_num].rect.x, hatch_tut[hatch_num].rect.y))
+    portal = Item(140, 175, 50, 80, 'images/items/portal.png')
+    window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 def items_level1():
@@ -153,13 +159,34 @@ def items_level1():
         i.update()
         collide_group.add(i)
     for key, values in trap_lvl1.items():
-        s = Item(*values)
-        s.update()
-        traps_group.add(s)
+        t = Item(*values)
+        t.update()
+        traps_group.add(t)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
-    opened_hatch = Item(370, 140, 43, 35, 'images/items/closed_hatch.png')
+    closed_hatch = Item(370, 140, 43, 35, 'images/items/closed_hatch.png')
+    opened_hatch = Item(370, 140, 43, 35, 'images/items/open_hatch.png')
+    hatch_lvl1.append(closed_hatch)
     hatch_lvl1.append(opened_hatch)
-    window.blit(hatch_lvl1[hatch_num].image, (hatch_lvl1[hatch_num].rect.x, hatch_lvl1[hatch_num].rect.y))
+    portal = Item(170, 110, 50, 80, 'images/items/portal.png')
+    window.blit(portal.image, (portal.rect.x, portal.rect.y))
+
+
+def items_level2():
+    from levels import item_lvl2, trap_lvl2
+    for key, values in item_lvl2.items():
+        i = Item(*values)
+        i.update()
+        collide_group.add(i)
+    for key, value in trap_lvl2.items():
+        t = Item(*value)
+        t.update()
+        traps_group.add(t)
+    closed_hatch = Item(740, 575, 43, 35, 'images/items/closed_hatch.png')
+    opened_hatch = Item(740, 575, 43, 35, 'images/items/open_hatch.png')
+    hatch_lvl2.append(closed_hatch)
+    hatch_lvl2.append(opened_hatch)
+    portal = Item(550, 540, 50, 80, 'images/items/portal.png')
+    window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 # LEVELS
@@ -170,6 +197,7 @@ def tutorial():
     floor_tut()
     walls_tut()
     items_tut()
+    window.blit(hatch_tut[hatch_num_tut].image, (hatch_tut[hatch_num_tut].rect.x, hatch_tut[hatch_num_tut].rect.y))
     pygame.display.update()
     clock.tick(fps)
 
@@ -181,6 +209,7 @@ def level_1():
     floor_level1()
     walls_level1()
     items_level1()
+    window.blit(hatch_lvl1[hatch_num_lvl1].image, (hatch_lvl1[hatch_num_lvl1].rect.x, hatch_lvl1[hatch_num_lvl1].rect.y))
     pygame.display.update()
     clock.tick(fps)
 
@@ -191,6 +220,8 @@ def level_2():
 
     floor_level2()
     walls_level2()
+    items_level2()
+    window.blit(hatch_lvl2[hatch_num_lvl2].image, (hatch_lvl2[hatch_num_lvl2].rect.x, hatch_lvl2[hatch_num_lvl2].rect.y))
     pygame.display.update()
     clock.tick(fps)
 

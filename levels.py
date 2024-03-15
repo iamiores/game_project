@@ -86,7 +86,6 @@ item_tuts ={
     # '18': [438, 572, 16, 50, 'images/items/lantern_1.png'],
     # '19': [438, 480, 16, 50, 'images/items/lantern_1.png'],
     '20': [729, 547, 27, 30, 'images/items/grave2.png'],
-    '21': [140, 175, 50, 80, 'images/items/portal.png'],
     '22': [252, 90, 25, 40, 'images/items/wall_decor2.png'],
     '23': [449, 90, 25, 40, 'images/items/wall_decor2.png'],
     '24': [648, 90, 25, 40, 'images/items/wall_decor2.png'],
@@ -193,7 +192,6 @@ item_lvl1 = {
     "28": [792, 165, 29, 29, 'images/items/water.png'],
     "29": [824, 165, 29, 29, 'images/items/water.png'],
     "30": [855, 134, 29, 29, 'images/items/water.png'],
-    "31": [170, 110, 50, 80, 'images/items/portal.png'],
     "32": [940, 70, 28, 31, 'images/items/grave1.png'],
     "33": [305, 360, 25, 29, 'images/items/grave2.png']
 }
@@ -272,4 +270,58 @@ floor_lvl2 = {
     '24': [503, 210, 80, 60, 'images/floor/floor.jpg'],
     '25': [180, 362, 80, 60, 'images/floor/floor.jpg'],
     '26': [180, 466, 80, 60, 'images/floor/floor.jpg']
+}
+
+item_lvl2 = {
+    '1': [321, 490, 16, 50, 'images/items/lantern_1.png'],
+    '2': [104, 490, 16, 50, 'images/items/lantern_1.png'],
+    '3': [321, 617, 16, 50, 'images/items/lantern_1.png'],
+    '4': [104, 617, 16, 50, 'images/items/lantern_1.png'],
+    '5': [388, 160, 16, 50, 'images/items/lantern_1.png'],
+    '6': [388, 273, 16, 50, 'images/items/lantern_1.png'],
+    '7': [592, 160, 16, 50, 'images/items/lantern_1.png'],
+    '8': [592, 273, 16, 50, 'images/items/lantern_1.png'],
+    '9': [482, 470, 16, 50, 'images/items/lantern_1.png'],
+    '10': [902, 470, 16, 50, 'images/items/lantern_1.png'],
+    '11': [482, 612, 16, 50, 'images/items/lantern_1.png'],
+    '12': [902, 612, 16, 50, 'images/items/lantern_1.png'],
+    '13': [63, 162, 28, 31, 'images/items/water.png'],
+    '14': [93, 162, 29, 31, 'images/items/water.png'],
+    '15': [124, 162, 32, 31, 'images/items/water.png'],
+    '16': [158, 162, 31, 31, 'images/items/water.png'],
+    '17': [352, 162, 28, 31, 'images/items/water.png'],
+    '18': [321, 162, 29, 31, 'images/items/water.png'],
+    '19': [291, 162, 28, 31, 'images/items/water.png'],
+    '20': [258, 162, 31, 31, 'images/items/water.png'],
+    '21': [158, 195, 31, 32, 'images/items/water.png'],
+    '22': [258, 195, 31, 32, 'images/items/water.png'],
+    '23': [584, 323, 34, 36, 'images/items/water.png'],
+    '24': [620, 323, 33, 36, 'images/items/water.png'],
+    '25': [655, 323, 34, 36, 'images/items/water.png'],
+    '26': [908, 323, 34, 36, 'images/items/water.png'],
+    '27': [871, 323, 35, 36, 'images/items/water.png'],
+    '28': [835, 323, 34, 36, 'images/items/water.png'],
+
+    '29': [655, 137, 34, 35, 'images/items/water.png'],
+    '30': [691, 137, 33, 35, 'images/items/water.png'],
+    '31': [726, 137, 33, 35, 'images/items/water.png'],
+    '32': [761, 137, 35, 35, 'images/items/water.png'],
+    '33': [798, 137, 35, 35, 'images/items/water.png'],
+    '34': [835, 137, 34, 35, 'images/items/water.png']
+}
+
+trap_lvl2 = {
+    '1': [194, 170, 25, 25, 'images/items/spikes.png'],
+    '2': [228, 170, 25, 25, 'images/items/spikes.png'],
+    '3': [127, 204, 25, 25, 'images/items/spikes.png'],
+    '4': [292, 204, 25, 25, 'images/items/spikes.png'],
+    '5': [194, 271, 25, 25, 'images/items/spikes.png'],
+    '6': [228, 271, 25, 25, 'images/items/spikes.png'],
+
+    '7': [694, 334, 26, 26, 'images/items/spikes.png'],
+    '8': [803, 334, 26, 26, 'images/items/spikes.png'],
+    '9': [624, 148, 26, 26, 'images/items/spikes.png'],
+    '10': [875, 148, 26, 26, 'images/items/spikes.png'],
+    '11': [729, 186, 26, 26, 'images/items/spikes.png'],
+    '12': [765, 186, 26, 26, 'images/items/spikes.png'],
 }
