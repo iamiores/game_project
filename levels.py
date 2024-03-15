@@ -307,7 +307,12 @@ item_lvl2 = {
     '31': [726, 137, 33, 35, 'images/items/water.png'],
     '32': [761, 137, 35, 35, 'images/items/water.png'],
     '33': [798, 137, 35, 35, 'images/items/water.png'],
-    '34': [835, 137, 34, 35, 'images/items/water.png']
+    '34': [835, 137, 34, 35, 'images/items/water.png'],
+    '35': [427, 175, 20, 32, "images/items/wall_decor2.png"],
+    '36': [548, 175, 20, 32, "images/items/wall_decor2.png"],
+    '37': [505, 463, 25, 40, "images/items/wall_decor2.png"],
+    '38': [870, 463, 25, 40, "images/items/wall_decor2.png"],
+    '39': [685, 463, 25, 40, "images/items/wall_decor2.png"],
 }
 
 trap_lvl2 = {
