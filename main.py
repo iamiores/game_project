@@ -55,6 +55,26 @@ class Item(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 
+class Button:
+    def __init__(self, button_x, button_y, button_width, button_height, button_image):
+        self.file = button_image
+        self.image = transform.scale(image.load(self.file), (button_width, button_height))
+        self.rect = self.image.get_rect()
+        self.rect.x = button_x
+        self.rect.y = button_y
+        self.clicked = False  # Флаг для відстеження натискання кнопки
+
+    def draw(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+
+    def button_click(self):
+        mouse_controller = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        if self.rect.collidepoint(mouse_controller) and click[0]:
+            pygame.time.set_timer(pygame.USEREVENT, 500)
+            return True
+
+
 # FONTS
 font1 = pygame.font.Font(None, 20)
 
@@ -64,9 +84,14 @@ window = pygame.display.set_mode((w_width, w_height))
 clock = pygame.time.Clock()
 fps = 60
 game = True
+
+# ALTERNATES
 hatch_num_tut = 0
 hatch_num_lvl1 = 0
 hatch_num_lvl2 = 0
+
+lives = 5
+energy = 5
 
 # GROUPS, LISTS ETC
 hatch_tut = []
@@ -79,7 +104,7 @@ traps_group = sprite.Group()
 # WALLS
 def walls_tut():
     from levels import wall_tuts
-    for key, value in wall_tuts.items():
+    for keys, value in wall_tuts.items():
         w = Wall(*value)
         collide_group.add(w)
         w.update()
@@ -87,7 +112,7 @@ def walls_tut():
 
 def walls_level1():
     from levels import wall_lvl1
-    for key, value in wall_lvl1.items():
+    for keys, value in wall_lvl1.items():
         w = Wall(*value)
         collide_group.add(w)
         w.update()
@@ -95,7 +120,7 @@ def walls_level1():
 
 def walls_level2():
     from levels import wall_lvl2
-    for key, value in wall_lvl2.items():
+    for keys, value in wall_lvl2.items():
         w = Wall(*value)
         collide_group.add(w)
         w.update()
@@ -104,7 +129,7 @@ def walls_level2():
 # FLOORS
 def floor_tut():
     from levels import floor_tuts
-    for key, value in floor_tuts.items():
+    for keys, value in floor_tuts.items():
         f = Floor(*value)
         f.update()
     pygame.draw.rect(window, (43, 35, 52), (263, 525, 160, 60))
@@ -113,7 +138,7 @@ def floor_tut():
 
 def floor_level1():
     from levels import floor_lvl1
-    for key, value in floor_lvl1.items():
+    for keys, value in floor_lvl1.items():
         f = Floor(*value)
         f.update()
     pygame.draw.rect(window, (43, 35, 52), (596, 427, 161, 60))
@@ -123,7 +148,7 @@ def floor_level1():
 
 def floor_level2():
     from levels import floor_lvl2
-    for key, value in floor_lvl2.items():
+    for keys, value in floor_lvl2.items():
         f = Floor(*value)
         f.update()
     pygame.draw.rect(window, (43, 35, 52), (180, 372, 80, 144))
@@ -134,12 +159,12 @@ def floor_level2():
 # ITEMS
 def items_tut():
     from levels import item_tuts, trap_tuts
-    for key, values in item_tuts.items():
+    for keys, values in item_tuts.items():
         i = Item(*values)
         i.update()
         collide_group.add(i)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
-    for key, values in trap_tuts.items():
+    for keys, values in trap_tuts.items():
         t = Item(*values)
         t.update()
         traps_group.add(t)
@@ -154,11 +179,11 @@ def items_tut():
 
 def items_level1():
     from levels import item_lvl1, trap_lvl1
-    for key, values in item_lvl1.items():
+    for keys, values in item_lvl1.items():
         i = Item(*values)
         i.update()
         collide_group.add(i)
-    for key, values in trap_lvl1.items():
+    for keys, values in trap_lvl1.items():
         t = Item(*values)
         t.update()
         traps_group.add(t)
@@ -173,11 +198,11 @@ def items_level1():
 
 def items_level2():
     from levels import item_lvl2, trap_lvl2
-    for key, values in item_lvl2.items():
+    for keys, values in item_lvl2.items():
         i = Item(*values)
         i.update()
         collide_group.add(i)
-    for key, value in trap_lvl2.items():
+    for keys, value in trap_lvl2.items():
         t = Item(*value)
         t.update()
         traps_group.add(t)
@@ -227,6 +252,7 @@ def level_2():
 
 
 # MAIN CYCLE
+
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
@@ -237,7 +263,10 @@ while game:
 
     # tutorial()
     # level_1()
-    level_2()
+    # level_2()
+
+    pygame.display.update()
+    clock.tick(fps)
 
     # collision on end level
     # LEVEL_NUMBER = 0
