@@ -330,3 +330,42 @@ trap_lvl2 = {
     '11': [729, 186, 26, 26, 'images/items/spikes.png'],
     '12': [765, 186, 26, 26, 'images/items/spikes.png'],
 }
+
+# LEVEL 3
+
+wall_lvl3 = {
+    '1': [370, 5, 250, 60, 'images/walls/front_wall.jpg'],
+    '2': [620, 5, 15, 230, 'images/walls/right_wall.jpg'],
+    '3': [357, 5, 15, 230, 'images/walls/left_wall.jpg'],
+    '4': [370, 223, 85, 12, 'images/walls/half1-back_wall.jpg'],
+    '5': [535, 223, 85, 12, 'images/walls/half1-back_wall.jpg'],
+    '6': [441, 235, 14, 95, 'images/walls/half1-left_wall.jpg'],
+    '7': [536, 235, 14, 95, 'images/walls/half1-right_wall.jpg'],
+    '8': [536, 310, 215, 60, 'images/walls/front_wall.jpg'],
+    '9': [240, 310, 215, 60, 'images/walls/front_wall.jpg'],
+    '10': [751, 310, 15, 350, 'images/walls/right_wall.jpg'],
+    '11': [227, 310, 15, 350, 'images/walls/left_wall.jpg'],
+    '12': [240, 648, 512, 12, 'images/walls/back_wall.jpg']
+
+}
+
+floor_lvl3 = {
+    '1': [370, 65, 125, 79, 'images/floor/floor.jpg'],
+    '2': [497, 65, 125, 79, 'images/floor/floor.jpg'],
+    '3': [370, 145, 125, 78, 'images/floor/floor.jpg'],
+    '4': [497, 145, 125, 78, 'images/floor/floor.jpg'],
+    '5': [455, 224, 80, 60, 'images/floor/floor.jpg'],
+    '6': [455, 308, 80, 60, 'images/floor/floor.jpg'],
+    '7': [240, 369, 125, 92, 'images/floor/floor.jpg'],
+    '8': [240, 462, 125, 92, 'images/floor/floor.jpg'],
+    '9': [240, 555, 125, 92, 'images/floor/floor.jpg'],
+    '10': [367, 369, 125, 92, 'images/floor/floor.jpg'],
+    '11': [367, 462, 125, 92, 'images/floor/floor.jpg'],
+    '12': [367, 555, 125, 92, 'images/floor/floor.jpg'],
+    '13': [494, 369, 125, 92, 'images/floor/floor.jpg'],
+    '14': [494, 462, 125, 92, 'images/floor/floor.jpg'],
+    '15': [494, 555, 125, 92, 'images/floor/floor.jpg'],
+    '16': [621, 369, 129, 92, 'images/floor/floor.jpg'],
+    '17': [621, 462, 129, 92, 'images/floor/floor.jpg'],
+    '18': [621, 555, 129, 92, 'images/floor/floor.jpg']
+}

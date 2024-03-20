@@ -1,3 +1,5 @@
+import sys
+
 import pygame
 from pygame import *
 pygame.init()
@@ -6,7 +8,7 @@ pygame.init()
 class MainSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed):
         super().__init__()
-        self.image = transform.scale(image.load(player_image), (65, 65))
+        self.image = transform.scale(pygame.image.load(player_image), (65, 65))
         self.speed = player_speed
         self.rect = self.image.get_rect()
         self.rect.x = player_x
@@ -20,7 +22,7 @@ class Wall(sprite.Sprite):
     def __init__(self, wall_x, wall_y, wall_width, wall_height, file_image):
         super().__init__()
         self.file = file_image
-        self.image = transform.scale(image.load(self.file), (wall_width, wall_height))
+        self.image = transform.scale(pygame.image.load(self.file), (wall_width, wall_height))
         self.rect = self.image.get_rect()
         self.rect.x = wall_x
         self.rect.y = wall_y
@@ -33,7 +35,7 @@ class Floor(sprite.Sprite):
     def __init__(self, floor_x, floor_y, floor_width, floor_height, image_name):
         super().__init__()
         self.file_name = image_name
-        self.image = transform.scale(image.load(self.file_name), (floor_width, floor_height))
+        self.image = transform.scale(pygame.image.load(self.file_name), (floor_width, floor_height))
         self.rect = self.image.get_rect()
         self.rect.x = floor_x
         self.rect.y = floor_y
@@ -46,7 +48,7 @@ class Item(sprite.Sprite):
     def __init__(self, item_x, item_y, item_width, item_height, file_image):
         super().__init__()
         self.file = file_image
-        self.image = transform.scale(image.load(self.file), (item_width, item_height))
+        self.image = transform.scale(pygame.image.load(self.file), (item_width, item_height))
         self.rect = self.image.get_rect()
         self.rect.x = item_x
         self.rect.y = item_y
@@ -58,11 +60,12 @@ class Item(sprite.Sprite):
 class Button:
     def __init__(self, button_x, button_y, button_width, button_height, button_image):
         self.file = button_image
-        self.image = transform.scale(image.load(self.file), (button_width, button_height))
+        self.image = transform.scale(pygame.image.load(self.file), (button_width, button_height))
         self.rect = self.image.get_rect()
         self.rect.x = button_x
         self.rect.y = button_y
-        self.clicked = False  # Флаг для відстеження натискання кнопки
+        self.clicked = False
+        self.click_time = 0
 
     def draw(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
@@ -70,9 +73,16 @@ class Button:
     def button_click(self):
         mouse_controller = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        if self.rect.collidepoint(mouse_controller) and click[0]:
-            pygame.time.set_timer(pygame.USEREVENT, 500)
-            return True
+        if self.rect.collidepoint(mouse_controller):
+            if click[0] and not self.clicked:
+                self.clicked = True
+                self.click_time = pygame.time.get_ticks()
+                if pygame.time.get_ticks() - self.click_time <= 500:
+                    return True
+                self.click_time = 0
+        else:
+            self.clicked = False
+        return False
 
 
 # FONTS
@@ -92,6 +102,11 @@ hatch_num_lvl2 = 0
 
 lives = 5
 energy = 5
+
+button_show_state = 'main menu'
+image = pygame.image.load('images/possible_background.png')
+image = pygame.transform.scale(image, (w_width, w_height))
+
 
 # GROUPS, LISTS ETC
 hatch_tut = []
@@ -126,6 +141,14 @@ def walls_level2():
         w.update()
 
 
+def walls_level3():
+    from levels import wall_lvl3
+    for keys, value in wall_lvl3.items():
+        w = Wall(*value)
+        collide_group.add(w)
+        w.update()
+
+
 # FLOORS
 def floor_tut():
     from levels import floor_tuts
@@ -154,6 +177,14 @@ def floor_level2():
     pygame.draw.rect(window, (43, 35, 52), (180, 372, 80, 144))
     pygame.draw.rect(window, (43, 35, 52), (422, 212, 150, 60))
     pygame.draw.rect(window, (43, 35, 52), (720, 370, 85, 123))
+
+
+def floor_level3():
+    from levels import floor_lvl3
+    for keys, value in floor_lvl3.items():
+        f = Floor(*value)
+        f.update()
+    pygame.draw.rect(window, (43, 35, 52), (455, 236, 82, 120))
 
 
 # ITEMS
@@ -215,6 +246,40 @@ def items_level2():
 
 
 # LEVELS
+def menu():
+    global button_show_state
+    start_button = Button(435, 240, 120, 50, 'images/buttons/start.png')
+    settings_button = Button(435, 300, 120, 50, 'images/buttons/settings.png')
+    exit_button = Button(435, 360, 120, 50, 'images/buttons/exit.png')
+    store_button = Button(450, 240, 60, 50, 'images/buttons/store.png')
+    add_volume_button = Button(400, 300, 60, 50, 'images/buttons/more_volume.png')
+    reduce_volume_button = Button(500, 300, 60, 50, 'images/buttons/less_volume.png')
+    pause_button = None
+    back_to_menu_button = None
+    window.blit(image, (0, 0))
+    if button_show_state == 'main menu':
+        start_button.draw()
+        settings_button.draw()
+        exit_button.draw()
+        pygame.draw.rect(window, (255, 0, 0), start_button.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), settings_button.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), exit_button.rect, 1)
+        if start_button.button_click():
+            button_show_state = 'menu'
+        elif settings_button.button_click():
+            button_show_state = 'settings'
+    if button_show_state == 'settings':
+        window.blit(image, (0, 0))
+        store_button.draw()
+        add_volume_button.draw()
+        reduce_volume_button.draw()
+        pygame.draw.rect(window, (255, 0, 0), store_button.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), add_volume_button.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), reduce_volume_button.rect, 1)
+        if reduce_volume_button.button_click():
+            button_show_state = 'main menu'
+
+
 def tutorial():
     window.fill((0, 0, 0))
     window.blit(text, (10, 10))
@@ -251,19 +316,30 @@ def level_2():
     clock.tick(fps)
 
 
-# MAIN CYCLE
+def level_3():
+    window.fill((0, 0, 0))
+    window.blit(text, (10, 0))
 
+    floor_level3()
+    walls_level3()
+    pygame.display.update()
+    clock.tick(fps)
+
+
+# MAIN CYCLE
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             game = False
-
+            sys.exit()
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
 
     # tutorial()
     # level_1()
     # level_2()
+    level_3()
+    # menu()
 
     pygame.display.update()
     clock.tick(fps)
