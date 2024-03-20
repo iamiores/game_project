@@ -18,7 +18,7 @@ class MainSprite(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 
-class Wall(sprite.Sprite):
+class For_Level_Building(sprite.Sprite):
     def __init__(self, wall_x, wall_y, wall_width, wall_height, file_image):
         super().__init__()
         self.file = file_image
@@ -26,32 +26,6 @@ class Wall(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = wall_x
         self.rect.y = wall_y
-
-    def update(self):
-        window.blit(self.image, (self.rect.x, self.rect.y))
-
-
-class Floor(sprite.Sprite):
-    def __init__(self, floor_x, floor_y, floor_width, floor_height, image_name):
-        super().__init__()
-        self.file_name = image_name
-        self.image = transform.scale(pygame.image.load(self.file_name), (floor_width, floor_height))
-        self.rect = self.image.get_rect()
-        self.rect.x = floor_x
-        self.rect.y = floor_y
-
-    def update(self):
-        window.blit(self.image, (self.rect.x, self.rect.y))
-
-
-class Item(sprite.Sprite):
-    def __init__(self, item_x, item_y, item_width, item_height, file_image):
-        super().__init__()
-        self.file = file_image
-        self.image = transform.scale(pygame.image.load(self.file), (item_width, item_height))
-        self.rect = self.image.get_rect()
-        self.rect.x = item_x
-        self.rect.y = item_y
 
     def update(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
@@ -120,7 +94,7 @@ traps_group = sprite.Group()
 def walls_tut():
     from levels import wall_tuts
     for keys, value in wall_tuts.items():
-        w = Wall(*value)
+        w = For_Level_Building(*value)
         collide_group.add(w)
         w.update()
 
@@ -128,7 +102,7 @@ def walls_tut():
 def walls_level1():
     from levels import wall_lvl1
     for keys, value in wall_lvl1.items():
-        w = Wall(*value)
+        w = For_Level_Building(*value)
         collide_group.add(w)
         w.update()
 
@@ -136,7 +110,7 @@ def walls_level1():
 def walls_level2():
     from levels import wall_lvl2
     for keys, value in wall_lvl2.items():
-        w = Wall(*value)
+        w = For_Level_Building(*value)
         collide_group.add(w)
         w.update()
 
@@ -144,7 +118,7 @@ def walls_level2():
 def walls_level3():
     from levels import wall_lvl3
     for keys, value in wall_lvl3.items():
-        w = Wall(*value)
+        w = For_Level_Building(*value)
         collide_group.add(w)
         w.update()
 
@@ -153,7 +127,7 @@ def walls_level3():
 def floor_tut():
     from levels import floor_tuts
     for keys, value in floor_tuts.items():
-        f = Floor(*value)
+        f = For_Level_Building(*value)
         f.update()
     pygame.draw.rect(window, (43, 35, 52), (263, 525, 160, 60))
     pygame.draw.rect(window, (43, 35, 52), (555, 323, 80, 140))
@@ -162,7 +136,7 @@ def floor_tut():
 def floor_level1():
     from levels import floor_lvl1
     for keys, value in floor_lvl1.items():
-        f = Floor(*value)
+        f = For_Level_Building(*value)
         f.update()
     pygame.draw.rect(window, (43, 35, 52), (596, 427, 161, 60))
     pygame.draw.rect(window, (43, 35, 52), (835, 266, 70, 121))
@@ -172,7 +146,7 @@ def floor_level1():
 def floor_level2():
     from levels import floor_lvl2
     for keys, value in floor_lvl2.items():
-        f = Floor(*value)
+        f = For_Level_Building(*value)
         f.update()
     pygame.draw.rect(window, (43, 35, 52), (180, 372, 80, 144))
     pygame.draw.rect(window, (43, 35, 52), (422, 212, 150, 60))
@@ -182,7 +156,7 @@ def floor_level2():
 def floor_level3():
     from levels import floor_lvl3
     for keys, value in floor_lvl3.items():
-        f = Floor(*value)
+        f = For_Level_Building(*value)
         f.update()
     pygame.draw.rect(window, (43, 35, 52), (455, 236, 82, 120))
 
@@ -191,57 +165,71 @@ def floor_level3():
 def items_tut():
     from levels import item_tuts, trap_tuts
     for keys, values in item_tuts.items():
-        i = Item(*values)
+        i = For_Level_Building(*values)
         i.update()
         collide_group.add(i)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, values in trap_tuts.items():
-        t = Item(*values)
+        t = For_Level_Building(*values)
         t.update()
         traps_group.add(t)
         # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
-    closed_hatch = Item(574, 205, 43, 35, 'images/items/closed_hatch.png')
-    opened_hatch = Item(574, 205, 43, 35, 'images/items/open_hatch.png')
+    closed_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/closed_hatch.png')
+    opened_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/open_hatch.png')
     hatch_tut.append(closed_hatch)
     hatch_tut.append(opened_hatch)
-    portal = Item(140, 175, 50, 80, 'images/items/portal.png')
+    portal = For_Level_Building(140, 175, 50, 80, 'images/items/portal.png')
     window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 def items_level1():
     from levels import item_lvl1, trap_lvl1
     for keys, values in item_lvl1.items():
-        i = Item(*values)
+        i = For_Level_Building(*values)
         i.update()
         collide_group.add(i)
     for keys, values in trap_lvl1.items():
-        t = Item(*values)
+        t = For_Level_Building(*values)
         t.update()
         traps_group.add(t)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
-    closed_hatch = Item(370, 140, 43, 35, 'images/items/closed_hatch.png')
-    opened_hatch = Item(370, 140, 43, 35, 'images/items/open_hatch.png')
+    closed_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/closed_hatch.png')
+    opened_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl1.append(closed_hatch)
     hatch_lvl1.append(opened_hatch)
-    portal = Item(170, 110, 50, 80, 'images/items/portal.png')
+    portal = For_Level_Building(170, 110, 50, 80, 'images/items/portal.png')
     window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 def items_level2():
     from levels import item_lvl2, trap_lvl2
     for keys, values in item_lvl2.items():
-        i = Item(*values)
+        i = For_Level_Building(*values)
         i.update()
         collide_group.add(i)
     for keys, value in trap_lvl2.items():
-        t = Item(*value)
+        t = For_Level_Building(*value)
         t.update()
         traps_group.add(t)
-    closed_hatch = Item(740, 575, 43, 35, 'images/items/closed_hatch.png')
-    opened_hatch = Item(740, 575, 43, 35, 'images/items/open_hatch.png')
+    closed_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/closed_hatch.png')
+    opened_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl2.append(closed_hatch)
     hatch_lvl2.append(opened_hatch)
-    portal = Item(550, 540, 50, 80, 'images/items/portal.png')
+    portal = For_Level_Building(550, 540, 50, 80, 'images/items/portal.png')
+    window.blit(portal.image, (portal.rect.x, portal.rect.y))
+
+
+def items_level3():
+    from levels import item_lvl3, trap_lvl3
+    for keys, value in item_lvl3.items():
+        i = For_Level_Building(*value)
+        collide_group.add(i)
+        i.update()
+    for keys, value in trap_lvl3.items():
+        t = For_Level_Building(*value)
+        traps_group.add(t)
+        t.update()
+    portal = For_Level_Building(470, 585, 40, 60, 'images/items/portal.png')
     window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
@@ -322,6 +310,7 @@ def level_3():
 
     floor_level3()
     walls_level3()
+    items_level3()
     pygame.display.update()
     clock.tick(fps)
 
