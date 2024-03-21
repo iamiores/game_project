@@ -1,7 +1,7 @@
 import pygame
 from pygame import *
-pygame.init()
 
+pygame.init()
 
 class MainSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed):
@@ -15,7 +15,6 @@ class MainSprite(sprite.Sprite):
     def show(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
-
 class Wall(sprite.Sprite):
     def __init__(self, wall_x, wall_y, wall_width, wall_height, file_image):
         super().__init__()
@@ -27,7 +26,6 @@ class Wall(sprite.Sprite):
 
     def update(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
-
 
 class Floor(sprite.Sprite):
     def __init__(self, floor_x, floor_y, floor_width, floor_height, image_name):
@@ -41,7 +39,6 @@ class Floor(sprite.Sprite):
     def update(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
-
 # FONTS
 font1 = pygame.font.Font(None, 20)
 
@@ -52,9 +49,7 @@ clock = pygame.time.Clock()
 fps = 60
 game = True
 
-
 # FUNCTIONS
-
 
 def walls_tut():
     # spawn
@@ -81,12 +76,7 @@ def walls_tut():
     w20 = Wall(859, 75, 15, 248, 'images/walls/right_wall.jpg')
     w20.update()
 
-
-
-
 def floor_tut():
-    # f1 = Floor(50, 495, 200, 156, 'images/floor/floor.jpg')
-    # f1.update()
     f1_x = 50
     for i in range(2):
         f1 = Floor(f1_x, 495, 110, 76, 'images/floor/floor.jpg')
@@ -98,60 +88,50 @@ def floor_tut():
         f2.update()
         f2_x += 89
 
+def tutorial():
+    window.fill((0, 0, 0))  # Очищаем экран
+
+    floor_tut()  # Отрисовываем пол
+    walls_tut()  # Отрисовываем стены
+
+    # Отрисовка всех спрайтов
+    all_sprites.draw(window)
+
+    # Отображаем содержимое на экране
+    pygame.display.flip()
+
+    # Ограничиваем частоту кадров
+    clock.tick(fps)
+
+def first_lvl():
+    window.fill((0, 0, 0))
+    window.blit(text, (10, 10))
+
+    floor_tut()
+    pygame.display.update()
+    clock.tick(fps)
+
+from coin import Coin
+
+# Создание объекта монеты
+coin = Coin(x=250, y=210, width=40, height=40)
+
+# Добавление монеты в список спрайтов
+all_sprites = sprite.Group()
+all_sprites.add(coin)
+
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
-            game = Falset
+            game = False
+
+    clock.tick(fps)
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
 
     tutorial()
 
-    # collision on end level
-    # LEVEL_NUMBER = 0
+    all_sprites.update()  # Обновление всех спрайтов
 
-    # LEVEL_NAMES = [
-    # tutorial(),
-    # first_lvl(),
-    # second_lvl()
-    # ]
-
-    # if pygame.event == 'endlevel':
-    #    show two buttons: next_level and back
-    #    if next_level == 'pressed':
-    #        LEVEL_NUMBER += 1
-    #        loadnew level with
-    #           LEVEL_NAMES[LEVEL_NUMBER]
-    #    if back == 'pressed':
-    #        LEVEL_NUMBER = 0
-    #         return to menu
-    #
-
-
-def tutorial():
-
-        window.fill((0, 0, 0))
-        window.blit(text, (10, 10))
-
-        floor_tut()
-        walls_tut()
-        pygame.display.update()
-        clock.tick(fps)
-
-
-
-def first_lvl():
-
-        window.fill((0, 0, 0))
-        window.blit(text, (10, 10))
-
-        floor_tut()
-        walls_tut_2()
-        pygame.display.update()
-        clock.tick(fps)
-
-
-
-
-
+pygame.quit()
