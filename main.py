@@ -1,8 +1,9 @@
 import sys
-
 import pygame
 from pygame import *
+from coin import Coin
 pygame.init()
+
 
 
 class MainSprite(sprite.Sprite):
@@ -89,6 +90,12 @@ hatch_lvl2 = []
 collide_group = sprite.Group()
 traps_group = sprite.Group()
 
+# Создание объекта монеты
+coin = Coin(x=500, y=136, width=40, height=40)
+
+# Добавление монеты в список спрайтов
+all_sprites = sprite.Group()
+all_sprites.add(coin)
 
 # WALLS
 def walls_tut():
@@ -330,6 +337,8 @@ while game:
     level_3()
     # menu()
 
+    all_sprites.update()  # Обновление всех спрайтов
+    all_sprites.draw(window)  # Отображение всех спрайтов
     pygame.display.update()
     clock.tick(fps)
 
@@ -352,5 +361,3 @@ while game:
     #        LEVEL_NUMBER = 0
     #         return to menu
     #
-
-
