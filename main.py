@@ -5,7 +5,6 @@ from coin import Coin
 pygame.init()
 
 
-
 class MainSprite(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed):
         super().__init__()
