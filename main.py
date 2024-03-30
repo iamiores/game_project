@@ -231,10 +231,7 @@ hatch_lvl1 = []
 hatch_lvl2 = []
 hatch_lvl3 = []
 collide_group = sprite.Group()
-traps_group_tut = sprite.Group()
-traps_group_lvl1 = sprite.Group()
-traps_group_lvl2 = sprite.Group()
-traps_group_lvl3 = sprite.Group()
+traps_group = sprite.Group()
 all_sprites = sprite.Group()
 
 # OBJECTS
@@ -277,7 +274,7 @@ def walls_level3():
         w = For_Level_Building(*value)
         collide_group.add(w)
         w.update()
-        pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
+        # pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
 
 
 # FLOORS
@@ -329,7 +326,7 @@ def items_tut():
     for keys, values in trap_tuts.items():
         t = For_Level_Building(*values)
         t.update()
-        traps_group_tut.add(t)
+        traps_group.add(t)
         # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
     closed_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/open_hatch.png')
@@ -348,7 +345,7 @@ def items_level1():
     for keys, values in trap_lvl1.items():
         t = For_Level_Building(*values)
         t.update()
-        traps_group_lvl1.add(t)
+        traps_group.add(t)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     closed_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/open_hatch.png')
@@ -367,7 +364,7 @@ def items_level2():
     for keys, value in trap_lvl2.items():
         t = For_Level_Building(*value)
         t.update()
-        traps_group_lvl2.add(t)
+        traps_group.add(t)
     closed_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl2.append(closed_hatch)
@@ -382,12 +379,12 @@ def items_level3():
         i = For_Level_Building(*value)
         collide_group.add(i)
         i.update()
-        pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
+        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, value in trap_lvl3.items():
         t = For_Level_Building(*value)
-        traps_group_lvl3.add(t)
+        traps_group.add(t)
         t.update()
-        pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
+        # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl3.append(closed_hatch)
@@ -496,18 +493,18 @@ while game:
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
 
-    # tutorial()
+    tutorial()
     # level_1()
     # level_2()
-    level_3()
+    # level_3()
     # menu()
 
     all_sprites.update()  # Обновление всех спрайтов
     all_sprites.draw(window)  # Отображение всех спрайтов
     player.collide(collide_group)
-    player.trap(traps_group_lvl3)
-    pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
-    print(lives)
+    player.trap(traps_group)
+    # pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
+    # print(lives)
     pygame.display.update()
     clock.tick(fps)
 
