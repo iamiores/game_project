@@ -13,14 +13,38 @@ class MainSprite(sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = player_x
         self.rect.y = player_y
+        self.was_colliding = False
 
     def show(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
+
+    def collide(self, group):
+        for group in group:
+            if self.rect.colliderect(group.rect):
+                if self.rect.top < group.rect.bottom < self.rect.bottom:
+                    self.rect.y += 1
+                elif self.rect.bottom > group.rect.top > self.rect.top:
+                    self.rect.y -= 1
+                elif self.rect.left < group.rect.right < self.rect.right:
+                    self.rect.x += 1
+                elif self.rect.right > group.rect.left > self.rect.left:
+                    self.rect.x -= 1
+
+    def trap(self, group):
+        global lives
+        if not self.was_colliding:
+            if any(self.rect.colliderect(group.rect) for group in group):
+                lives -= 1
+                self.was_colliding = True
+        elif not any(self.rect.colliderect(group.rect) for group in group):
+            self.was_colliding = False
 
 
 class Player(MainSprite):
     def __init__(self, player_image, player_x, player_y, player_speed, width, height):
         super().__init__(player_image, player_x, player_y, player_speed)
+        self.rect.width = width
+        self.rect.height = height
         self.width = width
         self.heigh = height
         self.counter_right = 0
@@ -29,16 +53,16 @@ class Player(MainSprite):
         self.counter_backward = 0
         self.pics_stay = transform.scale(pygame.image.load('images/player/male/male_WalkBack_1.png'), (self.width, self.heigh))
 
-        self.pics_right = ['images/player/male/male_WalkRight_2.png', 'images/player/male/male_WalkRight_1.png', 'images/player/male/male_WalkRight_3.png']
+        self.pics_right = ['images/player/male/male_WalkRight_2.png', 'images/player/male/male_WalkRight_1.png', 'images/player/male/male_WalkRight_3.png', 'images/player/male/male_WalkRight_1.png']
         self.pics_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_right]
 
-        self.pics_left = ['images/player/male/male_WalkLeft_2.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkLeft_3.png']
+        self.pics_left = ['images/player/male/male_WalkLeft_2.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkLeft_3.png', 'images/player/male/male_WalkLeft_1.png']
         self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_left]
 
-        self.pics_forward = ['images/player/male/male_WalkForward_2.png', 'images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkForward_3.png']
+        self.pics_forward = ['images/player/male/male_WalkForward_2.png', 'images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkForward_3.png', 'images/player/male/male_WalkForward_1.png']
         self.pics_forward_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_forward]
 
-        self.pics_back = ['images/player/male/male_WalkBack_2.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkBack_3.png']
+        self.pics_back = ['images/player/male/male_WalkBack_2.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkBack_3.png', 'images/player/male/male_WalkBack_1.png']
         self.pics_back_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_back]
 
     def animate(self, kind):
@@ -47,56 +71,64 @@ class Player(MainSprite):
 
         if kind == 'right':
             self.counter_right += 1
-            if self.counter_right < 10:
+            if self.counter_right < 5:
                 self.image = self.pics_right_obj[0]
-            elif 10 <= self.counter_right < 20:
+            elif 5 <= self.counter_right < 10:
                 self.image = self.pics_right_obj[1]
-            elif 20 <= self.counter_right < 30:
+            elif 10 <= self.counter_right < 15:
                 self.image = self.pics_right_obj[2]
+            elif 15 <= self.counter_right < 20:
+                self.image = self.pics_right_obj[3]
 
-            elif self.counter_right == 30:
+            elif self.counter_right == 20:
                 self.counter_right = 0
         else:
             self.counter_right = 0
 
         if kind == 'left':
             self.counter_left += 1
-            if self.counter_left < 10:
+            if self.counter_left < 5:
                 self.image = self.pics_left_obj[0]
-            elif 10 <= self.counter_left < 20:
+            elif 5 <= self.counter_left < 10:
                 self.image = self.pics_left_obj[1]
-            elif 20 <= self.counter_left < 30:
+            elif 10 <= self.counter_left < 15:
                 self.image = self.pics_left_obj[2]
+            elif 15 <= self.counter_left < 20:
+                self.image = self.pics_left_obj[3]
 
-            elif self.counter_left == 30:
+            elif self.counter_left == 20:
                 self.counter_left = 0
         else:
             self.counter_left = 0
 
         if kind == 'forward':
             self.counter_forward += 1
-            if self.counter_forward  < 10:
+            if self.counter_forward  < 5:
                 self.image = self.pics_forward_obj[0]
-            elif 10 <= self.counter_forward  < 20:
+            elif 5 <= self.counter_forward  < 10:
                 self.image = self.pics_forward_obj[1]
-            elif 20 <= self.counter_forward  < 30:
+            elif 10 <= self.counter_forward  < 15:
                 self.image = self.pics_forward_obj[2]
+            elif 15 <= self.counter_forward  < 20:
+                self.image = self.pics_forward_obj[3]
 
-            elif self.counter_forward  == 30:
+            elif self.counter_forward  == 20:
                 self.counter_forward  = 0
         else:
             self.counter_forward = 0
 
         if kind == 'back':
             self.counter_backward += 1
-            if self.counter_backward < 10:
+            if self.counter_backward < 5:
                 self.image = self.pics_back_obj[0]
-            elif 10 <= self.counter_backward < 20:
+            elif 5 <= self.counter_backward < 10:
                 self.image = self.pics_back_obj[1]
-            elif 20 <= self.counter_backward < 30:
+            elif 10 <= self.counter_backward < 15:
                 self.image = self.pics_back_obj[2]
+            elif 15 <= self.counter_backward < 20:
+                self.image = self.pics_back_obj[3]
 
-            elif self.counter_backward == 30:
+            elif self.counter_backward == 20:
                 self.counter_backward = 0
         else:
             self.counter_backward = 0
@@ -127,7 +159,6 @@ class Player(MainSprite):
         with open('file.txt', 'w') as f:
             f.write(str(self.rect.x) + '\n')
             f.write(str(self.rect.y))
-
 
 
 class For_Level_Building(sprite.Sprite):
@@ -184,6 +215,7 @@ game = True
 hatch_num_tut = 0
 hatch_num_lvl1 = 0
 hatch_num_lvl2 = 0
+hatch_num_lvl3 = 0
 
 lives = 5
 energy = 5
@@ -197,19 +229,22 @@ image = pygame.transform.scale(image, (w_width, w_height))
 hatch_tut = []
 hatch_lvl1 = []
 hatch_lvl2 = []
+hatch_lvl3 = []
 collide_group = sprite.Group()
-traps_group = sprite.Group()
-
-
-
-# Создание объекта монеты
-coin = Coin(x=500, y=136, width=20, height=20)
-player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 35, 35)
-
-# Добавление монеты в список спрайтов
+traps_group_tut = sprite.Group()
+traps_group_lvl1 = sprite.Group()
+traps_group_lvl2 = sprite.Group()
+traps_group_lvl3 = sprite.Group()
 all_sprites = sprite.Group()
+
+# OBJECTS
+
+coin = Coin(x=500, y=136, width=20, height=20)
+player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 30, 35)
+
 all_sprites.add(coin)
 all_sprites.add(player)
+
 
 # WALLS
 def walls_tut():
@@ -242,6 +277,7 @@ def walls_level3():
         w = For_Level_Building(*value)
         collide_group.add(w)
         w.update()
+        pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
 
 
 # FLOORS
@@ -293,7 +329,7 @@ def items_tut():
     for keys, values in trap_tuts.items():
         t = For_Level_Building(*values)
         t.update()
-        traps_group.add(t)
+        traps_group_tut.add(t)
         # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
     closed_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/open_hatch.png')
@@ -312,7 +348,7 @@ def items_level1():
     for keys, values in trap_lvl1.items():
         t = For_Level_Building(*values)
         t.update()
-        traps_group.add(t)
+        traps_group_lvl1.add(t)
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     closed_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/open_hatch.png')
@@ -331,7 +367,7 @@ def items_level2():
     for keys, value in trap_lvl2.items():
         t = For_Level_Building(*value)
         t.update()
-        traps_group.add(t)
+        traps_group_lvl2.add(t)
     closed_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl2.append(closed_hatch)
@@ -346,10 +382,16 @@ def items_level3():
         i = For_Level_Building(*value)
         collide_group.add(i)
         i.update()
+        pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, value in trap_lvl3.items():
         t = For_Level_Building(*value)
-        traps_group.add(t)
+        traps_group_lvl3.add(t)
         t.update()
+        pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
+    closed_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/closed_hatch.png')
+    opened_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/open_hatch.png')
+    hatch_lvl3.append(closed_hatch)
+    hatch_lvl3.append(opened_hatch)
     portal = For_Level_Building(470, 585, 40, 60, 'images/items/portal.png')
     window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
@@ -432,8 +474,17 @@ def level_3():
     floor_level3()
     walls_level3()
     items_level3()
+    # window.blit(hatch_lvl3[hatch_num_lvl3].image, (hatch_lvl3[hatch_num_lvl3].rect.x, hatch_lvl3[hatch_num_lvl3].rect.y))
     pygame.display.update()
     clock.tick(fps)
+
+
+try:
+    with open('file.txt', 'r') as f:
+        player.rect.x = int(f.readline().replace('\n', ''))
+        player.rect.y = int(f.readline().replace('\n', ''))
+except:
+    player.write_file()
 
 
 # MAIN CYCLE
@@ -453,6 +504,10 @@ while game:
 
     all_sprites.update()  # Обновление всех спрайтов
     all_sprites.draw(window)  # Отображение всех спрайтов
+    player.collide(collide_group)
+    player.trap(traps_group_lvl3)
+    pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
+    print(lives)
     pygame.display.update()
     clock.tick(fps)
 
