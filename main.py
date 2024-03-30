@@ -18,6 +18,118 @@ class MainSprite(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 
+class Player(MainSprite):
+    def __init__(self, player_image, player_x, player_y, player_speed, width, height):
+        super().__init__(player_image, player_x, player_y, player_speed)
+        self.width = width
+        self.heigh = height
+        self.counter_right = 0
+        self.counter_left = 0
+        self.counter_forward = 0
+        self.counter_backward = 0
+        self.pics_stay = transform.scale(pygame.image.load('images/player/male/male_WalkBack_1.png'), (self.width, self.heigh))
+
+        self.pics_right = ['images/player/male/male_WalkRight_2.png', 'images/player/male/male_WalkRight_1.png', 'images/player/male/male_WalkRight_3.png']
+        self.pics_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_right]
+
+        self.pics_left = ['images/player/male/male_WalkLeft_2.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkLeft_3.png']
+        self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_left]
+
+        self.pics_forward = ['images/player/male/male_WalkForward_2.png', 'images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkForward_3.png']
+        self.pics_forward_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_forward]
+
+        self.pics_back = ['images/player/male/male_WalkBack_2.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkBack_3.png']
+        self.pics_back_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_back]
+
+    def animate(self, kind):
+        if kind == 'stay':
+            self.image = self.pics_stay
+
+        if kind == 'right':
+            self.counter_right += 1
+            if self.counter_right < 10:
+                self.image = self.pics_right_obj[0]
+            elif 10 <= self.counter_right < 20:
+                self.image = self.pics_right_obj[1]
+            elif 20 <= self.counter_right < 30:
+                self.image = self.pics_right_obj[2]
+
+            elif self.counter_right == 30:
+                self.counter_right = 0
+        else:
+            self.counter_right = 0
+
+        if kind == 'left':
+            self.counter_left += 1
+            if self.counter_left < 10:
+                self.image = self.pics_left_obj[0]
+            elif 10 <= self.counter_left < 20:
+                self.image = self.pics_left_obj[1]
+            elif 20 <= self.counter_left < 30:
+                self.image = self.pics_left_obj[2]
+
+            elif self.counter_left == 30:
+                self.counter_left = 0
+        else:
+            self.counter_left = 0
+
+        if kind == 'forward':
+            self.counter_forward += 1
+            if self.counter_forward  < 10:
+                self.image = self.pics_forward_obj[0]
+            elif 10 <= self.counter_forward  < 20:
+                self.image = self.pics_forward_obj[1]
+            elif 20 <= self.counter_forward  < 30:
+                self.image = self.pics_forward_obj[2]
+
+            elif self.counter_forward  == 30:
+                self.counter_forward  = 0
+        else:
+            self.counter_forward = 0
+
+        if kind == 'back':
+            self.counter_backward += 1
+            if self.counter_backward < 10:
+                self.image = self.pics_back_obj[0]
+            elif 10 <= self.counter_backward < 20:
+                self.image = self.pics_back_obj[1]
+            elif 20 <= self.counter_backward < 30:
+                self.image = self.pics_back_obj[2]
+
+            elif self.counter_backward == 30:
+                self.counter_backward = 0
+        else:
+            self.counter_backward = 0
+
+    def update(self):
+        keys = key.get_pressed()
+        if keys[K_d]:
+            self.rect.x += self.speed
+            self.animate('right')
+        if keys[K_a]:
+            self.rect.x -= self.speed
+            self.animate('left')
+
+        if keys[K_w]:
+            self.rect.y -= self.speed
+            self.animate('forward')
+
+        if keys[K_s]:
+            self.rect.y += self.speed
+            self.animate('back')
+
+        if keys[K_d] or keys[K_a] or keys[K_w] or keys[K_s]:
+            self.write_file()
+        else:
+            self.animate('stay')
+
+    def write_file(self):
+        with open('file.txt', 'w') as f:
+            f.write(str(self.rect.x) + '\n')
+            f.write(str(self.rect.y))
+
+
+
 class For_Level_Building(sprite.Sprite):
     def __init__(self, wall_x, wall_y, wall_width, wall_height, file_image):
         super().__init__()
@@ -58,7 +170,6 @@ class Button:
             self.clicked = False
         return False
 
-
 # FONTS
 font1 = pygame.font.Font(None, 20)
 
@@ -89,12 +200,16 @@ hatch_lvl2 = []
 collide_group = sprite.Group()
 traps_group = sprite.Group()
 
+
+
 # Создание объекта монеты
-coin = Coin(x=500, y=136, width=40, height=40)
+coin = Coin(x=500, y=136, width=20, height=20)
+player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 35, 35)
 
 # Добавление монеты в список спрайтов
 all_sprites = sprite.Group()
 all_sprites.add(coin)
+all_sprites.add(player)
 
 # WALLS
 def walls_tut():
