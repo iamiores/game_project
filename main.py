@@ -182,7 +182,6 @@ class Button:
         self.rect.x = button_x
         self.rect.y = button_y
         self.clicked = False
-        self.click_time = 0
 
     def draw(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
@@ -193,10 +192,7 @@ class Button:
         if self.rect.collidepoint(mouse_controller):
             if click[0] and not self.clicked:
                 self.clicked = True
-                self.click_time = pygame.time.get_ticks()
-                if pygame.time.get_ticks() - self.click_time <= 500:
-                    return True
-                self.click_time = 0
+                return True
         else:
             self.clicked = False
         return False
@@ -237,7 +233,7 @@ all_sprites = sprite.Group()
 # OBJECTS
 
 coin = Coin(x=500, y=136, width=20, height=20)
-player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 30, 35)
+player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 28, 33)
 
 all_sprites.add(coin)
 all_sprites.add(player)
