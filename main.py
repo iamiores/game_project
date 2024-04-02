@@ -39,6 +39,14 @@ class MainSprite(sprite.Sprite):
         elif not any(self.rect.colliderect(group.rect) for group in group):
             self.was_colliding = False
 
+class Boss(MainSprite):
+    def __init__(self, boss_image, boss_x, boss_y, boss_speed, width, height):
+        super().__init__(boss_image, boss_x, boss_y, boss_speed)
+        self.rect.width = width
+        self.rect.height = height
+        self.width = width
+        self.height = height
+
 
 class Player(MainSprite):
     def __init__(self, player_image, player_x, player_y, player_speed, width, height):
@@ -64,6 +72,7 @@ class Player(MainSprite):
 
         self.pics_back = ['images/player/male/male_WalkBack_2.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkBack_3.png', 'images/player/male/male_WalkBack_1.png']
         self.pics_back_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_back]
+
 
     def animate(self, kind):
         if kind == 'stay':
