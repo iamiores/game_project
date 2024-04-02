@@ -217,8 +217,6 @@ lives = 5
 energy = 5
 
 button_show_state = 'main menu'
-image = pygame.image.load('images/possible_background.png')
-image = pygame.transform.scale(image, (w_width, w_height))
 
 
 # GROUPS, LISTS ETC
@@ -390,38 +388,38 @@ def items_level3():
 
 
 # LEVELS
-def menu():
-    global button_show_state
-    start_button = Button(435, 240, 120, 50, 'images/buttons/start.png')
-    settings_button = Button(435, 300, 120, 50, 'images/buttons/settings.png')
-    exit_button = Button(435, 360, 120, 50, 'images/buttons/exit.png')
-    store_button = Button(450, 240, 60, 50, 'images/buttons/store.png')
-    add_volume_button = Button(400, 300, 60, 50, 'images/buttons/more_volume.png')
-    reduce_volume_button = Button(500, 300, 60, 50, 'images/buttons/less_volume.png')
-    pause_button = None
-    back_to_menu_button = None
-    window.blit(image, (0, 0))
-    if button_show_state == 'main menu':
-        start_button.draw()
-        settings_button.draw()
-        exit_button.draw()
-        pygame.draw.rect(window, (255, 0, 0), start_button.rect, 1)
-        pygame.draw.rect(window, (255, 0, 0), settings_button.rect, 1)
-        pygame.draw.rect(window, (255, 0, 0), exit_button.rect, 1)
-        if start_button.button_click():
-            button_show_state = 'menu'
-        elif settings_button.button_click():
-            button_show_state = 'settings'
-    if button_show_state == 'settings':
-        window.blit(image, (0, 0))
-        store_button.draw()
-        add_volume_button.draw()
-        reduce_volume_button.draw()
-        pygame.draw.rect(window, (255, 0, 0), store_button.rect, 1)
-        pygame.draw.rect(window, (255, 0, 0), add_volume_button.rect, 1)
-        pygame.draw.rect(window, (255, 0, 0), reduce_volume_button.rect, 1)
-        if reduce_volume_button.button_click():
-            button_show_state = 'main menu'
+# def menu():
+#     global button_show_state
+#     start_button = Button(435, 240, 120, 50, 'images/buttons/start.png')
+#     settings_button = Button(435, 300, 120, 50, 'images/buttons/settings.png')
+#     exit_button = Button(435, 360, 120, 50, 'images/buttons/exit.png')
+#     store_button = Button(450, 240, 60, 50, 'images/buttons/store.png')
+#     add_volume_button = Button(400, 300, 60, 50, 'images/buttons/more_volume.png')
+#     reduce_volume_button = Button(500, 300, 60, 50, 'images/buttons/less_volume.png')
+#     pause_button = None
+#     back_to_menu_button = None
+#     window.blit(image, (0, 0))
+#     if button_show_state == 'main menu':
+#         start_button.draw()
+#         settings_button.draw()
+#         exit_button.draw()
+#         pygame.draw.rect(window, (255, 0, 0), start_button.rect, 1)
+#         pygame.draw.rect(window, (255, 0, 0), settings_button.rect, 1)
+#         pygame.draw.rect(window, (255, 0, 0), exit_button.rect, 1)
+#         if start_button.button_click():
+#             button_show_state = 'menu'
+#         elif settings_button.button_click():
+#             button_show_state = 'settings'
+#     if button_show_state == 'settings':
+#         window.blit(image, (0, 0))
+#         store_button.draw()
+#         add_volume_button.draw()
+#         reduce_volume_button.draw()
+#         pygame.draw.rect(window, (255, 0, 0), store_button.rect, 1)
+#         pygame.draw.rect(window, (255, 0, 0), add_volume_button.rect, 1)
+#         pygame.draw.rect(window, (255, 0, 0), reduce_volume_button.rect, 1)
+#         if reduce_volume_button.button_click():
+#             button_show_state = 'main menu'
 
 
 def tutorial():
@@ -493,7 +491,6 @@ while game:
     # level_1()
     # level_2()
     # level_3()
-    # menu()
 
     all_sprites.update()  # Обновление всех спрайтов
     all_sprites.draw(window)  # Отображение всех спрайтов
