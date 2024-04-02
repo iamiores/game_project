@@ -46,24 +46,24 @@ class Player(MainSprite):
         self.rect.width = width
         self.rect.height = height
         self.width = width
-        self.heigh = height
+        self.height = height
         self.counter_right = 0
         self.counter_left = 0
         self.counter_forward = 0
         self.counter_backward = 0
-        self.pics_stay = transform.scale(pygame.image.load('images/player/male/male_WalkBack_1.png'), (self.width, self.heigh))
+        self.pics_stay = transform.scale(pygame.image.load('images/player/male/male_WalkBack_1.png'), (self.width, self.height))
 
         self.pics_right = ['images/player/male/male_WalkRight_2.png', 'images/player/male/male_WalkRight_1.png', 'images/player/male/male_WalkRight_3.png', 'images/player/male/male_WalkRight_1.png']
-        self.pics_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_right]
+        self.pics_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_right]
 
         self.pics_left = ['images/player/male/male_WalkLeft_2.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkLeft_3.png', 'images/player/male/male_WalkLeft_1.png']
-        self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_left]
+        self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_left]
 
         self.pics_forward = ['images/player/male/male_WalkForward_2.png', 'images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkForward_3.png', 'images/player/male/male_WalkForward_1.png']
-        self.pics_forward_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_forward]
+        self.pics_forward_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_forward]
 
         self.pics_back = ['images/player/male/male_WalkBack_2.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkBack_3.png', 'images/player/male/male_WalkBack_1.png']
-        self.pics_back_obj = [transform.scale(pygame.image.load(pic), (self.width, self.heigh)) for pic in self.pics_back]
+        self.pics_back_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_back]
 
     def animate(self, kind):
         if kind == 'stay':
