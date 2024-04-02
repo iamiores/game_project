@@ -39,6 +39,7 @@ class MainSprite(sprite.Sprite):
         elif not any(self.rect.colliderect(group.rect) for group in group):
             self.was_colliding = False
 
+
 class Boss(MainSprite):
     def __init__(self, boss_image, boss_x, boss_y, boss_speed, width, height):
         super().__init__(boss_image, boss_x, boss_y, boss_speed)
@@ -72,7 +73,6 @@ class Player(MainSprite):
 
         self.pics_back = ['images/player/male/male_WalkBack_2.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkBack_3.png', 'images/player/male/male_WalkBack_1.png']
         self.pics_back_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_back]
-
 
     def animate(self, kind):
         if kind == 'stay':
@@ -207,7 +207,7 @@ class Button:
         return False
 
 # FONTS
-font1 = pygame.font.Font(None, 20)
+font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 20)
 
 # SETTINGS
 w_width, w_height = 1000, 700
@@ -224,22 +224,42 @@ hatch_num_lvl3 = 0
 
 lives = 5
 energy = 5
+coins = 0
 
 button_show_state = 'main menu'
 
+# LOADS
+live_0 = transform.scale(pygame.image.load('images/lives/lives_0.png'), (100, 45))
+live_1 = transform.scale(pygame.image.load('images/lives/lives_1.png'), (100, 45))
+live_2 = transform.scale(pygame.image.load('images/lives/lives_2.png'), (100, 45))
+live_3 = transform.scale(pygame.image.load('images/lives/lives_3.png'), (100, 45))
+live_4 = transform.scale(pygame.image.load('images/lives/lives_4.png'), (100, 45))
+live_5 = transform.scale(pygame.image.load('images/lives/lives_5.png'), (100, 45))
+
+energy_0 = transform.scale(pygame.image.load('images/energy/energy_0.png'), (90, 20))
+energy_1 = transform.scale(pygame.image.load('images/energy/energy_1.png'), (90, 20))
+energy_2 = transform.scale(pygame.image.load('images/energy/energy_2.png'), (90, 20))
+energy_3 = transform.scale(pygame.image.load('images/energy/energy_3.png'), (90, 20))
+energy_4 = transform.scale(pygame.image.load('images/energy/energy_4.png'), (90, 20))
+energy_5 = transform.scale(pygame.image.load('images/energy/energy_5.png'), (90, 20))
+
 
 # GROUPS, LISTS ETC
+lives_list = [live_0, live_1, live_2, live_3, live_4, live_5]
+energy_list = [energy_0, energy_1, energy_2, energy_3, energy_4, energy_5]
+
 hatch_tut = []
 hatch_lvl1 = []
 hatch_lvl2 = []
 hatch_lvl3 = []
 collide_group = sprite.Group()
 traps_group = sprite.Group()
+
 all_sprites = sprite.Group()
 
 # OBJECTS
 
-coin = Coin(x=500, y=136, width=20, height=20)
+coin = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 28, 33)
 
 all_sprites.add(coin)
@@ -433,7 +453,6 @@ def items_level3():
 
 def tutorial():
     window.fill((0, 0, 0))
-    window.blit(text, (10, 10))
 
     floor_tut()
     walls_tut()
@@ -445,7 +464,6 @@ def tutorial():
 
 def level_1():
     window.fill((0, 0, 0))
-    window.blit(text, (10, 0))
 
     floor_level1()
     walls_level1()
@@ -457,7 +475,6 @@ def level_1():
 
 def level_2():
     window.fill((0, 0, 0))
-    window.blit(text, (10, 0))
 
     floor_level2()
     walls_level2()
@@ -469,7 +486,6 @@ def level_2():
 
 def level_3():
     window.fill((0, 0, 0))
-    window.blit(text, (10, 0))
 
     floor_level3()
     walls_level3()
@@ -493,13 +509,15 @@ while game:
         if e.type == pygame.QUIT:
             game = False
             sys.exit()
-    mouse_x, mouse_y = pygame.mouse.get_pos()
-    text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
 
-    tutorial()
+    # tutorial()
     # level_1()
-    # level_2()
+    level_2()
     # level_3()
+    # mouse_x, mouse_y = pygame.mouse.get_pos()
+    # text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
+    money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
+    window.blit(money, (255, 20))
 
     all_sprites.update()  # Обновление всех спрайтов
     all_sprites.draw(window)  # Отображение всех спрайтов
@@ -507,6 +525,9 @@ while game:
     player.trap(traps_group)
     # pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
     # print(lives)
+    window.blit(lives_list[lives], (10, 0))
+    # window.blit(energy_list[energy], (15, 60))
+    window.blit(energy_list[energy], (120, 24))
     pygame.display.update()
     clock.tick(fps)
 
