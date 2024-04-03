@@ -184,27 +184,50 @@ class For_Level_Building(sprite.Sprite):
 
 
 class Button:
-    def __init__(self, button_x, button_y, button_width, button_height, button_image):
-        self.file = button_image
-        self.image = transform.scale(pygame.image.load(self.file), (button_width, button_height))
-        self.rect = self.image.get_rect()
-        self.rect.x = button_x
-        self.rect.y = button_y
+    def __init__(self, button_x, button_y, button_width, button_height, text):
+        self.width = button_width
+        self.height = button_height
+        self.x = button_x
+        self.y = button_y
         self.clicked = False
+        self.inactive_color = (21, 24, 38)
+        self.active_color = (41, 47, 75)
+        self.border_radius = 20
+        self.text = text
 
-    def draw(self):
-        window.blit(self.image, (self.rect.x, self.rect.y))
-
-    def button_click(self):
+    def click_with_action(self, screen, action=None):
         mouse_controller = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
-        if self.rect.collidepoint(mouse_controller):
-            if click[0] and not self.clicked:
-                self.clicked = True
+
+        if self.x < mouse_controller[0] < self.x + self.width and self.y < mouse_controller[1] < self.y + self.height:
+            pygame.draw.rect(screen, self.active_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
+            if click[0]:
+                if action is not None:
+                    action()
+                    button_click_sound.play()
+        else:
+            pygame.draw.rect(screen, self.inactive_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
+
+        create_text(screen, self.text, x=self.x + 10, y=self.y + 10)
+
+    def click(self, screen):
+        mouse_controller = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()
+        if self.x < mouse_controller[0] < self.x + self.width and self.y < mouse_controller[1] < self.y + self.height:
+            pygame.draw.rect(screen, self.active_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
+            if click[0]:
+                button_click_sound.play()
                 return True
         else:
-            self.clicked = False
-        return False
+            pygame.draw.rect(screen, self.inactive_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
+
+        create_text(screen, self.text, x=self.x + 10, y=self.y + 10)
+
+
+def create_text(screen, text, x, y, font_color=(0, 0, 0), font_size=25):
+    text = pygame.font.Font('fonts/Retro Gaming.ttf', font_size).render(text, True, font_color)
+    screen.blit(text, (x, y))
+
 
 # FONTS
 font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 20)
@@ -215,6 +238,7 @@ window = pygame.display.set_mode((w_width, w_height))
 clock = pygame.time.Clock()
 fps = 60
 game = True
+bg_image = transform.scale(pygame.image.load('bg.png'), (w_width, w_height))
 
 # ALTERNATES
 hatch_num_tut = 0
@@ -226,7 +250,7 @@ lives = 5
 energy = 5
 coins = 0
 
-button_show_state = 'main menu'
+state = 'main menu'
 
 # LOADS
 live_0 = transform.scale(pygame.image.load('images/lives/lives_0.png'), (100, 45))
@@ -258,12 +282,29 @@ traps_group = sprite.Group()
 all_sprites = sprite.Group()
 
 # OBJECTS
+start_button = Button(440, 240, 110, 50, 'START')
+settings_button = Button(410, 300, 170, 50, 'SETTINGS')
+exit_button = Button(445, 360, 95, 50, 'QUIT')
+add_volume_button = Button(400, 300, 60, 50, '+')
+reduce_volume_button = Button(500, 300, 60, 50, '-')
+back_button = Button(450, 425, 95, 50, 'BACK')
+
+tutorial_button = Button(410, 180, 170, 50, 'TUTORIAL')
+level_1_button = Button(250, 280, 130, 50, 'LEVEL 1')
+level_2_button = Button(430, 280, 130, 50, 'LEVEL 2')
+level_3_button = Button(610, 280, 130, 50, 'LEVEL 3')
+store_button = Button(450, 240, 60, 50, '🛒')
 
 coin = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 28, 33)
-
+all_sprites.empty()
 all_sprites.add(coin)
 all_sprites.add(player)
+
+# SOUNDS
+music = pygame.mixer.Sound('music/Crystal Caves v1_2.mp3')
+music_volume = 0.4
+button_click_sound = pygame.mixer.Sound('sounds/Menu Selection Click.wav')
 
 
 # WALLS
@@ -417,38 +458,45 @@ def items_level3():
 
 
 # LEVELS
-# def menu():
-#     global button_show_state
-#     start_button = Button(435, 240, 120, 50, 'images/buttons/start.png')
-#     settings_button = Button(435, 300, 120, 50, 'images/buttons/settings.png')
-#     exit_button = Button(435, 360, 120, 50, 'images/buttons/exit.png')
-#     store_button = Button(450, 240, 60, 50, 'images/buttons/store.png')
-#     add_volume_button = Button(400, 300, 60, 50, 'images/buttons/more_volume.png')
-#     reduce_volume_button = Button(500, 300, 60, 50, 'images/buttons/less_volume.png')
-#     pause_button = None
-#     back_to_menu_button = None
-#     window.blit(image, (0, 0))
-#     if button_show_state == 'main menu':
-#         start_button.draw()
-#         settings_button.draw()
-#         exit_button.draw()
-#         pygame.draw.rect(window, (255, 0, 0), start_button.rect, 1)
-#         pygame.draw.rect(window, (255, 0, 0), settings_button.rect, 1)
-#         pygame.draw.rect(window, (255, 0, 0), exit_button.rect, 1)
-#         if start_button.button_click():
-#             button_show_state = 'menu'
-#         elif settings_button.button_click():
-#             button_show_state = 'settings'
-#     if button_show_state == 'settings':
-#         window.blit(image, (0, 0))
-#         store_button.draw()
-#         add_volume_button.draw()
-#         reduce_volume_button.draw()
-#         pygame.draw.rect(window, (255, 0, 0), store_button.rect, 1)
-#         pygame.draw.rect(window, (255, 0, 0), add_volume_button.rect, 1)
-#         pygame.draw.rect(window, (255, 0, 0), reduce_volume_button.rect, 1)
-#         if reduce_volume_button.button_click():
-#             button_show_state = 'main menu'
+def menu():
+    global state, music_volume, game
+    if state != 'game':
+        window.blit(bg_image, (0, 0))
+    music.set_volume(music_volume)
+    if state == 'main menu':
+        if start_button.click(window):
+            state = 'level menu'
+        elif settings_button.click(window):
+            state = 'settings'
+        elif exit_button.click(window):
+            game = False
+            sys.exit()
+    if state == 'settings':
+        if add_volume_button.click(window):
+            music_volume += 0.1
+        elif reduce_volume_button.click(window):
+            music_volume -= 0.1
+        elif back_button.click(window):
+            state = 'main menu'
+    if state == 'level menu':
+        # tutorial_button.click_with_action(window, tutorial)
+        # level_1_button.click_with_action(window, level_1)
+        # level_2_button.click_with_action(window, level_2)
+        # level_3_button.click_with_action(window, level_3)
+        if tutorial_button.click(window):
+            state = 'game'
+            tutorial()
+        elif level_1_button.click(window):
+            state = 'game'
+            level_1()
+        elif level_2_button.click(window):
+            state = 'game'
+            level_2()
+        elif level_3_button.click(window):
+            state = 'game'
+            level_3()
+        elif back_button.click(window):
+            state = 'main menu'
 
 
 def tutorial():
@@ -490,17 +538,17 @@ def level_3():
     floor_level3()
     walls_level3()
     items_level3()
-    # window.blit(hatch_lvl3[hatch_num_lvl3].image, (hatch_lvl3[hatch_num_lvl3].rect.x, hatch_lvl3[hatch_num_lvl3].rect.y))
+    window.blit(hatch_lvl3[hatch_num_lvl3].image, (hatch_lvl3[hatch_num_lvl3].rect.x, hatch_lvl3[hatch_num_lvl3].rect.y))
     pygame.display.update()
     clock.tick(fps)
 
 
-try:
-    with open('file.txt', 'r') as f:
-        player.rect.x = int(f.readline().replace('\n', ''))
-        player.rect.y = int(f.readline().replace('\n', ''))
-except:
-    player.write_file()
+# try:
+#     with open('file.txt', 'r') as f:
+#         player.rect.x = int(f.readline().replace('\n', ''))
+#         player.rect.y = int(f.readline().replace('\n', ''))
+# except:
+#     player.write_file()
 
 
 # MAIN CYCLE
@@ -509,25 +557,30 @@ while game:
         if e.type == pygame.QUIT:
             game = False
             sys.exit()
+    menu()
 
+    if state == 'game':
+        money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
+        window.blit(money, (255, 20))
+        all_sprites.update()  # Обновление всех спрайтов
+        all_sprites.draw(window)  # Отображение всех спрайтов
+        player.collide(collide_group)
+        player.trap(traps_group)
+        window.blit(lives_list[lives], (10, 0))
+        window.blit(energy_list[energy], (120, 24))
     # tutorial()
     # level_1()
-    level_2()
+    # level_2()
     # level_3()
     # mouse_x, mouse_y = pygame.mouse.get_pos()
     # text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
-    money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
-    window.blit(money, (255, 20))
 
-    all_sprites.update()  # Обновление всех спрайтов
-    all_sprites.draw(window)  # Отображение всех спрайтов
-    player.collide(collide_group)
-    player.trap(traps_group)
+
     # pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
     # print(lives)
-    window.blit(lives_list[lives], (10, 0))
+
     # window.blit(energy_list[energy], (15, 60))
-    window.blit(energy_list[energy], (120, 24))
+
     pygame.display.update()
     clock.tick(fps)
 
