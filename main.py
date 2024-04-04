@@ -297,7 +297,6 @@ store_button = Button(450, 240, 60, 50, '🛒')
 
 coin = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 28, 33)
-all_sprites.empty()
 all_sprites.add(coin)
 all_sprites.add(player)
 
@@ -479,21 +478,16 @@ def menu():
         elif back_button.click(window):
             state = 'main menu'
     if state == 'level menu':
-        # tutorial_button.click_with_action(window, tutorial)
-        # level_1_button.click_with_action(window, level_1)
-        # level_2_button.click_with_action(window, level_2)
-        # level_3_button.click_with_action(window, level_3)
         if tutorial_button.click(window):
-            state = 'game'
-            tutorial()
+            state = 'tutorial'
         elif level_1_button.click(window):
-            state = 'game'
+            state = 'level 1'
             level_1()
         elif level_2_button.click(window):
-            state = 'game'
+            state = 'level 2'
             level_2()
         elif level_3_button.click(window):
-            state = 'game'
+            state = 'level 3'
             level_3()
         elif back_button.click(window):
             state = 'main menu'
@@ -550,17 +544,26 @@ def level_3():
 # except:
 #     player.write_file()
 
-
+# music.play()
 # MAIN CYCLE
+money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             game = False
             sys.exit()
-    menu()
 
-    if state == 'game':
-        money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
+    if state == 'main menu' or state == 'level menu' or state == 'settings':
+        menu()
+    if state == 'tutorial':
+        tutorial()
+    if state == 'level 1':
+        level_1()
+    if state == 'level 2':
+        level_2()
+    if state == 'level 3':
+        level_3()
+    if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
         window.blit(money, (255, 20))
         all_sprites.update()  # Обновление всех спрайтов
         all_sprites.draw(window)  # Отображение всех спрайтов
