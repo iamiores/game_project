@@ -61,7 +61,9 @@ class Player(MainSprite):
         self.counter_left = 0
         self.counter_forward = 0
         self.counter_backward = 0
-        self.pics_stay = transform.scale(pygame.image.load('images/player/male/male_WalkBack_1.png'), (self.width, self.height))
+        self.direction = None
+        self.pics_stay = ['images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkRight_3.png']
+        self.pics_stay_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_stay]
 
         self.pics_right = ['images/player/male/male_WalkRight_2.png', 'images/player/male/male_WalkRight_1.png', 'images/player/male/male_WalkRight_3.png', 'images/player/male/male_WalkRight_1.png']
         self.pics_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_right]
@@ -77,9 +79,19 @@ class Player(MainSprite):
 
     def animate(self, kind):
         if kind == 'stay':
-            self.image = self.pics_stay
+            if self.direction == 'forward':
+                self.image = self.pics_stay_obj[0]
+            elif self.direction == 'back':
+                self.image = self.pics_stay_obj[1]
+            elif self.direction == 'right':
+                self.image = self.pics_stay_obj[3]
+            elif self.direction == 'left':
+                self.image = self.pics_stay_obj[2]
+            else:
+                self.image = self.pics_stay_obj[1]
 
         if kind == 'right':
+            self.direction = 'right'
             self.counter_right += 1
             if self.counter_right < 5:
                 self.image = self.pics_right_obj[0]
@@ -96,6 +108,7 @@ class Player(MainSprite):
             self.counter_right = 0
 
         if kind == 'left':
+            self.direction = 'left'
             self.counter_left += 1
             if self.counter_left < 5:
                 self.image = self.pics_left_obj[0]
@@ -112,6 +125,7 @@ class Player(MainSprite):
             self.counter_left = 0
 
         if kind == 'forward':
+            self.direction = 'forward'
             self.counter_forward += 1
             if self.counter_forward  < 5:
                 self.image = self.pics_forward_obj[0]
@@ -128,6 +142,7 @@ class Player(MainSprite):
             self.counter_forward = 0
 
         if kind == 'back':
+            self.direction = 'back'
             self.counter_backward += 1
             if self.counter_backward < 5:
                 self.image = self.pics_back_obj[0]
@@ -185,7 +200,7 @@ class For_Level_Building(sprite.Sprite):
 
 
 # FONTS
-font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 15)
+font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 20)
 
 # SETTINGS
 w_width, w_height = 1000, 700
