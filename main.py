@@ -2,6 +2,7 @@ import sys
 import pygame
 from pygame import *
 from coin import Coin
+from button import Button
 pygame.init()
 
 
@@ -183,54 +184,8 @@ class For_Level_Building(sprite.Sprite):
         window.blit(self.image, (self.rect.x, self.rect.y))
 
 
-class Button:
-    def __init__(self, button_x, button_y, button_width, button_height, text):
-        self.width = button_width
-        self.height = button_height
-        self.x = button_x
-        self.y = button_y
-        self.clicked = False
-        self.inactive_color = (21, 24, 38)
-        self.active_color = (41, 47, 75)
-        self.border_radius = 20
-        self.text = text
-
-    def click_with_action(self, screen, action=None):
-        mouse_controller = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-
-        if self.x < mouse_controller[0] < self.x + self.width and self.y < mouse_controller[1] < self.y + self.height:
-            pygame.draw.rect(screen, self.active_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
-            if click[0]:
-                if action is not None:
-                    action()
-                    button_click_sound.play()
-        else:
-            pygame.draw.rect(screen, self.inactive_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
-
-        create_text(screen, self.text, x=self.x + 10, y=self.y + 10)
-
-    def click(self, screen):
-        mouse_controller = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()
-        if self.x < mouse_controller[0] < self.x + self.width and self.y < mouse_controller[1] < self.y + self.height:
-            pygame.draw.rect(screen, self.active_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
-            if click[0]:
-                button_click_sound.play()
-                return True
-        else:
-            pygame.draw.rect(screen, self.inactive_color, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
-
-        create_text(screen, self.text, x=self.x + 10, y=self.y + 10)
-
-
-def create_text(screen, text, x, y, font_color=(0, 0, 0), font_size=25):
-    text = pygame.font.Font('fonts/Retro Gaming.ttf', font_size).render(text, True, font_color)
-    screen.blit(text, (x, y))
-
-
 # FONTS
-font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 20)
+font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 15)
 
 # SETTINGS
 w_width, w_height = 1000, 700
@@ -276,7 +231,10 @@ hatch_tut = []
 hatch_lvl1 = []
 hatch_lvl2 = []
 hatch_lvl3 = []
-collide_group = sprite.Group()
+collide_group_tut = sprite.Group()
+collide_group_lvl1 = sprite.Group()
+collide_group_lvl2 = sprite.Group()
+collide_group_lvl3 = sprite.Group()
 traps_group = sprite.Group()
 
 all_sprites = sprite.Group()
@@ -296,14 +254,18 @@ level_3_button = Button(610, 280, 130, 50, 'LEVEL 3')
 store_button = Button(450, 240, 60, 50, '🛒')
 
 coin = Coin(x=240, y=33, width=27, height=27)
-player = Player('images/player/male/male_WalkBack_1.png', 450, 200, 6, 28, 33)
+player = Player('images/player/male/male_WalkBack_1.png', 130, 560, 6, 28, 33)
 all_sprites.add(coin)
 all_sprites.add(player)
+
+portal_tut = For_Level_Building(140, 175, 50, 80, 'images/items/portal.png')
+portal_lvl1 = For_Level_Building(170, 110, 50, 80, 'images/items/portal.png')
+portal_lvl2 = For_Level_Building(550, 540, 50, 80, 'images/items/portal.png')
+portal_lvl3 = For_Level_Building(470, 585, 40, 60, 'images/items/portal.png')
 
 # SOUNDS
 music = pygame.mixer.Sound('music/Crystal Caves v1_2.mp3')
 music_volume = 0.4
-button_click_sound = pygame.mixer.Sound('sounds/Menu Selection Click.wav')
 
 
 # WALLS
@@ -311,33 +273,36 @@ def walls_tut():
     from levels import wall_tuts
     for keys, value in wall_tuts.items():
         w = For_Level_Building(*value)
-        collide_group.add(w)
+        collide_group_tut.add(w)
         w.update()
+        pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
 
 
 def walls_level1():
     from levels import wall_lvl1
     for keys, value in wall_lvl1.items():
         w = For_Level_Building(*value)
-        collide_group.add(w)
+        collide_group_lvl1.add(w)
         w.update()
+        pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
 
 
 def walls_level2():
     from levels import wall_lvl2
     for keys, value in wall_lvl2.items():
         w = For_Level_Building(*value)
-        collide_group.add(w)
+        collide_group_lvl2.add(w)
         w.update()
+        pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
 
 
 def walls_level3():
     from levels import wall_lvl3
     for keys, value in wall_lvl3.items():
         w = For_Level_Building(*value)
-        collide_group.add(w)
+        collide_group_lvl3.add(w)
         w.update()
-        # pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
 
 
 # FLOORS
@@ -384,19 +349,17 @@ def items_tut():
     for keys, values in item_tuts.items():
         i = For_Level_Building(*values)
         i.update()
-        collide_group.add(i)
-        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
+        collide_group_tut.add(i)
+        pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, values in trap_tuts.items():
         t = For_Level_Building(*values)
         t.update()
         traps_group.add(t)
-        # pygame.draw.rect(window, (255, 0, 0), s.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/open_hatch.png')
     hatch_tut.append(closed_hatch)
     hatch_tut.append(opened_hatch)
-    portal = For_Level_Building(140, 175, 50, 80, 'images/items/portal.png')
-    window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 def items_level1():
@@ -404,18 +367,17 @@ def items_level1():
     for keys, values in item_lvl1.items():
         i = For_Level_Building(*values)
         i.update()
-        collide_group.add(i)
+        collide_group_lvl1.add(i)
+        pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, values in trap_lvl1.items():
         t = For_Level_Building(*values)
         t.update()
         traps_group.add(t)
-        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl1.append(closed_hatch)
     hatch_lvl1.append(opened_hatch)
-    portal = For_Level_Building(170, 110, 50, 80, 'images/items/portal.png')
-    window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 def items_level2():
@@ -423,37 +385,35 @@ def items_level2():
     for keys, values in item_lvl2.items():
         i = For_Level_Building(*values)
         i.update()
-        collide_group.add(i)
+        collide_group_lvl2.add(i)
+        pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, value in trap_lvl2.items():
         t = For_Level_Building(*value)
         t.update()
         traps_group.add(t)
+        pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl2.append(closed_hatch)
     hatch_lvl2.append(opened_hatch)
-    portal = For_Level_Building(550, 540, 50, 80, 'images/items/portal.png')
-    window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 def items_level3():
     from levels import item_lvl3, trap_lvl3
     for keys, value in item_lvl3.items():
         i = For_Level_Building(*value)
-        collide_group.add(i)
+        collide_group_lvl3.add(i)
         i.update()
-        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, value in trap_lvl3.items():
         t = For_Level_Building(*value)
         traps_group.add(t)
         t.update()
-        # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
+        pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl3.append(closed_hatch)
     hatch_lvl3.append(opened_hatch)
-    portal = For_Level_Building(470, 585, 40, 60, 'images/items/portal.png')
-    window.blit(portal.image, (portal.rect.x, portal.rect.y))
 
 
 # LEVELS
@@ -500,6 +460,7 @@ def tutorial():
     walls_tut()
     items_tut()
     window.blit(hatch_tut[hatch_num_tut].image, (hatch_tut[hatch_num_tut].rect.x, hatch_tut[hatch_num_tut].rect.y))
+    window.blit(portal_tut.image, (portal_tut.rect.x, portal_tut.rect.y))
     pygame.display.update()
     clock.tick(fps)
 
@@ -511,6 +472,7 @@ def level_1():
     walls_level1()
     items_level1()
     window.blit(hatch_lvl1[hatch_num_lvl1].image, (hatch_lvl1[hatch_num_lvl1].rect.x, hatch_lvl1[hatch_num_lvl1].rect.y))
+    window.blit(portal_lvl1.image, (portal_lvl1.rect.x, portal_lvl1.rect.y))
     pygame.display.update()
     clock.tick(fps)
 
@@ -522,6 +484,7 @@ def level_2():
     walls_level2()
     items_level2()
     window.blit(hatch_lvl2[hatch_num_lvl2].image, (hatch_lvl2[hatch_num_lvl2].rect.x, hatch_lvl2[hatch_num_lvl2].rect.y))
+    window.blit(portal_lvl2.image, (portal_lvl2.rect.x, portal_lvl2.rect.y))
     pygame.display.update()
     clock.tick(fps)
 
@@ -533,16 +496,21 @@ def level_3():
     walls_level3()
     items_level3()
     window.blit(hatch_lvl3[hatch_num_lvl3].image, (hatch_lvl3[hatch_num_lvl3].rect.x, hatch_lvl3[hatch_num_lvl3].rect.y))
+    window.blit(portal_lvl3.image, (portal_lvl3.rect.x, portal_lvl3.rect.y))
     pygame.display.update()
     clock.tick(fps)
 
 
-# try:
-#     with open('file.txt', 'r') as f:
-#         player.rect.x = int(f.readline().replace('\n', ''))
-#         player.rect.y = int(f.readline().replace('\n', ''))
-# except:
-#     player.write_file()
+def autosave(filename, guy):
+    try:
+        with open(filename, 'r') as f:
+            guy.rect.x = int(f.readline().replace('\n', ''))
+            guy.rect.y = int(f.readline().replace('\n', ''))
+    except:
+        guy.write_file()
+
+autosave('file.txt', player)
+
 
 # music.play()
 # MAIN CYCLE
@@ -557,32 +525,34 @@ while game:
         menu()
     if state == 'tutorial':
         tutorial()
+        player.collide(collide_group_tut)
+        if player.rect.colliderect(portal_tut.rect):
+            state = 'level 1'
     if state == 'level 1':
         level_1()
+        player.collide(collide_group_lvl1)
+        if player.rect.colliderect(portal_lvl1.rect):
+            state = 'level 2'
     if state == 'level 2':
         level_2()
+        player.collide(collide_group_lvl2)
+        if player.rect.colliderect(portal_lvl2.rect):
+            state = 'level 3'
     if state == 'level 3':
         level_3()
+        player.collide(collide_group_lvl3)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
         window.blit(money, (255, 20))
         all_sprites.update()  # Обновление всех спрайтов
         all_sprites.draw(window)  # Отображение всех спрайтов
-        player.collide(collide_group)
         player.trap(traps_group)
         window.blit(lives_list[lives], (10, 0))
         window.blit(energy_list[energy], (120, 24))
-    # tutorial()
-    # level_1()
-    # level_2()
-    # level_3()
-    # mouse_x, mouse_y = pygame.mouse.get_pos()
-    # text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
+    window.blit(text, (10, 680))
 
-
-    # pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
-    # print(lives)
-
-    # window.blit(energy_list[energy], (15, 60))
+    pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
 
     pygame.display.update()
     clock.tick(fps)
