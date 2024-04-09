@@ -219,6 +219,7 @@ hatch_num_lvl3 = 0
 lives = 5
 energy = 5
 coins = 0
+finished = False
 
 state = 'main menu'
 
@@ -237,6 +238,15 @@ energy_3 = transform.scale(pygame.image.load('images/energy/energy_3.png'), (90,
 energy_4 = transform.scale(pygame.image.load('images/energy/energy_4.png'), (90, 20))
 energy_5 = transform.scale(pygame.image.load('images/energy/energy_5.png'), (90, 20))
 
+armor = transform.scale(pygame.image.load('store_items/armor.png'), (92, 92))
+great_armor = transform.scale(pygame.image.load('store_items/great_armor.png'), (92, 92))
+great_sword = transform.scale(pygame.image.load('store_items/great_sword.png'), (92, 92))
+steel_sword = transform.scale(pygame.image.load('store_items/steel_sword.png'), (92, 92))
+axe = transform.scale(pygame.image.load('store_items/axe.png'), (90, 92))
+bow = transform.scale(pygame.image.load('store_items/bow.png'), (92, 92))
+health_potion = transform.scale(pygame.image.load('store_items/health_potion.png'), (76, 92))
+energy_potion = transform.scale(pygame.image.load('store_items/energy_potion.png'), (66, 88))
+
 
 # GROUPS, LISTS ETC
 lives_list = [live_0, live_1, live_2, live_3, live_4, live_5]
@@ -254,32 +264,50 @@ traps_group = sprite.Group()
 
 all_sprites = sprite.Group()
 
+# BUTTONS
+start_button = Button(450, 255, 110, 45, 'START')
+settings_button = Button(427, 310, 155, 45, 'SETTINGS')
+store_button = Button(450, 365, 110, 45, 'STORE')
+exit_button = Button(460, 420, 90, 45, 'QUIT')
+add_volume_button = Button(415, 300, 50, 45, '+')
+reduce_volume_button = Button(515, 300, 50, 45, '-')
+back_button = Button(460, 475, 95, 45, 'BACK')
+back_button_2 = Button(460, 465, 95, 45, 'BACK')
+
+tutorial_button = Button(425, 180, 155, 45, 'TUTORIAL')
+level_1_button = Button(260, 300, 125, 45, 'LEVEL 1')
+level_2_button = Button(440, 300, 125, 45, 'LEVEL 2')
+level_3_button = Button(620, 300, 125, 45, 'LEVEL 3')
+home_button = Button(900, 5, 95, 50, 'HOME')
+
+armor_button = Button(300, 150, 110, 50, 'ARMOR')
+swords_button = Button(440, 150, 130, 50, 'SWORDS')
+potions_button = Button(600, 150, 140, 50, 'POTIONS')
+
+buy_armor_button = Button(380, 365, 77, 47, 'BUY')
+buy_great_armor_button = Button(550, 365, 77, 47, 'BUY')
+buy_great_sword_button = Button(215, 365, 77, 47, 'BUY')
+buy_steel_sword_button = Button(715, 365, 77, 47, 'BUY')
+buy_bow_button = Button(380, 365, 77, 47, 'BUY')
+buy_axe_button = Button(550, 365, 77, 47, 'BUY')
+buy_health_potion_button = Button(380, 365, 77, 47, 'BUY')
+buy_energy_potion_button = Button(550, 365, 77, 47, 'BUY')
+
+
 # OBJECTS
-start_button = Button(440, 240, 110, 50, 'START')
-settings_button = Button(410, 300, 170, 50, 'SETTINGS')
-exit_button = Button(445, 360, 95, 50, 'QUIT')
-add_volume_button = Button(400, 300, 60, 50, '+')
-reduce_volume_button = Button(500, 300, 60, 50, '-')
-back_button = Button(450, 425, 95, 50, 'BACK')
-
-tutorial_button = Button(410, 180, 170, 50, 'TUTORIAL')
-level_1_button = Button(250, 280, 130, 50, 'LEVEL 1')
-level_2_button = Button(430, 280, 130, 50, 'LEVEL 2')
-level_3_button = Button(610, 280, 130, 50, 'LEVEL 3')
-store_button = Button(450, 240, 60, 50, '🛒')
-
 coin = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 130, 560, 6, 28, 33)
 all_sprites.add(coin)
 all_sprites.add(player)
 
-portal_tut = For_Level_Building(140, 175, 50, 80, 'images/items/portal.png')
-portal_lvl1 = For_Level_Building(170, 110, 50, 80, 'images/items/portal.png')
+portal_tut = For_Level_Building(200, 175, 50, 80, 'images/items/portal.png')
+portal_lvl1 = For_Level_Building(150, 110, 50, 80, 'images/items/portal.png')
 portal_lvl2 = For_Level_Building(550, 540, 50, 80, 'images/items/portal.png')
 portal_lvl3 = For_Level_Building(470, 585, 40, 60, 'images/items/portal.png')
 
 # SOUNDS
 music = pygame.mixer.Sound('music/Crystal Caves v1_2.mp3')
+collect_coin_sound = pygame.mixer.Sound('sounds/coin_collect.wav')
 music_volume = 0.4
 
 
@@ -434,14 +462,16 @@ def items_level3():
 # LEVELS
 def menu():
     global state, music_volume, game
-    if state != 'game':
-        window.blit(bg_image, (0, 0))
+    window.blit(bg_image, (0, 0))
     music.set_volume(music_volume)
-    if state == 'main menu':
+    if state == 'main menu' and state != 'shop':
         if start_button.click(window):
             state = 'level menu'
         elif settings_button.click(window):
             state = 'settings'
+        elif store_button.click(window):
+            window.blit(bg_image, (0, 0))
+            state = 'store'
         elif exit_button.click(window):
             game = False
             sys.exit()
@@ -457,15 +487,30 @@ def menu():
             state = 'tutorial'
         elif level_1_button.click(window):
             state = 'level 1'
-            level_1()
         elif level_2_button.click(window):
             state = 'level 2'
-            level_2()
         elif level_3_button.click(window):
             state = 'level 3'
-            level_3()
         elif back_button.click(window):
             state = 'main menu'
+
+
+def store():
+    global state
+    window.blit(bg_image, (0, 0))
+    if back_button.click(window):
+        state = 'main menu'
+    if armor_button.click(window):
+        state = 'armor store'
+    elif swords_button.click(window):
+        state = 'swords store'
+    elif potions_button.click(window):
+        state = 'potions store'
+    # elif other_button.click(window):
+    #     state = 'other store'
+
+    pygame.display.update()
+    clock.tick(fps)
 
 
 def tutorial():
@@ -516,6 +561,23 @@ def level_3():
     clock.tick(fps)
 
 
+# SOME FUNCTIONS
+def create_coin(*coordinates):
+    coins_x = sprite.Group()
+    for x, y in coordinates:
+        coin_x = Coin(x, y, 20, 20)
+        coins_x.add(coin_x)
+    return coins_x
+
+
+def create_showcases(*coordinates):
+    showcasess = []
+    for x, y in coordinates:
+        showcase = For_Level_Building(x, y, 250, 230, 'store_items/showcase.png')
+        showcasess.append(showcase)
+    return showcasess
+
+
 def autosave(filename, guy):
     try:
         with open(filename, 'r') as f:
@@ -523,46 +585,149 @@ def autosave(filename, guy):
             guy.rect.y = int(f.readline().replace('\n', ''))
     except:
         guy.write_file()
-
 autosave('file.txt', player)
 
+# COIN STUFF
+w_hatch_collided_tut = False
+coins_tut = create_coin((576, 234), (618, 211), (614, 243))
+coin_amount_tut = 3
+w_hatch_collided_lvl1 = False
+coins_lvl1 = create_coin((388, 173), (362, 164), (374, 179))
+coin_amount_lvl1 = 3
+w_hatch_collided_lvl2 = False
+coins_lvl2 = create_coin((749, 560), (788, 577), (737, 615))
+coin_amount_lvl2 = 3
+
+# SHOWCASE STUFF
+armor_showcases = create_showcases((290, 200), (460, 200))
+swords_showcases = create_showcases((125, 200), (290, 200), (460, 200), (625, 200))
+potions_showcases = create_showcases((290, 200), (460, 200))
+
+# with open('coin', 'r') as f:
+#     coins = int(f.readline().replace('\n', ''))
 
 # music.play()
 # MAIN CYCLE
-money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             game = False
             sys.exit()
-
+    money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
+    # MENU STATE
     if state == 'main menu' or state == 'level menu' or state == 'settings':
         menu()
+    elif state == 'store':
+        store()
+    # SHOP STATE
+    if state == 'armor store':
+        window.blit(bg_image, (0, 0))
+        for armor_showcase in armor_showcases:
+            armor_showcase.update()
+        window.blit(armor, (373, 250))
+        window.blit(great_armor, (543, 250))
+        buy_armor_button.click_1(window)
+        buy_great_armor_button.click_1(window)
+    if state == 'swords store':
+        window.blit(bg_image, (0, 0))
+        for swords_showcase in swords_showcases:
+            swords_showcase.update()
+        window.blit(great_sword, (207, 250))
+        window.blit(axe, (373, 250))
+        window.blit(bow, (543, 250))
+        window.blit(steel_sword, (707, 250))
+        buy_great_sword_button.click_1(window)
+        buy_axe_button.click_1(window)
+        buy_bow_button.click_1(window)
+        buy_steel_sword_button.click_1(window)
+    if state == 'potions store':
+        window.blit(bg_image, (0, 0))
+        for potions_showcase in potions_showcases:
+            potions_showcase.update()
+        window.blit(health_potion, (380, 250))
+        window.blit(energy_potion, (555, 250))
+        buy_health_potion_button.click_1(window)
+        buy_energy_potion_button.click_1(window)
+    if state == 'armor store' or state == 'swords store' or state == 'potions store':
+        if back_button.click(window):
+            state = 'main menu'
+        if armor_button.click(window):
+            state = 'armor store'
+        elif swords_button.click(window):
+            state = 'swords store'
+        elif potions_button.click(window):
+            state = 'potions store'
+    # LEVELS STATE
     if state == 'tutorial':
         tutorial()
         player.collide(collide_group_tut)
+        if player.rect.colliderect(hatch_tut[0]):
+            w_hatch_collided_tut = True
+            hatch_num_tut = 1
+        if w_hatch_collided_tut:
+            for coin in coins_tut:
+                coin.update()
+                coin.draw(window)
+                if player.rect.colliderect(coin.rect):
+                    collect_coin_sound.play()
+                    coin.kill()
+                    coin_amount_tut -= 1
+                    coins += 1
+                elif coin_amount_tut == 0:
+                    w_hatch_collided_tut = False
         if player.rect.colliderect(portal_tut.rect):
             state = 'level 1'
     if state == 'level 1':
         level_1()
         player.collide(collide_group_lvl1)
+        if player.rect.colliderect(hatch_lvl1[0]):
+            w_hatch_collided_lvl1 = True
+            hatch_num_lvl1 = 1
+        if w_hatch_collided_lvl1:
+            for coin in coins_lvl1:
+                coin.update()
+                coin.draw(window)
+                if player.rect.colliderect(coin.rect):
+                    collect_coin_sound.play()
+                    coin.kill()
+                    coin_amount_lvl1 -= 1
+                    coins += 1
+                elif coin_amount_lvl1 == 0:
+                    w_hatch_collided_lvl1 = False
         if player.rect.colliderect(portal_lvl1.rect):
             state = 'level 2'
     if state == 'level 2':
         level_2()
         player.collide(collide_group_lvl2)
+        if player.rect.colliderect(hatch_lvl2[0]):
+            w_hatch_collided_lvl2 = True
+            hatch_num_lvl2 = 1
+        if w_hatch_collided_lvl2:
+            for coin in coins_lvl2:
+                coin.update()
+                coin.draw(window)
+                if player.rect.colliderect(coin.rect):
+                    collect_coin_sound.play()
+                    coin.kill()
+                    coin_amount_lvl2 -= 1
+                    coins += 1
+                elif coin_amount_lvl2 == 0:
+                    w_hatch_collided_lvl2 = False
         if player.rect.colliderect(portal_lvl2.rect):
             state = 'level 3'
     if state == 'level 3':
         level_3()
         player.collide(collide_group_lvl3)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
-        window.blit(money, (255, 20))
-        all_sprites.update()  # Обновление всех спрайтов
+        if not finished:
+            all_sprites.update()  # Обновление всех спрайтов
         all_sprites.draw(window)  # Отображение всех спрайтов
         player.trap(traps_group)
         window.blit(lives_list[lives], (10, 0))
         window.blit(energy_list[energy], (120, 24))
+        window.blit(money, (255, 20))
+        if home_button.click(window):
+            state = 'level menu'
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
     window.blit(text, (10, 680))
