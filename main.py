@@ -3,6 +3,7 @@ import pygame
 from pygame import *
 from coin import Coin
 from button import Button
+import math
 pygame.init()
 
 
@@ -53,6 +54,8 @@ class Boss(MainSprite):
 class Player(MainSprite):
     def __init__(self, player_image, player_x, player_y, player_speed, width, height):
         super().__init__(player_image, player_x, player_y, player_speed)
+        self.armor = "no_armor"
+        self.weapon = "no_weapon"
         self.rect.width = width
         self.rect.height = height
         self.width = width
@@ -185,6 +188,47 @@ class Player(MainSprite):
             f.write(str(self.rect.x) + '\n')
             f.write(str(self.rect.y))
 
+    def equip_armor(self, armor_name):
+        self.armor = armor_name
+        print(self.armor)
+
+    def equip_weapon(self, weapon_name):
+        self.weapon = weapon_name
+        print(self.weapon)
+
+    def attack(self, target):
+        if self.weapon == "no_weapon":
+            print("You don't have any weapon equipped!")
+
+        attack_properties = WEAPON_TABLE.get(self.weapon)
+        if attack_properties:
+            attack_power, attack_range = attack_properties
+            distance = math.sqrt((self.rect.x - target.rect.x) ** 2 + (self.rect.y - target.rect.y) ** 2)
+            if distance <= attack_range:
+                print(f"You dealt {attack_power} damage to the target!")
+            else:
+                print("Target is out of range!")
+        else:
+            print("Weapon not found in the weapon table!")
+
+
+WEAPON_TABLE = {
+    # attack, range
+    "no_weapon": [5, 5],
+    "knife": [10, 5],
+    "great_sword": [15, 5],
+    "steel_sword": [20, 10],
+    "bow": [20, 10],
+    "axe": [15, 10]
+}
+
+ARMOR_TABLE = {
+    # defence, magic_defence
+    "no_armor": [0, 30],
+    "armor": [50, 80],
+    "great_armor": [100, 30]
+}
+
 
 class For_Level_Building(sprite.Sprite):
     def __init__(self, wall_x, wall_y, wall_width, wall_height, file_image):
@@ -292,6 +336,25 @@ buy_bow_button = Button(380, 365, 77, 47, 'BUY')
 buy_axe_button = Button(550, 365, 77, 47, 'BUY')
 buy_health_potion_button = Button(380, 365, 77, 47, 'BUY')
 buy_energy_potion_button = Button(550, 365, 77, 47, 'BUY')
+price_num = {
+    'armor_price_num': 2,
+    'great_armor_price_num': 4,
+    'great_sword_price_num': 2,
+    'steel_sword_price_num': 4,
+    'bow_price_num': 5,
+    'axe_price_num': 3,
+    'health_potion_price_num': [1, 1],
+    'energy_potion_price_num': [1, 2]
+}
+
+armor_price = font1.render(str(price_num['armor_price_num']), True, pygame.color.Color('white'))
+great_armor_price = font1.render(str(price_num['great_armor_price_num']), True, pygame.color.Color('white'))
+great_sword_price = font1.render(str(price_num['great_sword_price_num']), True, pygame.color.Color('white'))
+steel_sword_price = font1.render(str(price_num['steel_sword_price_num']), True, pygame.color.Color('white'))
+bow_price = font1.render(str(price_num['bow_price_num']), True, pygame.color.Color('white'))
+axe_price = font1.render(str(price_num['axe_price_num']), True, pygame.color.Color('white'))
+health_potion_price = font1.render(str(price_num['health_potion_price_num'][0]), True, pygame.color.Color('white'))
+energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]), True, pygame.color.Color('white'))
 
 
 # OBJECTS
@@ -592,11 +655,11 @@ w_hatch_collided_tut = False
 coins_tut = create_coin((576, 234), (618, 211), (614, 243))
 coin_amount_tut = 3
 w_hatch_collided_lvl1 = False
-coins_lvl1 = create_coin((388, 173), (362, 164), (374, 179))
-coin_amount_lvl1 = 3
+coins_lvl1 = create_coin((388, 173), (362, 164), (374, 179), (358, 182))
+coin_amount_lvl1 = 4
 w_hatch_collided_lvl2 = False
-coins_lvl2 = create_coin((749, 560), (788, 577), (737, 615))
-coin_amount_lvl2 = 3
+coins_lvl2 = create_coin((749, 560), (788, 577), (737, 615), (766, 590))
+coin_amount_lvl2 = 4
 
 # SHOWCASE STUFF
 armor_showcases = create_showcases((290, 200), (460, 200))
@@ -626,8 +689,20 @@ while game:
             armor_showcase.update()
         window.blit(armor, (373, 250))
         window.blit(great_armor, (543, 250))
-        buy_armor_button.click_1(window)
-        buy_great_armor_button.click_1(window)
+        if buy_armor_button.click_1(window):
+            if coins >= price_num['armor_price_num']:
+                player.equip_armor('armor')
+                coins -= price_num['armor_price_num']
+            else:
+                print('Not enough cash')
+        if buy_great_armor_button.click_1(window):
+            if coins >= price_num['great_armor_price_num']:
+                player.equip_armor('great_armor')
+                coins -= price_num['great_armor_price_num']
+            else:
+                print('Not enough cash')
+        window.blit(armor_price, (410, 220))
+        window.blit(great_armor_price, (580, 220))
     if state == 'swords store':
         window.blit(bg_image, (0, 0))
         for swords_showcase in swords_showcases:
@@ -636,18 +711,56 @@ while game:
         window.blit(axe, (373, 250))
         window.blit(bow, (543, 250))
         window.blit(steel_sword, (707, 250))
-        buy_great_sword_button.click_1(window)
-        buy_axe_button.click_1(window)
-        buy_bow_button.click_1(window)
-        buy_steel_sword_button.click_1(window)
+        if buy_great_sword_button.click_1(window):
+            if coins > price_num['great_sword_price_num']:
+                player.equip_weapon('great_sword')
+                coins -= price_num['great_sword_price_num']
+            else:
+                print('Not enough cash')
+        if buy_axe_button.click_1(window):
+            if coins > price_num['axe_price_num']:
+                player.equip_weapon('axe')
+                coins -= price_num['axe_price_num']
+            else:
+                print('Not enough cash')
+        if buy_bow_button.click_1(window):
+            if coins > price_num['bow_price_num']:
+                player.equip_weapon('bow')
+                coins -= price_num['bow_price_num']
+            else:
+                print('Not enough cash')
+        if buy_steel_sword_button.click_1(window):
+            if coins > price_num['steel_sword_price_num']:
+                player.equip_weapon('steel_sword')
+                coins -= price_num['steel_sword_price_num']
+            else:
+                print('Not enough cash')
+        window.blit(great_sword_price, (245, 220))
+        window.blit(axe_price, (410, 220))
+        window.blit(bow_price, (580, 220))
+        window.blit(steel_sword_price, (745, 220))
     if state == 'potions store':
         window.blit(bg_image, (0, 0))
         for potions_showcase in potions_showcases:
             potions_showcase.update()
         window.blit(health_potion, (380, 250))
         window.blit(energy_potion, (555, 250))
-        buy_health_potion_button.click_1(window)
-        buy_energy_potion_button.click_1(window)
+        if buy_health_potion_button.click_1(window):
+            if lives < 5:
+                if coins > price_num['health_potion_price_num'][0]:
+                    lives += price_num['health_potion_price_num'][1]
+                    coins -= price_num['health_potion_price_num'][0]
+                else:
+                    print('Not enough cash')
+        if buy_energy_potion_button.click_1(window):
+            if energy < 5:
+                if coins > price_num['energy_potion_price_num'][0]:
+                    lives += price_num['energy_potion_price_num'][1]
+                    coins -= price_num['energy_potion_price_num'][0]
+                else:
+                    print('Not enough cash')
+        window.blit(health_potion_price, (415, 220))
+        window.blit(energy_potion_price, (585, 220))
     if state == 'armor store' or state == 'swords store' or state == 'potions store':
         if back_button.click(window):
             state = 'main menu'
@@ -723,6 +836,7 @@ while game:
             all_sprites.update()  # Обновление всех спрайтов
         all_sprites.draw(window)  # Отображение всех спрайтов
         player.trap(traps_group)
+    if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3' or state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
         window.blit(lives_list[lives], (10, 0))
         window.blit(energy_list[energy], (120, 24))
         window.blit(money, (255, 20))
