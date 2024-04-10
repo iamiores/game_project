@@ -712,25 +712,25 @@ while game:
         window.blit(bow, (543, 250))
         window.blit(steel_sword, (707, 250))
         if buy_great_sword_button.click_1(window):
-            if coins > price_num['great_sword_price_num']:
+            if coins >= price_num['great_sword_price_num']:
                 player.equip_weapon('great_sword')
                 coins -= price_num['great_sword_price_num']
             else:
                 print('Not enough cash')
-        if buy_axe_button.click_1(window):
-            if coins > price_num['axe_price_num']:
+        if buy_bow_button.click_1(window):
+            if coins >= price_num['axe_price_num']:
                 player.equip_weapon('axe')
                 coins -= price_num['axe_price_num']
             else:
                 print('Not enough cash')
-        if buy_bow_button.click_1(window):
-            if coins > price_num['bow_price_num']:
+        if buy_axe_button.click_1(window):
+            if coins >= price_num['bow_price_num']:
                 player.equip_weapon('bow')
                 coins -= price_num['bow_price_num']
             else:
                 print('Not enough cash')
         if buy_steel_sword_button.click_1(window):
-            if coins > price_num['steel_sword_price_num']:
+            if coins >= price_num['steel_sword_price_num']:
                 player.equip_weapon('steel_sword')
                 coins -= price_num['steel_sword_price_num']
             else:
@@ -747,14 +747,14 @@ while game:
         window.blit(energy_potion, (555, 250))
         if buy_health_potion_button.click_1(window):
             if lives < 5:
-                if coins > price_num['health_potion_price_num'][0]:
+                if coins >= price_num['health_potion_price_num'][0]:
                     lives += price_num['health_potion_price_num'][1]
                     coins -= price_num['health_potion_price_num'][0]
                 else:
                     print('Not enough cash')
         if buy_energy_potion_button.click_1(window):
             if energy < 5:
-                if coins > price_num['energy_potion_price_num'][0]:
+                if coins >= price_num['energy_potion_price_num'][0]:
                     lives += price_num['energy_potion_price_num'][1]
                     coins -= price_num['energy_potion_price_num'][0]
                 else:
