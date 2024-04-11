@@ -42,3 +42,4 @@ class Coin(sprite.Sprite):
     def draw(self, screen):
         # Отображение монеты на экране
         screen.blit(self.image, self.rect)
+
