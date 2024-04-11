@@ -20,26 +20,6 @@ class MainSprite(sprite.Sprite):
     def show(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
-    def collide(self, group):
-        for group in group:
-            if self.rect.colliderect(group.rect):
-                if self.rect.top < group.rect.bottom < self.rect.bottom:
-                    self.rect.y += 1
-                elif self.rect.bottom > group.rect.top > self.rect.top:
-                    self.rect.y -= 1
-                elif self.rect.left < group.rect.right < self.rect.right:
-                    self.rect.x += 1
-                elif self.rect.right > group.rect.left > self.rect.left:
-                    self.rect.x -= 1
-
-    def trap(self, group):
-        global lives
-        if not self.was_colliding:
-            if any(self.rect.colliderect(group.rect) for group in group):
-                lives -= 1
-                self.was_colliding = True
-        elif not any(self.rect.colliderect(group.rect) for group in group):
-            self.was_colliding = False
 
 
 class Boss(MainSprite):
@@ -51,15 +31,21 @@ class Boss(MainSprite):
         self.height = height
 
 
-class Player(MainSprite):
+class Player(sprite.Sprite):
     def __init__(self, player_image, player_x, player_y, player_speed, width, height):
-        super().__init__(player_image, player_x, player_y, player_speed)
+        super().__init__()
+        self.speed = player_speed
+        self.was_colliding = False
         self.armor = "no_armor"
         self.weapon = "no_weapon"
-        self.rect.width = width
-        self.rect.height = height
         self.width = width
         self.height = height
+        self.image = transform.scale(pygame.image.load(player_image), (self.width, self.height))
+        self.rect = self.image.get_rect()
+        self.rect.width = width
+        self.rect.height = height
+        self.rect.x = player_x
+        self.rect.y = player_y
         self.counter_right = 0
         self.counter_left = 0
         self.counter_forward = 0
@@ -183,6 +169,27 @@ class Player(MainSprite):
         else:
             self.animate('stay')
 
+    def collide(self, group):
+        for group in group:
+            if self.rect.colliderect(group.rect):
+                if self.rect.top < group.rect.bottom < self.rect.bottom:
+                    self.rect.y += 1
+                elif self.rect.bottom > group.rect.top > self.rect.top:
+                    self.rect.y -= 1
+                elif self.rect.left < group.rect.right < self.rect.right:
+                    self.rect.x += 1
+                elif self.rect.right > group.rect.left > self.rect.left:
+                    self.rect.x -= 1
+
+    def trap(self, group):
+        global lives
+        if not self.was_colliding:
+            if any(self.rect.colliderect(group.rect) for group in group):
+                lives -= 1
+                self.was_colliding = True
+        elif not any(self.rect.colliderect(group.rect) for group in group):
+            self.was_colliding = False
+
     def write_file(self):
         with open('file.txt', 'w') as f:
             f.write(str(self.rect.x) + '\n')
@@ -231,13 +238,13 @@ ARMOR_TABLE = {
 
 
 class For_Level_Building(sprite.Sprite):
-    def __init__(self, wall_x, wall_y, wall_width, wall_height, file_image):
+    def __init__(self, x, y, width, height, file_image):
         super().__init__()
         self.file = file_image
-        self.image = transform.scale(pygame.image.load(self.file), (wall_width, wall_height))
+        self.image = transform.scale(pygame.image.load(self.file), (width, height))
         self.rect = self.image.get_rect()
-        self.rect.x = wall_x
-        self.rect.y = wall_y
+        self.rect.x = x
+        self.rect.y = y
 
     def update(self):
         window.blit(self.image, (self.rect.x, self.rect.y))
