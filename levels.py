@@ -389,8 +389,6 @@ item_lvl3 = {
     '14': [648, 494, 24, 29, 'images/items/water.png'],
     '15': [648, 525, 24, 29, 'images/items/water.png'],
 
-    '16': [469, 525, 23, 29, 'images/items/water.png'],
-    '17': [494, 525, 24, 29, 'images/items/water.png'],
 }
 
 trap_lvl3 = {
