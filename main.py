@@ -49,7 +49,124 @@ class Boss(MainSprite):
         self.rect.height = height
         self.width = width
         self.height = height
+        self.counter_idle = 0
+        self.counter_right = 0
+        self.counter_left = 0
+        self.counter_attack_right = 0
+        self.counter_attack_left = 0
 
+        self.pics_idle = ['images/monsters/boss/boss_idle_left_1.png', 'images/monsters/boss/boss_idle_left_2.png', 'images/monsters/boss/boss_idle_left_3.png', 'images/monsters/boss/boss_idle_left_4.png']
+        self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
+
+        self.pics_attack_right = ['images/monsters/boss/boss_attack_right_1.png', 'images/monsters/boss/boss_attack_right_2.png', 'images/monsters/boss/boss_attack_right_3.png', 'images/monsters/boss/boss_attack_right_4.png', 'images/monsters/boss/boss_attack_right_5.png']
+        self.pics_attack_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_attack_right]
+
+        self.pics_attack_left = ['images/monsters/boss/boss_attack_left_1.png', 'images/monsters/boss/boss_attack_left_2.png', 'images/monsters/boss/boss_attack_left_3.png', 'images/monsters/boss/boss_attack_left_4.png', 'images/monsters/boss/boss_attack_left_5.png']
+        self.pics_attack_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_attack_left]
+
+        self.pics_right = ['images/monsters/boss/boss_walk_right_1.png', 'images/monsters/boss/boss_walk_right_1.png', 'images/monsters/boss/boss_walk_right_2.png','images/monsters/boss/boss_walk_right_3.png']
+        self.pics_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_right]
+
+        self.pics_left = ['images/monsters/boss/boss_walk_left_1.png', 'images/monsters/boss/boss_walk_left_2.png', 'images/monsters/boss/boss_walk_right_2.png','images/monsters/boss/boss_walk_left_3.png']
+        self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_left]
+
+    def animate(self, kind):
+        if kind == 'stay':
+            self.counter_idle += 1
+            if self.counter_idle < 5:
+                self.image = self.pics_idle_obj[0]
+            elif 5 <= self.counter_idle < 10:
+                self.image = self.pics_idle_obj[1]
+            elif 10 <= self.counter_idle < 15:
+                self.image = self.pics_idle_obj[2]
+            elif 15 <= self.counter_idle < 20:
+                self.image = self.pics_idle_obj[3]
+
+            elif self.counter_idle == 20:
+                self.counter_idle = 0
+        else:
+            self.counter_idle = 0
+
+        if kind == 'attack right':
+            self.counter_attack_right += 1
+            if self.counter_attack_right < 5:
+                self.image = self.pics_attack_right_obj[0]
+            elif 5 <= self.counter_attack_right < 10:
+                self.image = self.pics_attack_right_obj[1]
+            elif 10 <= self.counter_attack_right < 15:
+                self.image = self.pics_attack_right_obj[2]
+            elif 15 <= self.counter_attack_right < 20:
+                self.image = self.pics_attack_right_obj[3]
+
+            elif self.counter_attack_right == 20:
+                self.counter_attack_right = 0
+        else:
+            self.counter_attack_right = 0
+
+        if kind == 'attack left':
+            self.counter_attack_left += 1
+            if self.counter_attack_left < 5:
+                self.image = self.pics_attack_left_obj[0]
+            elif 5 <= self.counter_attack_left < 10:
+                self.image = self.pics_attack_left_obj[1]
+            elif 10 <= self.counter_attack_left < 15:
+                self.image = self.pics_attack_left_obj[2]
+            elif 15 <= self.counter_attack_left < 20:
+                self.image = self.pics_attack_left_obj[3]
+
+            elif self.counter_attack_left == 20:
+                self.counter_attack_left = 0
+        else:
+            self.counter_attack_left = 0
+
+        if kind == 'right':
+            self.counter_right += 1
+            if self.counter_right < 5:
+                self.image = self.pics_right_obj[0]
+            elif 5 <= self.counter_right < 10:
+                self.image = self.pics_right_obj[1]
+            elif 10 <= self.counter_right < 15:
+                self.image = self.pics_right_obj[2]
+            elif 15 <= self.counter_right < 20:
+                self.image = self.pics_right_obj[3]
+
+            elif self.counter_right == 20:
+                self.counter_right = 0
+        else:
+            self.counter_right = 0
+
+        if kind == 'attack left':
+            self.counter_left += 1
+            if self.counter_left < 5:
+                self.image = self.pics_left_obj[0]
+            elif 5 <= self.counter_left < 10:
+                self.image = self.pics_left_obj[1]
+            elif 10 <= self.counter_left < 15:
+                self.image = self.pics_left_obj[2]
+            elif 15 <= self.counter_left < 20:
+                self.image = self.pics_left_obj[3]
+
+            elif self.counter_left == 20:
+                self.counter_left = 0
+        else:
+            self.counter_left = 0
+
+    def update(self, target_x, target_y, target):
+        dx = target_x - self.rect.x
+        dy = target_y - self.rect.y
+
+        # Переслідування
+        if dx != 0 or dy != 0:
+            if abs(dx) > abs(dy):  # Перевірка, чи більша різниця по горизонталі
+                if dx > 0:
+                    self.animate('right')
+                else:
+                    self.animate('left')
+        else:
+            self.animate('stay')
+
+        if pygame.sprite.collide_rect(self, target):
+            self.animate('attack left')
 
 class Player(MainSprite):
     def __init__(self, player_image, player_x, player_y, player_speed, width, height):
