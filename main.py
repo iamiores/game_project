@@ -175,6 +175,7 @@ class Player(sprite.Sprite):
         self.was_colliding = False
         self.armor = "no_armor"
         self.weapon = "no_weapon"
+        self.is_spawned = False
         self.width = width
         self.height = height
         self.image = transform.scale(pygame.image.load(player_image), (self.width, self.height))
@@ -305,6 +306,12 @@ class Player(sprite.Sprite):
             self.write_file()
         else:
             self.animate('stay')
+
+    def spawn(self, x, y):
+        if not self.is_spawned:
+            self.rect.x = x
+            self.rect.y = y
+            self.is_spawned = True
 
     def collide(self, group):
         for group in group:
@@ -827,6 +834,7 @@ while game:
     # MENU STATE
     if state == 'main menu' or state == 'level menu' or state == 'settings':
         menu()
+        player.is_spawned = False
     elif state == 'store':
         store()
     # SHOP STATE
@@ -920,6 +928,7 @@ while game:
     # LEVELS STATE
     if state == 'tutorial':
         tutorial()
+        player.spawn(200, 100)
         player.collide(collide_group_tut)
         if player.rect.colliderect(hatch_tut[0]):
             w_hatch_collided_tut = True
@@ -939,6 +948,7 @@ while game:
             state = 'level 1'
     if state == 'level 1':
         level_1()
+        player.spawn(500, 400)
         player.collide(collide_group_lvl1)
         if player.rect.colliderect(hatch_lvl1[0]):
             w_hatch_collided_lvl1 = True
@@ -958,6 +968,7 @@ while game:
             state = 'level 2'
     if state == 'level 2':
         level_2()
+        player.spawn(200, 500)
         player.collide(collide_group_lvl2)
         if player.rect.colliderect(hatch_lvl2[0]):
             w_hatch_collided_lvl2 = True
@@ -977,6 +988,7 @@ while game:
             state = 'level 3'
     if state == 'level 3':
         level_3()
+        player.spawn(100, 100)
         player.collide(collide_group_lvl3)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
         if not finished:
