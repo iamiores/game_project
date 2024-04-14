@@ -290,20 +290,18 @@ class Player(sprite.Sprite):
         if keys[K_d]:
             self.rect.x += self.speed
             self.animate('right')
-        if keys[K_a]:
+        elif keys[K_a]:
             self.rect.x -= self.speed
             self.animate('left')
 
-        if keys[K_w]:
+        elif keys[K_w]:
             self.rect.y -= self.speed
             self.animate('forward')
 
-        if keys[K_s]:
+        elif keys[K_s]:
             self.rect.y += self.speed
             self.animate('back')
 
-        if keys[K_d] or keys[K_a] or keys[K_w] or keys[K_s]:
-            self.write_file()
         else:
             self.animate('stay')
 
@@ -333,11 +331,6 @@ class Player(sprite.Sprite):
                 self.was_colliding = True
         elif not any(self.rect.colliderect(group.rect) for group in group):
             self.was_colliding = False
-
-    def write_file(self):
-        with open('file.txt', 'w') as f:
-            f.write(str(self.rect.x) + '\n')
-            f.write(str(self.rect.y))
 
     def equip_armor(self, armor_name):
         self.armor = armor_name
@@ -381,6 +374,8 @@ ARMOR_TABLE = {
     "armor": [50, 80],
     "great_armor": [100, 30]
 }
+
+
 
 
 class For_Level_Building(sprite.Sprite):
@@ -812,16 +807,6 @@ def create_showcases(*coordinates):
         showcasess.append(showcase)
     return showcasess
 
-
-# def autosave(filename, guy):
-#     try:
-#         with open(filename, 'r') as f:
-#             guy.rect.x = int(f.readline().replace('\n', ''))
-#             guy.rect.y = int(f.readline().replace('\n', ''))
-#     except:
-#         guy.write_file()
-# autosave('file.txt', player)
-
 # COIN STUFF
 w_hatch_collided_tut = False
 coins_tut = create_coin((576, 234), (618, 211), (614, 243))
@@ -1012,8 +997,6 @@ while game:
     if state == 'level 3':
         level_3()
         player.spawn(480, 120)
-        boss.show(window)
-        boss.update(player, player.rect.y, 345)
         player.trap(traps_group_lvl3)
         player.collide(collide_group_lvl3)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
@@ -1026,6 +1009,10 @@ while game:
         window.blit(money, (255, 20))
         if home_button.click(window):
             state = 'level menu'
+
+    if state == 'level 3':
+        boss.show(window)
+        boss.update(player, player.rect.y, 345)
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
