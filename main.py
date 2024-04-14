@@ -458,7 +458,11 @@ collide_group_tut = sprite.Group()
 collide_group_lvl1 = sprite.Group()
 collide_group_lvl2 = sprite.Group()
 collide_group_lvl3 = sprite.Group()
-traps_group = sprite.Group()
+traps_group_tut = sprite.Group()
+traps_group_lvl1 = sprite.Group()
+traps_group_lvl2 = sprite.Group()
+traps_group_lvl3 = sprite.Group()
+
 
 all_sprites = sprite.Group()
 
@@ -513,7 +517,7 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 
 # OBJECTS
 coin = Coin(x=240, y=33, width=27, height=27)
-player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 4, 28, 33)
+player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
 all_sprites.add(coin)
 all_sprites.add(player)
@@ -615,7 +619,7 @@ def items_tut():
     for keys, values in trap_tuts.items():
         t = For_Level_Building(*values)
         t.update()
-        traps_group.add(t)
+        traps_group_tut.add(t)
         # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/open_hatch.png')
@@ -633,7 +637,7 @@ def items_level1():
     for keys, values in trap_lvl1.items():
         t = For_Level_Building(*values)
         t.update()
-        traps_group.add(t)
+        traps_group_lvl1.add(t)
         # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/open_hatch.png')
@@ -651,7 +655,7 @@ def items_level2():
     for keys, value in trap_lvl2.items():
         t = For_Level_Building(*value)
         t.update()
-        traps_group.add(t)
+        traps_group_lvl2.add(t)
         # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/closed_hatch.png')
     opened_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/open_hatch.png')
@@ -668,7 +672,7 @@ def items_level3():
         # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
     for keys, value in trap_lvl3.items():
         t = For_Level_Building(*value)
-        traps_group.add(t)
+        traps_group_lvl3.add(t)
         t.update()
         # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
     closed_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/closed_hatch.png')
@@ -942,6 +946,7 @@ while game:
         tutorial()
         tutorial_text()
         player.spawn(130, 550)
+        player.trap(traps_group_tut)
         player.collide(collide_group_tut)
         if player.rect.colliderect(hatch_tut[0]):
             w_hatch_collided_tut = True
@@ -958,10 +963,12 @@ while game:
                 elif coin_amount_tut == 0:
                     w_hatch_collided_tut = False
         if player.rect.colliderect(portal_tut.rect):
+            player.spawn(860, 460)
             state = 'level 1'
     if state == 'level 1':
         level_1()
         player.spawn(860, 460)
+        player.trap(traps_group_lvl1)
         player.collide(collide_group_lvl1)
         if player.rect.colliderect(hatch_lvl1[0]):
             w_hatch_collided_lvl1 = True
@@ -978,10 +985,12 @@ while game:
                 elif coin_amount_lvl1 == 0:
                     w_hatch_collided_lvl1 = False
         if player.rect.colliderect(portal_lvl1.rect):
+            player.spawn(210, 590)
             state = 'level 2'
     if state == 'level 2':
         level_2()
         player.spawn(210, 590)
+        player.trap(traps_group_lvl2)
         player.collide(collide_group_lvl2)
         if player.rect.colliderect(hatch_lvl2[0]):
             w_hatch_collided_lvl2 = True
@@ -998,18 +1007,19 @@ while game:
                 elif coin_amount_lvl2 == 0:
                     w_hatch_collided_lvl2 = False
         if player.rect.colliderect(portal_lvl2.rect):
+            player.spawn(480, 120)
             state = 'level 3'
     if state == 'level 3':
         level_3()
+        player.spawn(480, 120)
         boss.show(window)
         boss.update(player, player.rect.y, 345)
-        player.spawn(480, 120)
+        player.trap(traps_group_lvl3)
         player.collide(collide_group_lvl3)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
         if not finished:
             all_sprites.update()  # Обновление всех спрайтов
         all_sprites.draw(window)  # Отображение всех спрайтов
-        player.trap(traps_group)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3' or state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
         window.blit(lives_list[lives], (10, 0))
         window.blit(energy_list[energy], (120, 24))
