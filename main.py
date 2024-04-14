@@ -398,6 +398,7 @@ class For_Level_Building(sprite.Sprite):
 
 # FONTS
 font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 20)
+font2 = pygame.font.Font('fonts/Retro Gaming.ttf', 14)
 
 # SETTINGS
 w_width, w_height = 1000, 700
@@ -512,7 +513,7 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 
 # OBJECTS
 coin = Coin(x=240, y=33, width=27, height=27)
-player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 6, 28, 33)
+player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 4, 28, 33)
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
 all_sprites.add(coin)
 all_sprites.add(player)
@@ -730,6 +731,19 @@ def store():
     clock.tick(fps)
 
 
+#    money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
+def tutorial_text():
+    howto_walk_fb = font2.render('Press W and S to walk forward and back.', True, pygame.color.Color('white'))
+    howto_walk_lr = font2.render('Press A and D to walk left and right.', True, pygame.color.Color('white'))
+    # careful = font2.render(f'Walk carefully!' + '\n' + 'The spikes will injure you.', True, pygame.color.Color('white'))
+    careful_line1 = font2.render('Walk carefully!', True, pygame.color.Color('white'))
+    careful_line2 = font2.render('The spikes will injure you.', True, pygame.color.Color('white'))
+    window.blit(howto_walk_fb, (100, 340))
+    window.blit(howto_walk_lr, (100, 360))
+    window.blit(careful_line1, (700, 370))
+    window.blit(careful_line2, (660, 385))
+
+
 def tutorial():
     window.fill((0, 0, 0))
 
@@ -820,8 +834,6 @@ armor_showcases = create_showcases((290, 200), (460, 200))
 swords_showcases = create_showcases((125, 200), (290, 200), (460, 200), (625, 200))
 potions_showcases = create_showcases((290, 200), (460, 200))
 
-# with open('coin', 'r') as f:
-#     coins = int(f.readline().replace('\n', ''))
 
 # music.play()
 # MAIN CYCLE
@@ -928,7 +940,8 @@ while game:
     # LEVELS STATE
     if state == 'tutorial':
         tutorial()
-        player.spawn(200, 100)
+        tutorial_text()
+        player.spawn(130, 550)
         player.collide(collide_group_tut)
         if player.rect.colliderect(hatch_tut[0]):
             w_hatch_collided_tut = True
@@ -948,7 +961,7 @@ while game:
             state = 'level 1'
     if state == 'level 1':
         level_1()
-        player.spawn(500, 400)
+        player.spawn(860, 460)
         player.collide(collide_group_lvl1)
         if player.rect.colliderect(hatch_lvl1[0]):
             w_hatch_collided_lvl1 = True
@@ -968,7 +981,7 @@ while game:
             state = 'level 2'
     if state == 'level 2':
         level_2()
-        player.spawn(200, 500)
+        player.spawn(210, 590)
         player.collide(collide_group_lvl2)
         if player.rect.colliderect(hatch_lvl2[0]):
             w_hatch_collided_lvl2 = True
@@ -988,7 +1001,9 @@ while game:
             state = 'level 3'
     if state == 'level 3':
         level_3()
-        player.spawn(100, 100)
+        boss.show(window)
+        boss.update(player, player.rect.y, 345)
+        player.spawn(480, 120)
         player.collide(collide_group_lvl3)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
         if not finished:
@@ -1001,9 +1016,7 @@ while game:
         window.blit(money, (255, 20))
         if home_button.click(window):
             state = 'level menu'
-    if state == 'level 3':
-        boss.show(window)
-        boss.update(player, player.rect.y, 365)
+
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
     window.blit(text, (10, 680))
