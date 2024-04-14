@@ -39,6 +39,7 @@ class Boss(sprite.Sprite):
         self.counter_attack_right = 0
         self.counter_attack_left = 0
         self.direction = 'left'
+        self.health = 100
 
         self.pics_idle = ['images/monsters/boss/boss_idle_left_1.png', 'images/monsters/boss/boss_idle_left_2.png', 'images/monsters/boss/boss_idle_left_3.png', 'images/monsters/boss/boss_idle_left_4.png']
         self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
@@ -348,7 +349,9 @@ class Player(sprite.Sprite):
             attack_power, attack_range = attack_properties
             distance = math.sqrt((self.rect.x - target.rect.x) ** 2 + (self.rect.y - target.rect.y) ** 2)
             if distance <= attack_range:
+                target.health -= attack_power
                 print(f"You dealt {attack_power} damage to the target!")
+                print(target.health)
             else:
                 print("Target is out of range!")
         else:
