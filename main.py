@@ -2,6 +2,7 @@ import sys
 import pygame
 from pygame import *
 from coin import Coin
+from goblin import Goblin
 from button import Button
 import math
 pygame.init()
@@ -514,6 +515,7 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 coin = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
+goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', 695, 520, 30, 20)
 all_sprites.add(coin)
 all_sprites.add(player)
 
@@ -1010,6 +1012,10 @@ while game:
         if home_button.click(window):
             state = 'level menu'
 
+    if state == 'tutorial':
+        goblin.show(window)
+        goblin.update(player.rect, lives, target_x=player.rect.x, x=422)
+        goblin.collide(collide_group_tut)
     if state == 'level 3':
         boss.show(window)
         boss.update(player, player.rect.y, 345)
@@ -1018,27 +1024,5 @@ while game:
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
     window.blit(text, (10, 680))
 
-    # pygame.draw.rect(window, (255, 0, 0), player.rect, 1)
-
     pygame.display.update()
     clock.tick(fps)
-
-    # collision on end level
-    # LEVEL_NUMBER = 0
-
-    # LEVEL_NAMES = [
-    # tutorial(),
-    # first_lvl(),
-    # second_lvl()
-    # ]
-
-    # if pygame.event == 'endlevel':
-    #    show two buttons: next_level and back
-    #    if next_level == 'pressed':
-    #        LEVEL_NUMBER += 1
-    #        loadnew level with
-    #           LEVEL_NAMES[LEVEL_NUMBER]
-    #    if back == 'pressed':
-    #        LEVEL_NUMBER = 0
-    #         return to menu
-    #    #
