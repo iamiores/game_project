@@ -1,8 +1,8 @@
 import pygame
 from pygame import *
+pygame.init()
 import math
 
-pygame.init()
 
 class Goblin(sprite.Sprite):
     def __init__(self, goblin_image, goblin_x, goblin_y, width, height):
@@ -40,6 +40,9 @@ class Goblin(sprite.Sprite):
         self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_left]
 
     def animate(self, kind, target_lives):
+        self.target_lives = target_lives
+        # print(kind)
+        print(target_lives)
         if kind == 'stay':
             self.counter_idle += 1
             if self.counter_idle < 5:
@@ -68,7 +71,7 @@ class Goblin(sprite.Sprite):
                 self.image = self.pics_attack_right_obj[3]
 
             elif self.counter_attack_right == 20:
-                target_lives -= 1
+                self.target_lives -= 1
                 self.counter_attack_right = 0
         else:
             self.counter_attack_right = 0
@@ -85,7 +88,7 @@ class Goblin(sprite.Sprite):
                 self.image = self.pics_attack_left_obj[3]
 
             elif self.counter_attack_left == 20:
-                target_lives -= 1
+                self.target_lives -= 1
                 self.counter_attack_left = 0
         else:
             self.counter_attack_left = 0
@@ -121,7 +124,7 @@ class Goblin(sprite.Sprite):
             self.counter_left = 0
 
         if kind == 'attack right' or kind == 'attack left':
-            self.speed = 1
+            self.speed = 2
         else:
             self.speed = 5
 
@@ -136,42 +139,52 @@ class Goblin(sprite.Sprite):
                     self.rect.x += 1
                 elif self.rect.right > group.rect.left > self.rect.left:
                     self.rect.x -= 1
-    def update(self, player_rect, target_lives, target_y = None, target_x = None, x = None, y = None):
-        dx = player_rect.centerx - self.rect.centerx
-        dy = player_rect.centery - self.rect.centery
+
+    def update(self, player, player_lives, target_y=None, target_x=None, x=None, y=None):
+        dx = player.rect.centerx - self.rect.centerx
+        dy = player.rect.centery - self.rect.centery
+        dist = math.hypot(dx, dy)
+        if dist != 0:
+            dx /= dist
+            dy /= dist
+
         target_x = target_x if target_x is not None else float('-inf')
         target_y = target_y if target_y is not None else float('-inf')
         x = x if x is not None else float('inf')
         y = y if y is not None else float('inf')
+        if dx > 0:
+            self.direction = 'right'
         if target_x >= x or target_y >= y:
             if self.direction == 'right':
-                if dx == 0 and dy == 0:
-                    self.animate('attack right',target_lives)
-
-                if dx > 0:
-                    self.animate('right', target_lives)
-                self.rect.x += self.speed
+                if self.rect.colliderect(player.rect):
+                    self.animate('attack right', player_lives)
+                else:
+                    self.animate('right', player_lives)
+                self.rect.x += dx * self.speed
                 if dy > 0:
-                    self.animate('right', target_lives)
-                    self.rect.y -= self.speed
-                if dy < 0:
-                    self.animate('right', target_lives)
-                    self.rect.y += self.speed
+                    self.animate('right', player_lives)
+                    self.rect.y += dy * self.speed
+                elif dy < 0:
+                    self.animate('right', player_lives)
+                    self.rect.y += dy * self.speed
+
+            if dx < 0:
+                self.direction = 'left'
 
             if self.direction == 'left':
-                if dx == 0 and dy == 0:
-                    self.animate('attack left', target_lives)
-                if dx < 0:
-                    self.animate('left', target_lives)
-
-                self.rect.x -= self.speed
+                if self.rect.colliderect(player.rect):
+                    self.animate('attack left', player_lives)
+                else:
+                    self.animate('left', player_lives)
+                self.rect.x += dx * self.speed
                 if dy > 0:
-                    self.animate('left', target_lives)
-                    self.rect.y -= self.speed
+                    self.animate('left', player_lives)
+                    self.rect.y += dy * self.speed
                 elif dy < 0:
-                    self.animate('left', target_lives)
-                    self.rect.y += self.speed
+                    self.animate('left', player_lives)
+                    self.rect.y += dy * self.speed
         else:
-            self.animate('stay', target_lives)
+            self.animate('stay', player_lives)
+
     def show(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))

@@ -377,8 +377,6 @@ ARMOR_TABLE = {
 }
 
 
-
-
 class For_Level_Building(sprite.Sprite):
     def __init__(self, x, y, width, height, file_image):
         super().__init__()
@@ -515,7 +513,7 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 coin = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
-goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', 695, 520, 30, 20)
+goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', 695, 520, 30, 35)
 all_sprites.add(coin)
 all_sprites.add(player)
 
@@ -1014,7 +1012,7 @@ while game:
 
     if state == 'tutorial':
         goblin.show(window)
-        goblin.update(player.rect, lives, target_x=player.rect.x, x=422)
+        goblin.update(player, lives, target_x=player.rect.x, x=422)
         goblin.collide(collide_group_tut)
     if state == 'level 3':
         boss.show(window)
