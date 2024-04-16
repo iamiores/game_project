@@ -58,3 +58,31 @@ def create_text(screen, text, x, y, font_color=(0, 0, 0), font_size=20):
     screen.blit(text, (x, y))
 
 button_click_sound = pygame.mixer.Sound('sounds/Menu Selection Click.wav')
+
+start_button = Button(450, 255, 110, 45, 'START')
+settings_button = Button(427, 310, 155, 45, 'SETTINGS')
+store_button = Button(450, 365, 110, 45, 'STORE')
+exit_button = Button(460, 420, 90, 45, 'QUIT')
+add_volume_button = Button(415, 300, 50, 45, '+')
+reduce_volume_button = Button(515, 300, 50, 45, '-')
+back_button = Button(460, 475, 95, 45, 'BACK')
+back_button_2 = Button(460, 465, 95, 45, 'BACK')
+
+tutorial_button = Button(425, 180, 155, 45, 'TUTORIAL')
+level_1_button = Button(260, 300, 125, 45, 'LEVEL 1')
+level_2_button = Button(440, 300, 125, 45, 'LEVEL 2')
+level_3_button = Button(620, 300, 125, 45, 'LEVEL 3')
+home_button = Button(900, 5, 95, 50, 'HOME')
+
+armor_button = Button(300, 150, 110, 50, 'ARMOR')
+swords_button = Button(440, 150, 130, 50, 'SWORDS')
+potions_button = Button(600, 150, 140, 50, 'POTIONS')
+
+buy_armor_button = Button(380, 365, 77, 47, 'BUY')
+buy_great_armor_button = Button(550, 365, 77, 47, 'BUY')
+buy_great_sword_button = Button(215, 365, 77, 47, 'BUY')
+buy_steel_sword_button = Button(715, 365, 77, 47, 'BUY')
+buy_bow_button = Button(380, 365, 77, 47, 'BUY')
+buy_axe_button = Button(550, 365, 77, 47, 'BUY')
+buy_health_potion_button = Button(380, 365, 77, 47, 'BUY')
+buy_energy_potion_button = Button(550, 365, 77, 47, 'BUY')

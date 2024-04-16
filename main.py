@@ -1,22 +1,223 @@
 import sys
-import pygame
-from pygame import *
 from coin import Coin
-from goblin import Goblin
-from button import Button
+from button import *
+from building import *
 import math
+from random import randint
 pygame.init()
 
 
-class MainSprite(sprite.Sprite):
-    def __init__(self, player_image, player_x, player_y, player_speed):
+class Goblin(sprite.Sprite):
+    def __init__(self, goblin_image, goblin_x, goblin_y, width, height):
         super().__init__()
-        self.image = transform.scale(pygame.image.load(player_image), (65, 65))
-        self.speed = player_speed
+        self.width = width
+        self.height = height
+        self.image = transform.scale(pygame.image.load(goblin_image), (self.width, self.height))
         self.rect = self.image.get_rect()
-        self.rect.x = player_x
-        self.rect.y = player_y
-        self.was_colliding = False
+        self.rect.x = goblin_x
+        self.rect.y = goblin_y
+        self.rect.width = width
+        self.rect.height = height
+        self.speed = randint(3, 5)
+        self.counter_idle = 0
+        self.counter_right = 0
+        self.counter_left = 0
+        self.counter_attack_right = 0
+        self.counter_attack_left = 0
+        self.direction = 'right'
+        self.health = 40
+
+        self.pics_idle = ['images/monsters/goblin/goblin_idle_right_1.png', 'images/monsters/goblin/goblin_idle_right_2.png', 'images/monsters/goblin/goblin_idle_right_3.png', 'images/monsters/goblin/goblin_idle_right_4.png']
+        self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
+
+        self.pics_attack_right = ['images/monsters/goblin/goblin_attack_right_1.png', 'images/monsters/goblin/goblin_attack_right_2.png', 'images/monsters/goblin/goblin_attack_right_3.png', 'images/monsters/goblin/goblin_attack_right_4.png']
+        self.pics_attack_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_attack_right]
+
+        self.pics_attack_left = ['images/monsters/goblin/goblin_attack_left_1.png', 'images/monsters/goblin/goblin_attack_left_2.png', 'images/monsters/goblin/goblin_attack_left_3.png', 'images/monsters/goblin/goblin_attack_left_4.png']
+        self.pics_attack_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_attack_left]
+
+        self.pics_right = ['images/monsters/goblin/goblin_walk_right_1.png', 'images/monsters/goblin/goblin_walk_right_2.png', 'images/monsters/goblin/goblin_walk_right_3.png']
+        self.pics_right_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_right]
+
+        self.pics_left = ['images/monsters/goblin/goblin_walk_left_1.png', 'images/monsters/goblin/goblin_walk_left_2.png', 'images/monsters/goblin/goblin_walk_left_3.png']
+        self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_left]
+
+    def animate(self, kind):
+        global lives
+        if kind == 'stay':
+            self.counter_idle += 1
+            if self.counter_idle < 5:
+                self.image = self.pics_idle_obj[0]
+            elif 5 <= self.counter_idle < 10:
+                self.image = self.pics_idle_obj[1]
+            elif 10 <= self.counter_idle < 15:
+                self.image = self.pics_idle_obj[2]
+            elif 15 <= self.counter_idle < 20:
+                self.image = self.pics_idle_obj[3]
+
+            elif self.counter_idle == 20:
+                self.counter_idle = 0
+        else:
+            self.counter_idle = 0
+
+        if kind == 'attack right':
+            self.counter_attack_right += 1
+            if self.counter_attack_right < 5:
+                self.image = self.pics_attack_right_obj[0]
+            elif 5 <= self.counter_attack_right < 10:
+                self.image = self.pics_attack_right_obj[1]
+            elif 10 <= self.counter_attack_right < 15:
+                self.image = self.pics_attack_right_obj[2]
+            elif 15 <= self.counter_attack_right < 20:
+                self.image = self.pics_attack_right_obj[3]
+
+            elif self.counter_attack_right == 20:
+                lives -= 1
+                self.counter_attack_right = 0
+        else:
+            self.counter_attack_right = 0
+
+        if kind == 'attack left':
+            self.counter_attack_left += 1
+            if self.counter_attack_left < 5:
+                self.image = self.pics_attack_left_obj[0]
+            elif 5 <= self.counter_attack_left < 10:
+                self.image = self.pics_attack_left_obj[1]
+            elif 10 <= self.counter_attack_left < 15:
+                self.image = self.pics_attack_left_obj[2]
+            elif 15 <= self.counter_attack_left < 20:
+                self.image = self.pics_attack_left_obj[3]
+
+            elif self.counter_attack_left == 20:
+                lives -= 1
+                self.counter_attack_left = 0
+        else:
+            self.counter_attack_left = 0
+
+        if kind == 'right':
+            self.direction = 'right'
+            self.counter_right += 1
+            if self.counter_right < 5:
+                self.image = self.pics_right_obj[0]
+            elif 5 <= self.counter_right < 10:
+                self.image = self.pics_right_obj[1]
+            elif 10 <= self.counter_right < 15:
+                self.image = self.pics_right_obj[2]
+
+            elif self.counter_right == 15:
+                self.counter_right = 0
+        else:
+            self.counter_right = 0
+
+        if kind == 'left':
+            self.direction = 'left'
+            self.counter_left += 1
+            if self.counter_left < 5:
+                self.image = self.pics_left_obj[0]
+            elif 5 <= self.counter_left < 10:
+                self.image = self.pics_left_obj[1]
+            elif 10 <= self.counter_left < 15:
+                self.image = self.pics_left_obj[2]
+
+            elif self.counter_left == 15:
+                self.counter_left = 0
+        else:
+            self.counter_left = 0
+
+        if kind == 'attack right' or kind == 'attack left':
+            self.speed = 2
+        else:
+            self.speed = randint(3, 5)
+
+    def collide(self, group):
+        for group in group:
+            if self.rect.colliderect(group.rect):
+                if self.rect.top < group.rect.bottom < self.rect.bottom:
+                    self.rect.y += 1
+                elif self.rect.bottom > group.rect.top > self.rect.top:
+                    self.rect.y -= 1
+                elif self.rect.left < group.rect.right < self.rect.right:
+                    self.rect.x += 1
+                elif self.rect.right > group.rect.left > self.rect.left:
+                    self.rect.x -= 1
+
+    def update(self, target, target_y=None, target_x=None, x=None, y=None):
+        dx = target.rect.centerx - self.rect.centerx
+        dy = target.rect.centery - self.rect.centery
+        dist = math.hypot(dx, dy)
+        if dist != 0:
+            dx /= dist
+            dy /= dist
+        target_x = target_x if target_x is not None else float('-inf')
+        target_y = target_y if target_y is not None else float('-inf')
+        x = x if x is not None else float('inf')
+        y = y if y is not None else float('inf')
+        if dx > 0:
+            self.direction = 'right'
+        if target_x < 600:
+            if target_x >= x or target_y >= y:
+                if self.direction == 'right':
+                    if self.rect.colliderect(target.rect):
+                        self.animate('attack right')
+                    else:
+                        self.animate('right')
+                    self.rect.x += dx * self.speed
+                    if dy > 0:
+                        self.animate('right')
+                        self.rect.y += dy * self.speed
+                    elif dy < 0:
+                        self.animate('right')
+                        self.rect.y += dy * self.speed
+
+                if dx < 0:
+                    self.direction = 'left'
+
+                if self.direction == 'left':
+                    if self.rect.colliderect(player.rect):
+                        self.animate('attack left')
+                    else:
+                        self.animate('left')
+                    self.rect.x += dx * self.speed
+                    if dy > 0:
+                        self.animate('left')
+                        self.rect.y += dy * self.speed
+                    elif dy < 0:
+                        self.animate('left')
+                        self.rect.y += dy * self.speed
+            else:
+                self.animate('stay')
+        if target_x > 600:
+            if x > target_x or y < target_y:
+                if self.direction == 'right':
+                    if self.rect.colliderect(target.rect):
+                        self.animate('attack right')
+                    else:
+                        self.animate('right')
+                    self.rect.x += dx * self.speed
+                    if dy > 0:
+                        self.animate('right')
+                        self.rect.y += dy * self.speed
+                    elif dy < 0:
+                        self.animate('right')
+                        self.rect.y += dy * self.speed
+
+                if dx < 0:
+                    self.direction = 'left'
+
+                if self.direction == 'left':
+                    if self.rect.colliderect(player.rect):
+                        self.animate('attack left')
+                    else:
+                        self.animate('left')
+                    self.rect.x += dx * self.speed
+                    if dy > 0:
+                        self.animate('left')
+                        self.rect.y += dy * self.speed
+                    elif dy < 0:
+                        self.animate('left')
+                        self.rect.y += dy * self.speed
+            else:
+                self.animate('stay')
 
     def show(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
@@ -376,20 +577,6 @@ ARMOR_TABLE = {
     "great_armor": [100, 30]
 }
 
-
-class For_Level_Building(sprite.Sprite):
-    def __init__(self, x, y, width, height, file_image):
-        super().__init__()
-        self.file = file_image
-        self.image = transform.scale(pygame.image.load(self.file), (width, height))
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
-    def update(self):
-        window.blit(self.image, (self.rect.x, self.rect.y))
-
-
 # FONTS
 font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 20)
 font2 = pygame.font.Font('fonts/Retro Gaming.ttf', 14)
@@ -403,11 +590,6 @@ game = True
 bg_image = transform.scale(pygame.image.load('bg.png'), (w_width, w_height))
 
 # ALTERNATES
-hatch_num_tut = 0
-hatch_num_lvl1 = 0
-hatch_num_lvl2 = 0
-hatch_num_lvl3 = 0
-
 lives = 5
 energy = 5
 coins = 0
@@ -444,50 +626,9 @@ energy_potion = transform.scale(pygame.image.load('store_items/energy_potion.png
 lives_list = [live_0, live_1, live_2, live_3, live_4, live_5]
 energy_list = [energy_0, energy_1, energy_2, energy_3, energy_4, energy_5]
 
-hatch_tut = []
-hatch_lvl1 = []
-hatch_lvl2 = []
-hatch_lvl3 = []
-collide_group_tut = sprite.Group()
-collide_group_lvl1 = sprite.Group()
-collide_group_lvl2 = sprite.Group()
-collide_group_lvl3 = sprite.Group()
-traps_group_tut = sprite.Group()
-traps_group_lvl1 = sprite.Group()
-traps_group_lvl2 = sprite.Group()
-traps_group_lvl3 = sprite.Group()
-
-
 all_sprites = sprite.Group()
 
-# BUTTONS
-start_button = Button(450, 255, 110, 45, 'START')
-settings_button = Button(427, 310, 155, 45, 'SETTINGS')
-store_button = Button(450, 365, 110, 45, 'STORE')
-exit_button = Button(460, 420, 90, 45, 'QUIT')
-add_volume_button = Button(415, 300, 50, 45, '+')
-reduce_volume_button = Button(515, 300, 50, 45, '-')
-back_button = Button(460, 475, 95, 45, 'BACK')
-back_button_2 = Button(460, 465, 95, 45, 'BACK')
-
-tutorial_button = Button(425, 180, 155, 45, 'TUTORIAL')
-level_1_button = Button(260, 300, 125, 45, 'LEVEL 1')
-level_2_button = Button(440, 300, 125, 45, 'LEVEL 2')
-level_3_button = Button(620, 300, 125, 45, 'LEVEL 3')
-home_button = Button(900, 5, 95, 50, 'HOME')
-
-armor_button = Button(300, 150, 110, 50, 'ARMOR')
-swords_button = Button(440, 150, 130, 50, 'SWORDS')
-potions_button = Button(600, 150, 140, 50, 'POTIONS')
-
-buy_armor_button = Button(380, 365, 77, 47, 'BUY')
-buy_great_armor_button = Button(550, 365, 77, 47, 'BUY')
-buy_great_sword_button = Button(215, 365, 77, 47, 'BUY')
-buy_steel_sword_button = Button(715, 365, 77, 47, 'BUY')
-buy_bow_button = Button(380, 365, 77, 47, 'BUY')
-buy_axe_button = Button(550, 365, 77, 47, 'BUY')
-buy_health_potion_button = Button(380, 365, 77, 47, 'BUY')
-buy_energy_potion_button = Button(550, 365, 77, 47, 'BUY')
+# STORE STUFF
 price_num = {
     'armor_price_num': 2,
     'great_armor_price_num': 4,
@@ -513,14 +654,9 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 coin = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
-goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', 695, 520, 30, 35)
+# goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', 695, 520, 30, 35)
 all_sprites.add(coin)
 all_sprites.add(player)
-
-portal_tut = For_Level_Building(200, 175, 50, 80, 'images/items/portal.png')
-portal_lvl1 = For_Level_Building(150, 110, 50, 80, 'images/items/portal.png')
-portal_lvl2 = For_Level_Building(550, 540, 50, 80, 'images/items/portal.png')
-portal_lvl3 = For_Level_Building(470, 585, 40, 60, 'images/items/portal.png')
 
 # SOUNDS
 music = pygame.mixer.Sound('music/Crystal Caves v1_2.mp3')
@@ -528,155 +664,7 @@ collect_coin_sound = pygame.mixer.Sound('sounds/coin_collect.wav')
 music_volume = 0.4
 
 
-# WALLS
-def walls_tut():
-    from levels import wall_tuts
-    for keys, value in wall_tuts.items():
-        w = For_Level_Building(*value)
-        collide_group_tut.add(w)
-        w.update()
-        # pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
-
-
-def walls_level1():
-    from levels import wall_lvl1
-    for keys, value in wall_lvl1.items():
-        w = For_Level_Building(*value)
-        collide_group_lvl1.add(w)
-        w.update()
-        # pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
-
-
-def walls_level2():
-    from levels import wall_lvl2
-    for keys, value in wall_lvl2.items():
-        w = For_Level_Building(*value)
-        collide_group_lvl2.add(w)
-        w.update()
-        # pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
-
-
-def walls_level3():
-    from levels import wall_lvl3
-    for keys, value in wall_lvl3.items():
-        w = For_Level_Building(*value)
-        collide_group_lvl3.add(w)
-        w.update()
-        # pygame.draw.rect(window, (255, 0, 0), w.rect, 1)
-
-
-# FLOORS
-def floor_tut():
-    from levels import floor_tuts
-    for keys, value in floor_tuts.items():
-        f = For_Level_Building(*value)
-        f.update()
-    pygame.draw.rect(window, (43, 35, 52), (263, 525, 160, 60))
-    pygame.draw.rect(window, (43, 35, 52), (555, 323, 80, 140))
-
-
-def floor_level1():
-    from levels import floor_lvl1
-    for keys, value in floor_lvl1.items():
-        f = For_Level_Building(*value)
-        f.update()
-    pygame.draw.rect(window, (43, 35, 52), (596, 427, 161, 60))
-    pygame.draw.rect(window, (43, 35, 52), (835, 266, 70, 121))
-    pygame.draw.rect(window, (43, 35, 52), (512, 113, 141, 67))
-
-
-def floor_level2():
-    from levels import floor_lvl2
-    for keys, value in floor_lvl2.items():
-        f = For_Level_Building(*value)
-        f.update()
-    pygame.draw.rect(window, (43, 35, 52), (180, 372, 80, 144))
-    pygame.draw.rect(window, (43, 35, 52), (422, 212, 150, 60))
-    pygame.draw.rect(window, (43, 35, 52), (720, 370, 85, 123))
-
-
-def floor_level3():
-    from levels import floor_lvl3
-    for keys, value in floor_lvl3.items():
-        f = For_Level_Building(*value)
-        f.update()
-    pygame.draw.rect(window, (43, 35, 52), (455, 236, 82, 120))
-
-
-# ITEMS
-def items_tut():
-    from levels import item_tuts, trap_tuts
-    for keys, values in item_tuts.items():
-        i = For_Level_Building(*values)
-        i.update()
-        collide_group_tut.add(i)
-        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
-    for keys, values in trap_tuts.items():
-        t = For_Level_Building(*values)
-        t.update()
-        traps_group_tut.add(t)
-        # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
-    closed_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/closed_hatch.png')
-    opened_hatch = For_Level_Building(574, 205, 43, 35, 'images/items/open_hatch.png')
-    hatch_tut.append(closed_hatch)
-    hatch_tut.append(opened_hatch)
-
-
-def items_level1():
-    from levels import item_lvl1, trap_lvl1
-    for keys, values in item_lvl1.items():
-        i = For_Level_Building(*values)
-        i.update()
-        collide_group_lvl1.add(i)
-        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
-    for keys, values in trap_lvl1.items():
-        t = For_Level_Building(*values)
-        t.update()
-        traps_group_lvl1.add(t)
-        # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
-    closed_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/closed_hatch.png')
-    opened_hatch = For_Level_Building(370, 140, 43, 35, 'images/items/open_hatch.png')
-    hatch_lvl1.append(closed_hatch)
-    hatch_lvl1.append(opened_hatch)
-
-
-def items_level2():
-    from levels import item_lvl2, trap_lvl2
-    for keys, values in item_lvl2.items():
-        i = For_Level_Building(*values)
-        i.update()
-        collide_group_lvl2.add(i)
-        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
-    for keys, value in trap_lvl2.items():
-        t = For_Level_Building(*value)
-        t.update()
-        traps_group_lvl2.add(t)
-        # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
-    closed_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/closed_hatch.png')
-    opened_hatch = For_Level_Building(740, 575, 43, 35, 'images/items/open_hatch.png')
-    hatch_lvl2.append(closed_hatch)
-    hatch_lvl2.append(opened_hatch)
-
-
-def items_level3():
-    from levels import item_lvl3, trap_lvl3
-    for keys, value in item_lvl3.items():
-        i = For_Level_Building(*value)
-        collide_group_lvl3.add(i)
-        i.update()
-        # pygame.draw.rect(window, (255, 0, 0), i.rect, 1)
-    for keys, value in trap_lvl3.items():
-        t = For_Level_Building(*value)
-        traps_group_lvl3.add(t)
-        t.update()
-        # pygame.draw.rect(window, (255, 0, 0), t.rect, 1)
-    closed_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/closed_hatch.png')
-    opened_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/open_hatch.png')
-    hatch_lvl3.append(closed_hatch)
-    hatch_lvl3.append(opened_hatch)
-
-
-# LEVELS
+# MENU, STORE
 def menu():
     global state, music_volume, game
     window.blit(bg_image, (0, 0))
@@ -730,65 +718,15 @@ def store():
     clock.tick(fps)
 
 
-#    money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
 def tutorial_text():
     howto_walk_fb = font2.render('Press W and S to walk forward and back.', True, pygame.color.Color('white'))
     howto_walk_lr = font2.render('Press A and D to walk left and right.', True, pygame.color.Color('white'))
-    # careful = font2.render(f'Walk carefully!' + '\n' + 'The spikes will injure you.', True, pygame.color.Color('white'))
     careful_line1 = font2.render('Walk carefully!', True, pygame.color.Color('white'))
     careful_line2 = font2.render('The spikes will injure you.', True, pygame.color.Color('white'))
     window.blit(howto_walk_fb, (100, 340))
     window.blit(howto_walk_lr, (100, 360))
     window.blit(careful_line1, (700, 370))
     window.blit(careful_line2, (660, 385))
-
-
-def tutorial():
-    window.fill((0, 0, 0))
-
-    floor_tut()
-    walls_tut()
-    items_tut()
-    window.blit(hatch_tut[hatch_num_tut].image, (hatch_tut[hatch_num_tut].rect.x, hatch_tut[hatch_num_tut].rect.y))
-    window.blit(portal_tut.image, (portal_tut.rect.x, portal_tut.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
-
-
-def level_1():
-    window.fill((0, 0, 0))
-
-    floor_level1()
-    walls_level1()
-    items_level1()
-    window.blit(hatch_lvl1[hatch_num_lvl1].image, (hatch_lvl1[hatch_num_lvl1].rect.x, hatch_lvl1[hatch_num_lvl1].rect.y))
-    window.blit(portal_lvl1.image, (portal_lvl1.rect.x, portal_lvl1.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
-
-
-def level_2():
-    window.fill((0, 0, 0))
-
-    floor_level2()
-    walls_level2()
-    items_level2()
-    window.blit(hatch_lvl2[hatch_num_lvl2].image, (hatch_lvl2[hatch_num_lvl2].rect.x, hatch_lvl2[hatch_num_lvl2].rect.y))
-    window.blit(portal_lvl2.image, (portal_lvl2.rect.x, portal_lvl2.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
-
-
-def level_3():
-    window.fill((0, 0, 0))
-
-    floor_level3()
-    walls_level3()
-    items_level3()
-    window.blit(hatch_lvl3[hatch_num_lvl3].image, (hatch_lvl3[hatch_num_lvl3].rect.x, hatch_lvl3[hatch_num_lvl3].rect.y))
-    window.blit(portal_lvl3.image, (portal_lvl3.rect.x, portal_lvl3.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
 
 
 # SOME FUNCTIONS
@@ -798,6 +736,14 @@ def create_coin(*coordinates):
         coin_x = Coin(x, y, 20, 20)
         coins_x.add(coin_x)
     return coins_x
+
+
+def goblins(*coordinates):
+    goblins_x = sprite.Group()
+    for x, y in coordinates:
+        goblin_x = Goblin('images/monsters/goblin/goblin_idle_right_1.png', x, y, 30, 35)
+        goblins_x.add(goblin_x)
+    return goblins_x
 
 
 def create_showcases(*coordinates):
@@ -823,6 +769,10 @@ armor_showcases = create_showcases((290, 200), (460, 200))
 swords_showcases = create_showcases((125, 200), (290, 200), (460, 200), (625, 200))
 potions_showcases = create_showcases((290, 200), (460, 200))
 
+# GOBLINS STUFF
+goblins_tut = goblins((695, 520), (605, 490), (665, 640))
+goblins_lvl1_1 = goblins((507, 392), (440, 438))
+goblins_lvl1_2 = goblins((932, 175), (780, 80), (732, 112))
 
 # music.play()
 # MAIN CYCLE
@@ -842,7 +792,7 @@ while game:
     if state == 'armor store':
         window.blit(bg_image, (0, 0))
         for armor_showcase in armor_showcases:
-            armor_showcase.update()
+            armor_showcase.update(screen=window)
         window.blit(armor, (373, 250))
         window.blit(great_armor, (543, 250))
         if buy_armor_button.click_1(window):
@@ -862,7 +812,7 @@ while game:
     if state == 'swords store':
         window.blit(bg_image, (0, 0))
         for swords_showcase in swords_showcases:
-            swords_showcase.update()
+            swords_showcase.update(screen=window)
         window.blit(great_sword, (207, 250))
         window.blit(axe, (373, 250))
         window.blit(bow, (543, 250))
@@ -898,7 +848,7 @@ while game:
     if state == 'potions store':
         window.blit(bg_image, (0, 0))
         for potions_showcase in potions_showcases:
-            potions_showcase.update()
+            potions_showcase.update(screen=window)
         window.blit(health_potion, (380, 250))
         window.blit(energy_potion, (555, 250))
         if buy_health_potion_button.click_1(window):
@@ -928,7 +878,7 @@ while game:
             state = 'potions store'
     # LEVELS STATE
     if state == 'tutorial':
-        tutorial()
+        tutorial(window, clock, fps)
         tutorial_text()
         player.spawn(130, 550)
         player.trap(traps_group_tut)
@@ -951,7 +901,7 @@ while game:
             player.spawn(860, 460)
             state = 'level 1'
     if state == 'level 1':
-        level_1()
+        level_1(window, clock, fps)
         player.spawn(860, 460)
         player.trap(traps_group_lvl1)
         player.collide(collide_group_lvl1)
@@ -973,7 +923,7 @@ while game:
             player.spawn(210, 590)
             state = 'level 2'
     if state == 'level 2':
-        level_2()
+        level_2(window, clock, fps)
         player.spawn(210, 590)
         player.trap(traps_group_lvl2)
         player.collide(collide_group_lvl2)
@@ -995,14 +945,14 @@ while game:
             player.spawn(480, 120)
             state = 'level 3'
     if state == 'level 3':
-        level_3()
+        level_3(window, clock, fps)
         player.spawn(480, 120)
         player.trap(traps_group_lvl3)
         player.collide(collide_group_lvl3)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
         if not finished:
-            all_sprites.update()  # Обновление всех спрайтов
-        all_sprites.draw(window)  # Отображение всех спрайтов
+            all_sprites.update()
+        all_sprites.draw(window)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3' or state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
         window.blit(lives_list[lives], (10, 0))
         window.blit(energy_list[energy], (120, 24))
@@ -1011,9 +961,20 @@ while game:
             state = 'level menu'
 
     if state == 'tutorial':
-        goblin.show(window)
-        goblin.update(player, lives, target_x=player.rect.x, x=422)
-        goblin.collide(collide_group_tut)
+        for goblin_x in goblins_tut:
+            goblin_x.update(target=player, target_x=player.rect.x, x=420)
+            goblin_x.collide(collide_group_tut)
+            goblin_x.show(window)
+    if state == 'level 1':
+        for goblin_x in goblins_lvl1_1:
+            goblin_x.update(target=player, target_x=player.rect.x, x=590)
+            goblin_x.collide(collide_group_tut)
+            goblin_x.show(window)
+        for goblin_x in goblins_lvl1_2:
+            goblin_x.update(target=player, target_x=player.rect.y, y=260)
+            goblin_x.collide(collide_group_tut)
+            goblin_x.show(window)
+        # print(player.rect.x)
     if state == 'level 3':
         boss.show(window)
         boss.update(player, player.rect.y, 345)
