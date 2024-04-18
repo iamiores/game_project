@@ -15,11 +15,6 @@ traps_group_lvl1 = sprite.Group()
 traps_group_lvl2 = sprite.Group()
 traps_group_lvl3 = sprite.Group()
 
-hatch_num_tut = 0
-hatch_num_lvl1 = 0
-hatch_num_lvl2 = 0
-hatch_num_lvl3 = 0
-
 
 class For_Level_Building(sprite.Sprite):
     def __init__(self, x, y, width, height, file_image):
@@ -185,51 +180,3 @@ def items_level3(screen):
     opened_hatch = For_Level_Building(472, 470, 43, 35, 'images/items/open_hatch.png')
     hatch_lvl3.append(closed_hatch)
     hatch_lvl3.append(opened_hatch)
-
-
-def tutorial(screen, clock, fps):
-    screen.fill((0, 0, 0))
-
-    floor_tut(screen=screen)
-    walls_tut(screen=screen)
-    items_tut(screen=screen)
-    screen.blit(hatch_tut[hatch_num_tut].image, (hatch_tut[hatch_num_tut].rect.x, hatch_tut[hatch_num_tut].rect.y))
-    screen.blit(portal_tut.image, (portal_tut.rect.x, portal_tut.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
-
-
-def level_1(screen, clock, fps):
-    screen.fill((0, 0, 0))
-
-    floor_level1(screen=screen)
-    walls_level1(screen=screen)
-    items_level1(screen=screen)
-    screen.blit(hatch_lvl1[hatch_num_lvl1].image, (hatch_lvl1[hatch_num_lvl1].rect.x, hatch_lvl1[hatch_num_lvl1].rect.y))
-    screen.blit(portal_lvl1.image, (portal_lvl1.rect.x, portal_lvl1.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
-
-
-def level_2(screen, clock, fps):
-    screen.fill((0, 0, 0))
-
-    floor_level2(screen=screen)
-    walls_level2(screen=screen)
-    items_level2(screen=screen)
-    screen.blit(hatch_lvl2[hatch_num_lvl2].image, (hatch_lvl2[hatch_num_lvl2].rect.x, hatch_lvl2[hatch_num_lvl2].rect.y))
-    screen.blit(portal_lvl2.image, (portal_lvl2.rect.x, portal_lvl2.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
-
-
-def level_3(screen, clock, fps):
-    screen.fill((0, 0, 0))
-
-    floor_level3(screen=screen)
-    walls_level3(screen=screen)
-    items_level3(screen=screen)
-    screen.blit(hatch_lvl3[hatch_num_lvl3].image, (hatch_lvl3[hatch_num_lvl3].rect.x, hatch_lvl3[hatch_num_lvl3].rect.y))
-    screen.blit(portal_lvl3.image, (portal_lvl3.rect.x, portal_lvl3.rect.y))
-    pygame.display.update()
-    clock.tick(fps)
