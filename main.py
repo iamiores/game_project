@@ -626,6 +626,7 @@ energy_list = [energy_0, energy_1, energy_2, energy_3, energy_4, energy_5]
 
 all_sprites = sprite.Group()
 arrows = sprite.Group()
+coin_group = sprite.Group()
 
 # STORE STUFF
 price_num = {
@@ -651,9 +652,11 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 
 # OBJECTS
 coin = Coin(x=240, y=33, width=27, height=27)
+coin_in_store = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
 # goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', 695, 520, 30, 35)
+coin_group.add(coin_in_store)
 all_sprites.add(coin)
 all_sprites.add(player)
 
@@ -994,7 +997,9 @@ while game:
                     print('Not enough cash')
         window.blit(health_potion_price, (415, 220))
         window.blit(energy_potion_price, (585, 220))
-    if state == 'armor store' or state == 'swords store' or state == 'potions store':
+    if state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
+        coin_group.draw(window)
+        coin_group.update()
         if back_button.click(window):
             state = 'main menu'
         if armor_button.click(window):
