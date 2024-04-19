@@ -26,22 +26,20 @@ class Arrow(pygame.sprite.Sprite):
         return nearest_target
 
     def update(self, attack):
-        keys = pygame.key.get_pressed()
         if not self.target or not pygame.sprite.spritecollide(self, self.targets_group, False):
             self.target = self.find_nearest_target()
-        if keys[K_r]:
-            if self.target:
-                dx = self.target.rect.centerx - self.rect.centerx
-                dy = self.target.rect.centery - self.rect.centery
-                distance = math.hypot(dx, dy)
-                if distance != 0:
-                    dx /= distance
-                    dy /= distance
-                self.rect.x += dx * self.speed
-                self.rect.y += dy * self.speed
-                angle = math.degrees(math.atan2(-dy, dx))  # Обчислюємо кут повороту
-                self.image = pygame.transform.rotate(self.original_image, angle)
-                self.rect = self.image.get_rect(center=self.rect.center)  # Оновлюємо положення стріли після повороту
-                if self.rect.colliderect(self.target.rect):
-                    self.target.health -= attack
-                    self.kill()
+        if self.target:
+            dx = self.target.rect.centerx - self.rect.centerx
+            dy = self.target.rect.centery - self.rect.centery
+            distance = math.hypot(dx, dy)
+            if distance != 0:
+                dx /= distance
+                dy /= distance
+            self.rect.x += dx * self.speed
+            self.rect.y += dy * self.speed
+            angle = math.degrees(math.atan2(-dy, dx))  # Обчислюємо кут повороту
+            self.image = pygame.transform.rotate(self.original_image, angle)
+            self.rect = self.image.get_rect(center=self.rect.center)  # Оновлюємо положення стріли після повороту
+            if self.rect.colliderect(self.target.rect):
+                self.target.health -= attack
+                self.kill()
