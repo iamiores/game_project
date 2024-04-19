@@ -1097,11 +1097,10 @@ while game:
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
                 for goblin_x in goblins_lvl1_2:
-                    goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_y=270,
-                                    end_x=630)
+                    goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_y=270, end_x=630)
                     if goblin_x.target_y <= goblin_x.start_y:
                         goblin_x.follow = True
-                    if goblin_x.target_x <= goblin_x.end_x:
+                    if goblin_x.target_x <= goblin_x.end_x or goblin_x.target_y >= goblin_x.start_y:
                         goblin_x.follow = False
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
@@ -1130,20 +1129,18 @@ while game:
                         w_hatch_collided_lvl2 = False
             if not finished:
                 for goblin_x in goblins_lvl2_1:
-                    goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_y=370,
-                                    end_x=430)
+                    goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_y=370, end_x=430)
                     if goblin_x.target_y <= goblin_x.start_y:
                         goblin_x.follow = True
-                    if goblin_x.target_x >= goblin_x.end_x:
+                    if goblin_x.target_x >= goblin_x.end_x or goblin_x.target_y >= goblin_x.start_y:
                         goblin_x.follow = False
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
                 for goblin_x in goblins_lvl2_2:
-                    goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_x=555,
-                                    end_y=370)
+                    goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_x=555, end_y=370)
                     if goblin_x.target_x >= goblin_x.start_x:
                         goblin_x.follow = True
-                    if goblin_x.target_y >= goblin_x.end_y:
+                    if goblin_x.target_y >= goblin_x.end_y or goblin_x.target_x <= goblin_x.start_x:
                         goblin_x.follow = False
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
