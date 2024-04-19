@@ -1011,6 +1011,33 @@ while game:
 
     # LEVELS STATE
     if state == 'tutorial':
+        if victory:
+            finished = True
+            next_level('victory', kill_tut, 3, coins, 860, 460)
+            if menu_button.click(window):
+                state = 'level menu'
+                reset_tutorial()
+                victory = False
+            elif retry_button_1.click(window):
+                reset_tutorial()
+                finished = False
+                victory = False
+            elif next_button.click(window):
+                finished = False
+                victory = False
+                player.spawn(tut_x, tut_y)
+                state = 'level 1'
+        if defeat:
+            finished = True
+            next_level('defeat', kill_tut, 3, coins, 860, 460)
+            if menu_button.click(window):
+                state = 'level menu'
+                reset_tutorial()
+                defeat = False
+            elif retry_button_2.click(window):
+                reset_tutorial()
+                finished = False
+                defeat = False
         if lives != 0:
             if not finished:
                 tutorial(window, clock, fps)
@@ -1041,36 +1068,9 @@ while game:
                     goblin_x.collide(collide_group_tut)
                     goblin_x.show(window)
                 if player.rect.colliderect(portal_tut.rect):
-                    finished = True
                     victory = True
                 if lives == 0:
                     defeat = True
-                    finished = True
-            if victory:
-                next_level('victory', kill_tut, 3, coins, 860, 460)
-                if menu_button.click(window):
-                    state = 'level menu'
-                    reset_tutorial()
-                    victory = False
-                elif retry_button_1.click(window):
-                    reset_tutorial()
-                    finished = False
-                    victory = False
-                elif next_button.click(window):
-                    finished = False
-                    victory = False
-                    player.spawn(tut_x, tut_y)
-                    state = 'level 1'
-            if defeat:
-                next_level('defeat', kill_tut, 3, coins, 860, 460)
-                if menu_button.click(window):
-                    state = 'level menu'
-                    reset_tutorial()
-                    defeat = False
-                elif retry_button_2.click(window):
-                    reset_tutorial()
-                    finished = False
-                    defeat = False
 
     if state == 'level 1':
         if lives != 0:
@@ -1165,14 +1165,14 @@ while game:
         if not finished:
             all_sprites.update()
         all_sprites.draw(window)
+        if home_button.click(window):
+            state = 'level menu'
+            reset_tutorial()
         # print(lives)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3' or state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
         window.blit(lives_list[lives], (10, 0))
         window.blit(energy_list[energy], (120, 24))
         window.blit(money, (255, 20))
-        if home_button.click(window):
-            state = 'level menu'
-            reset_tutorial()
 
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
