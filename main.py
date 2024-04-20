@@ -21,7 +21,7 @@ class Goblin(sprite.Sprite):
         self.rect.y = goblin_y
         self.rect.width = width
         self.rect.height = height
-        self.speed = randint(3, 5)
+        self.speed = randint(3, 6)
         self.counter_idle = 0
         self.counter_right = 0
         self.counter_left = 0
@@ -79,8 +79,8 @@ class Goblin(sprite.Sprite):
                 self.image = self.pics_attack_right_obj[3]
 
             elif self.counter_attack_right == 20:
-                self.attack = True
                 self.counter_attack_right = 0
+                lives -= self.attack_power
         else:
             self.counter_attack_right = 0
 
@@ -95,8 +95,8 @@ class Goblin(sprite.Sprite):
             elif 15 <= self.counter_attack_left < 20:
                 self.image = self.pics_attack_left_obj[3]
             elif self.counter_attack_left == 20:
-                self.attack = True
                 self.counter_attack_left = 0
+                lives -= self.attack_power
         else:
             self.counter_attack_left = 0
 
@@ -132,9 +132,8 @@ class Goblin(sprite.Sprite):
 
         if self.attack:
             self.speed = 2
-            lives -= self.attack_power
         else:
-            self.speed = randint(3, 5)
+            self.speed = randint(3, 6)
 
     def collide(self, group):
         for group in group:
@@ -169,8 +168,10 @@ class Goblin(sprite.Sprite):
         if self.follow:
             if self.direction == 'right':
                 if dist <= self.attack_range:
+                    self.attack = True
                     self.animate('attack right')
                 else:
+                    self.attack = False
                     self.animate('right')
                 self.rect.x += dx * self.speed
                 if dy > 0:
@@ -182,8 +183,10 @@ class Goblin(sprite.Sprite):
 
             if self.direction == 'left':
                 if dist <= self.attack_range:
+                    self.attack = True
                     self.animate('attack left')
                 else:
+                    self.attack = False
                     self.animate('left')
                 self.rect.x += dx * self.speed
                 if dy > 0:
@@ -265,9 +268,8 @@ class Boss(sprite.Sprite):
                 self.image = self.pics_attack_right_obj[2]
             elif 15 <= self.counter_attack_right < 20:
                 self.image = self.pics_attack_right_obj[3]
-
             elif self.counter_attack_right == 20:
-                self.attack = True
+                lives -= self.attack_power
                 self.counter_attack_right = 0
         else:
             self.counter_attack_right = 0
@@ -284,7 +286,7 @@ class Boss(sprite.Sprite):
                 self.image = self.pics_attack_left_obj[3]
 
             elif self.counter_attack_left == 20:
-                self.attack = True
+                lives -= self.attack_power
                 self.counter_attack_left = 0
         else:
             self.counter_attack_left = 0
@@ -320,8 +322,7 @@ class Boss(sprite.Sprite):
             self.counter_left = 0
 
         if self.attack:
-            lives -= self.attack_power
-            self.speed = 1
+            self.speed = 2
 
         else:
             self.speed = 5
@@ -330,16 +331,20 @@ class Boss(sprite.Sprite):
         if target_y >= y:
             if self.direction == 'left':
                 if self.rect.colliderect(target.rect):
+                    self.attack = True
                     self.animate('attack left')
                 else:
+                    self.attack = False
                     self.animate('left')
                 self.rect.x -= self.speed
                 if self.rect.x <= 340:
                     self.direction = 'right'
             elif self.direction == 'right':
                 if self.rect.colliderect(target.rect):
+                    self.attack = True
                     self.animate('attack right')
                 else:
+                    self.attack = False
                     self.animate('right')
                 self.rect.x += self.speed
                 if self.rect.x >= 610:
@@ -527,8 +532,14 @@ class Player(sprite.Sprite):
         self.weapon = weapon_name
         print(self.weapon)
 
-    def fire(self):
-        arrow = Arrow(self)
+    def fire(self, group=None):
+        group = group if group is not None else float('-inf')
+        arrow = Arrow(self, targets_group=group)
+        arrows.add(arrow)
+
+    def fire_boss(self, monster=None):
+        monster = monster if monster is not None else float('-inf')
+        arrow = Arrow(self, boss=monster)
         arrows.add(arrow)
 
     def attack(self, group=None, target=None):
@@ -579,11 +590,11 @@ class Player(sprite.Sprite):
 WEAPON_TABLE = {
     # attack, range
     "no_weapon": [5, 5],
-    "knife": [10, 5],
-    "great_sword": [15, 5],
+    "knife": [5, 10],
+    "great_sword": [10, 5],
     "steel_sword": [20, 10],
     "bow": [20, 10],
-    "axe": [15, 10]
+    "axe": [10, 10]
 }
 
 ARMOR_TABLE = {
@@ -610,9 +621,20 @@ lives = 5
 energy = 5
 coins = 0
 finished = False
+
+victory_tut = False
+defeat_tut = False
+victory_lvl1 = False
+defeat_lvl1 = False
+victory_lvl2 = False
+defeat_lvl2 = False
+victory_lvl3 = False
+defeat_lvl3 = False
+
 kill_tut = 0
 kill_lvl1 = 0
 kill_lvl2 = 0
+kill_lvl3 = 0
 hatch_num_tut = 0
 hatch_num_lvl1 = 0
 hatch_num_lvl2 = 0
@@ -633,8 +655,8 @@ price_num = {
     'armor_price_num': 2,
     'great_armor_price_num': 4,
     'great_sword_price_num': 2,
-    'steel_sword_price_num': 4,
-    'bow_price_num': 5,
+    'steel_sword_price_num': 6,
+    'bow_price_num': 10,
     'axe_price_num': 3,
     'health_potion_price_num': [1, 1],
     'energy_potion_price_num': [1, 2]
@@ -655,7 +677,6 @@ coin = Coin(x=240, y=33, width=27, height=27)
 coin_in_store = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
-# goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', 695, 520, 30, 35)
 coin_group.add(coin_in_store)
 all_sprites.add(coin)
 all_sprites.add(player)
@@ -781,6 +802,11 @@ def tutorial_text():
 
 # RESET GAME
 tut_x, tut_y = 130, 550
+lvl1_x, lvl1_y = 860, 460
+lvl2_x, lvl2_y = 210, 590
+lvl3_x, lvl3_y = 480, 120
+
+
 def reset_tutorial():
     global hatch_num_tut, coins, kill_tut, lives, energy, w_hatch_collided_tut, coin_amount_tut, finished, goblins_tut, tut_x, tut_y
     goblins_tut = goblins((695, 520), (605, 490), (665, 640))
@@ -817,6 +843,122 @@ def reset_tutorial():
         goblin_x.show(window)
 
 
+def reset_lvl1():
+    global hatch_num_lvl1, coins, kill_lvl1, lives, energy, w_hatch_collided_lvl1, coin_amount_lvl1, finished, goblins_lvl1_1, goblins_lvl1_2, lvl1_x, lvl1_y
+    goblins_lvl1_1 = goblins((507, 392), (440, 438))
+    goblins_lvl1_2 = goblins((932, 175), (780, 80), (732, 112))
+    player.spawn(lvl1_x, lvl1_y)
+    finished = False
+    hatch_num_lvl1 = 0
+    coins = 0
+    kill_lvl1 = 0
+    lives = 5
+    energy = 5
+    if player.rect.colliderect(hatch_lvl1[0]):
+        w_hatch_collided_lvl1 = True
+        hatch_num_lvl1 = 1
+    if w_hatch_collided_lvl1:
+        for coin in coins_lvl1:
+            coin.update()
+            coin.draw(window)
+            if player.rect.colliderect(coin.rect):
+                collect_coin_sound.play()
+                coin.kill()
+                coin_amount_lvl1 -= 1
+                coins += 1
+            elif coin_amount_lvl1 == 0:
+                w_hatch_collided_lvl1 = False
+    for goblin_x in goblins_lvl1_1:
+        goblin_x.update(target=player, target_x=player.rect.x, start_x=600)
+        if goblin_x.target_x <= goblin_x.start_x:
+            goblin_x.follow = True
+        else:
+            goblin_x.follow = False
+        goblin_x.collide(collide_group_lvl1)
+        goblin_x.show(window)
+    for goblin_x in goblins_lvl1_2:
+        goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_y=270, end_x=630)
+        if goblin_x.target_y <= goblin_x.start_y:
+            goblin_x.follow = True
+        if goblin_x.target_x <= goblin_x.end_x or goblin_x.target_y >= goblin_x.start_y:
+            goblin_x.follow = False
+        goblin_x.collide(collide_group_lvl1)
+        goblin_x.show(window)
+
+
+def reset_lvl2():
+    global hatch_num_lvl2, coins, kill_lvl2, lives, energy, w_hatch_collided_lvl2, coin_amount_lvl2, finished, goblins_lvl2_1, goblins_lvl2_2, lvl2_x, lvl2_y
+    goblins_lvl2_1 = goblins((352, 250), (293, 303), (125, 262))
+    goblins_lvl2_2 = goblins((860, 237), (717, 275))
+    player.spawn(lvl2_x, lvl2_y)
+    finished = False
+    hatch_num_lvl2 = 0
+    coins = 0
+    kill_lvl2 = 0
+    lives = 5
+    energy = 5
+    if player.rect.colliderect(hatch_lvl2[0]):
+        w_hatch_collided_lvl2 = True
+        hatch_num_lvl2 = 1
+    if w_hatch_collided_lvl2:
+        for coin in coins_lvl2:
+            coin.update()
+            coin.draw(window)
+            if player.rect.colliderect(coin.rect):
+                collect_coin_sound.play()
+                coin.kill()
+                coin_amount_lvl2 -= 1
+                coins += 1
+            elif coin_amount_lvl2 == 0:
+                w_hatch_collided_lvl2 = False
+    for goblin_x in goblins_lvl2_1:
+        goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_y=370, end_x=430)
+        if goblin_x.target_y <= goblin_x.start_y:
+            goblin_x.follow = True
+        if goblin_x.target_x >= goblin_x.end_x or goblin_x.target_y >= goblin_x.start_y:
+            goblin_x.follow = False
+        goblin_x.collide(collide_group_lvl2)
+        goblin_x.show(window)
+    for goblin_x in goblins_lvl2_2:
+        goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_x=555, end_y=370)
+        if goblin_x.target_x >= goblin_x.start_x:
+            goblin_x.follow = True
+        if goblin_x.target_y >= goblin_x.end_y or goblin_x.target_x <= goblin_x.start_x:
+            goblin_x.follow = False
+        goblin_x.collide(collide_group_lvl2)
+        goblin_x.show(window)
+
+
+def reset_lvl3():
+    global hatch_num_lvl3, coins, kill_lvl3, lives, energy, w_hatch_collided_lvl3, coin_amount_lvl3, finished, lvl3_x, lvl3_y
+    player.spawn(lvl3_x, lvl3_y)
+    player.trap(traps_group_lvl3)
+    player.collide(collide_group_lvl3)
+    boss.show(window)
+    boss.update(player, player.rect.y, 345)
+    finished = False
+    hatch_num_lvl3 = 0
+    coins = 0
+    kill_lvl3 = 0
+    lives = 5
+    energy = 5
+    if boss.health == 0:
+        if player.rect.colliderect(hatch_lvl3[0]):
+            w_hatch_collided_lvl3 = True
+            hatch_num_lvl3 = 1
+        if w_hatch_collided_lvl3:
+            for coin in coins_lvl3:
+                coin.update()
+                coin.draw(window)
+                if player.rect.colliderect(coin.rect):
+                    collect_coin_sound.play()
+                    coin.kill()
+                    coin_amount_lvl3 -= 1
+                    coins += 1
+                elif coin_amount_lvl3 == 0:
+                    w_hatch_collided_lvl3 = False
+
+
 # SOME FUNCTIONS
 def create_coin(*coordinates):
     coins_x = sprite.Group()
@@ -842,44 +984,41 @@ def create_showcases(*coordinates):
     return showcasess
 
 
-def next_level(kind, killed, inall, coin_amount, x, y):
+def next_level(kind, killed, inall, coin_amount):
     global finished, state
-    coin_n = Coin(545, 280, 27, 27)
+    window.blit(black_scr, (0, 0))
+    coin_n = Coin(540, 312, 27, 27)
     mid_kills = inall // 2
 
     if kind == 'defeat':
         if killed < mid_kills:
-            window.blit(one_star, (505, 210))
+            window.blit(one_star, (472, 225))
         elif killed == mid_kills:
-            window.blit(one_star, (505, 210))
-            window.blit(two_star, (485, 210))
+            window.blit(one_star, (512, 225))
+            window.blit(one_star, (442, 225))
         elif killed > mid_kills:
-            window.blit(one_star, (505, 210))
-            window.blit(two_star, (485, 210))
-            window.blit(three_star, (525, 210))
-        window.blit(defeat_flag, (505, 150))
+            window.blit(one_star, (472, 225))
+            window.blit(one_star, (412, 225))
+            window.blit(one_star, (532, 225))
+        window.blit(defeat_flag, (420, 140))
     elif kind == 'victory':
         if killed < mid_kills:
-            window.blit(one_star, (505, 210))
+            window.blit(one_star, (472, 225))
         elif killed == mid_kills:
-            window.blit(one_star, (505, 210))
-            window.blit(two_star, (485, 210))
+            window.blit(one_star, (512, 225))
+            window.blit(one_star, (442, 225))
         elif killed > mid_kills:
-            window.blit(one_star, (505, 210))
-            window.blit(two_star, (485, 210))
-            window.blit(three_star, (525, 210))
-        window.blit(victory_flag, (505, 150))
-    # window.blit(black_scr, (0, 0))
+            window.blit(one_star, (472, 225))
+            window.blit(one_star, (412, 225))
+            window.blit(one_star, (532, 225))
+        window.blit(victory_flag, (420, 140))
     coin_n.draw(window)
     coin_n.update()
-    window.blit(skull_killed, (475, 280))
+    window.blit(skull_killed, (415, 300))
     coins_end = font1.render(': ' + str(coin_amount), True, pygame.color.Color('white'))
     killed_end = font1.render(': ' + str(killed) + '/' + str(inall), True, pygame.color.Color('white'))
-    window.blit(coins_end, (565, 280))
-    window.blit(killed_end, (495, 280))
-
-victory = False
-defeat = False
+    window.blit(coins_end, (555, 300))
+    window.blit(killed_end, (452, 300))
 
 # COIN STUFF
 w_hatch_collided_tut = False
@@ -891,6 +1030,9 @@ coin_amount_lvl1 = 4
 w_hatch_collided_lvl2 = False
 coins_lvl2 = create_coin((749, 560), (788, 577), (737, 615), (766, 590))
 coin_amount_lvl2 = 4
+w_hatch_collided_lvl3 = False
+coins_lvl3 = create_coin((749, 560), (788, 577), (737, 615), (766, 590))
+coin_amount_lvl3 = 3
 
 # SHOWCASE STUFF
 armor_showcases = create_showcases((290, 200), (460, 200))
@@ -1011,38 +1153,39 @@ while game:
 
     # LEVELS STATE
     if state == 'tutorial':
-        if victory:
+        if victory_tut:
             finished = True
-            next_level('victory', kill_tut, 3, coins, 860, 460)
+            next_level('victory', kill_tut, 3, coins)
             if menu_button.click(window):
-                state = 'level menu'
+                state = 'main menu'
+                finished = False
+                victory_tut = False
                 reset_tutorial()
-                victory = False
             elif retry_button_1.click(window):
                 reset_tutorial()
                 finished = False
-                victory = False
+                victory_tut = False
             elif next_button.click(window):
                 finished = False
-                victory = False
-                player.spawn(tut_x, tut_y)
-                state = 'level 1'
-        if defeat:
-            finished = True
-            next_level('defeat', kill_tut, 3, coins, 860, 460)
-            if menu_button.click(window):
+                player.spawn(lvl1_x, lvl1_y)
                 state = 'level menu'
+        if defeat_tut:
+            finished = True
+            next_level('defeat', kill_tut, 3, coins)
+            if menu_button.click(window):
+                state = 'main menu'
+                finished = False
+                defeat_tut = False
                 reset_tutorial()
-                defeat = False
             elif retry_button_2.click(window):
                 reset_tutorial()
                 finished = False
-                defeat = False
+                defeat_tut = False
         if lives != 0:
             if not finished:
                 tutorial(window, clock, fps)
                 tutorial_text()
-                player.spawn(130, 550)
+                player.spawn(tut_x, tut_y)
                 player.trap(traps_group_tut)
                 player.collide(collide_group_tut)
                 if player.rect.colliderect(hatch_tut[0]):
@@ -1068,31 +1211,59 @@ while game:
                     goblin_x.collide(collide_group_tut)
                     goblin_x.show(window)
                 if player.rect.colliderect(portal_tut.rect):
-                    victory = True
+                    victory_tut = True
                 if lives == 0:
-                    defeat = True
+                    defeat_tut = True
 
     if state == 'level 1':
+        if victory_lvl1:
+            finished = True
+            next_level('victory', kill_lvl1, 5, coins)
+            if menu_button.click(window):
+                state = 'main menu'
+                finished = False
+                victory_lvl1 = False
+                reset_lvl1()
+            elif retry_button_1.click(window):
+                reset_lvl1()
+                finished = False
+                victory_lvl1 = False
+            elif next_button.click(window):
+                finished = False
+                player.spawn(lvl2_x, lvl2_y)
+                state = 'level menu'
+        if defeat_lvl1:
+            finished = True
+            next_level('defeat', kill_lvl1, 5, coins)
+            if menu_button.click(window):
+                state = 'main menu'
+                finished = False
+                defeat_lvl1 = False
+                reset_lvl1()
+            elif retry_button_2.click(window):
+                reset_lvl1()
+                finished = False
+                defeat_lvl1 = False
         if lives != 0:
-            level_1(window, clock, fps)
-            player.spawn(860, 460)
-            player.trap(traps_group_lvl1)
-            player.collide(collide_group_lvl1)
-            if player.rect.colliderect(hatch_lvl1[0]):
-                w_hatch_collided_lvl1 = True
-                hatch_num_lvl1 = 1
-            if w_hatch_collided_lvl1:
-                for coin in coins_lvl1:
-                    coin.update()
-                    coin.draw(window)
-                    if player.rect.colliderect(coin.rect):
-                        collect_coin_sound.play()
-                        coin.kill()
-                        coin_amount_lvl1 -= 1
-                        coins += 1
-                    elif coin_amount_lvl1 == 0:
-                        w_hatch_collided_lvl1 = False
             if not finished:
+                level_1(window, clock, fps)
+                player.spawn(lvl1_x, lvl1_y)
+                player.trap(traps_group_lvl1)
+                player.collide(collide_group_lvl1)
+                if player.rect.colliderect(hatch_lvl1[0]):
+                    w_hatch_collided_lvl1 = True
+                    hatch_num_lvl1 = 1
+                if w_hatch_collided_lvl1:
+                    for coin in coins_lvl1:
+                        coin.update()
+                        coin.draw(window)
+                        if player.rect.colliderect(coin.rect):
+                            collect_coin_sound.play()
+                            coin.kill()
+                            coin_amount_lvl1 -= 1
+                            coins += 1
+                        elif coin_amount_lvl1 == 0:
+                            w_hatch_collided_lvl1 = False
                 for goblin_x in goblins_lvl1_1:
                     goblin_x.update(target=player, target_x=player.rect.x, start_x=600)
                     if goblin_x.target_x <= goblin_x.start_x:
@@ -1110,36 +1281,66 @@ while game:
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
             if player.rect.colliderect(portal_lvl1.rect):
-                player.spawn(210, 590)
-                state = 'level 2'
+                victory_lvl1 = True
+            if lives == 0:
+                defeat_lvl1 = True
+
     if state == 'level 2':
+        if victory_lvl2:
+            finished = True
+            next_level('victory', kill_lvl2, 5, coins)
+            if menu_button.click(window):
+                state = 'main menu'
+                finished = False
+                victory_lvl2 = False
+                reset_lvl2()
+            elif retry_button_1.click(window):
+                reset_lvl2()
+                finished = False
+                victory_lvl2 = False
+                player.spawn(lvl2_x, lvl2_y)
+            elif next_button.click(window):
+                finished = False
+                state = 'level menu'
+        if defeat_lvl2:
+            finished = True
+            next_level('defeat', kill_lvl2, 5, coins)
+            if menu_button.click(window):
+                state = 'main menu'
+                finished = False
+                defeat_lvl2 = False
+                reset_lvl2()
+            elif retry_button_2.click(window):
+                reset_lvl2()
+                finished = False
+                defeat_lvl2 = False
         if lives != 0:
-            level_2(window, clock, fps)
-            player.spawn(210, 590)
-            player.trap(traps_group_lvl2)
-            player.collide(collide_group_lvl2)
-            if player.rect.colliderect(hatch_lvl2[0]):
-                w_hatch_collided_lvl2 = True
-                hatch_num_lvl2 = 1
-            if w_hatch_collided_lvl2:
-                for coin in coins_lvl2:
-                    coin.update()
-                    coin.draw(window)
-                    if player.rect.colliderect(coin.rect):
-                        collect_coin_sound.play()
-                        coin.kill()
-                        coin_amount_lvl2 -= 1
-                        coins += 1
-                    elif coin_amount_lvl2 == 0:
-                        w_hatch_collided_lvl2 = False
             if not finished:
+                level_2(window, clock, fps)
+                player.spawn(210, 590)
+                player.trap(traps_group_lvl2)
+                player.collide(collide_group_lvl2)
+                if player.rect.colliderect(hatch_lvl2[0]):
+                    w_hatch_collided_lvl2 = True
+                    hatch_num_lvl2 = 1
+                if w_hatch_collided_lvl2:
+                    for coin in coins_lvl2:
+                        coin.update()
+                        coin.draw(window)
+                        if player.rect.colliderect(coin.rect):
+                            collect_coin_sound.play()
+                            coin.kill()
+                            coin_amount_lvl2 -= 1
+                            coins += 1
+                        elif coin_amount_lvl2 == 0:
+                            w_hatch_collided_lvl2 = False
                 for goblin_x in goblins_lvl2_1:
                     goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_y=370, end_x=430)
                     if goblin_x.target_y <= goblin_x.start_y:
                         goblin_x.follow = True
                     if goblin_x.target_x >= goblin_x.end_x or goblin_x.target_y >= goblin_x.start_y:
                         goblin_x.follow = False
-                    goblin_x.collide(collide_group_lvl1)
+                    goblin_x.collide(collide_group_lvl2)
                     goblin_x.show(window)
                 for goblin_x in goblins_lvl2_2:
                     goblin_x.update(target=player, target_x=player.rect.x, target_y=player.rect.y, start_x=555, end_y=370)
@@ -1147,33 +1348,82 @@ while game:
                         goblin_x.follow = True
                     if goblin_x.target_y >= goblin_x.end_y or goblin_x.target_x <= goblin_x.start_x:
                         goblin_x.follow = False
-                    goblin_x.collide(collide_group_lvl1)
+                    goblin_x.collide(collide_group_lvl2)
                     goblin_x.show(window)
             if player.rect.colliderect(portal_lvl2.rect):
-                player.spawn(480, 120)
-                state = 'level 3'
+                victory_lvl2 = True
+            if lives == 0:
+                defeat_lvl2 = True
+
     if state == 'level 3':
+        if victory_lvl3:
+            finished = True
+            next_level('victory', kill_lvl3, 1, coins)
+            if menu_button.click(window):
+                state = 'main menu'
+                finished = False
+                victory_lvl3 = False
+                reset_lvl3()
+            elif retry_button_1.click(window):
+                reset_lvl3()
+                finished = False
+                victory_lvl3 = False
+        if defeat_lvl3:
+            finished = True
+            next_level('defeat', kill_lvl3, 1, coins)
+            if menu_button.click(window):
+                state = 'main menu'
+                finished = False
+                defeat_lvl3 = False
+                reset_lvl3()
+            elif retry_button_2.click(window):
+                reset_lvl3()
+                finished = False
+                defeat_lvl3 = False
         if lives != 0:
-            level_3(window, clock, fps)
-            player.spawn(480, 120)
-            player.trap(traps_group_lvl3)
-            player.collide(collide_group_lvl3)
-            boss.show(window)
-            boss.update(player, player.rect.y, 345)
+            if not finished:
+                level_3(window, clock, fps)
+                player.spawn(480, 120)
+                player.trap(traps_group_lvl3)
+                player.collide(collide_group_lvl3)
+                boss.show(window)
+                boss.update(player, player.rect.y, 345)
+                if boss.health == 0:
+                    if player.rect.colliderect(hatch_lvl3[0]):
+                        w_hatch_collided_lvl3 = True
+                        hatch_num_lvl3 = 1
+                    if w_hatch_collided_lvl3:
+                        for coin in coins_lvl3:
+                            coin.update()
+                            coin.draw(window)
+                            if player.rect.colliderect(coin.rect):
+                                collect_coin_sound.play()
+                                coin.kill()
+                                coin_amount_lvl3 -= 1
+                                coins += 1
+                            elif coin_amount_lvl3 == 0:
+                                w_hatch_collided_lvl3 = False
+                    if player.rect.colliderect(portal_lvl3.rect):
+                        victory_lvl3 = True
+            if lives <= 0:
+                defeat_lvl3 = True
 
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3':
         if not finished:
             all_sprites.update()
-        all_sprites.draw(window)
+            all_sprites.draw(window)
         if home_button.click(window):
             state = 'level menu'
-            reset_tutorial()
         # print(lives)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3' or state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
-        window.blit(lives_list[lives], (10, 0))
-        window.blit(energy_list[energy], (120, 24))
-        window.blit(money, (255, 20))
-
+        if not finished:
+            window.blit(lives_list[lives], (10, 0))
+            window.blit(energy_list[energy], (120, 24))
+            window.blit(money, (255, 20))
+    # if tut_x == player.rect.x and tut_y == player.rect.y:
+    #     print(True)
+    # else:
+    #     print(False)
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))
