@@ -380,7 +380,6 @@ class Player(sprite.Sprite):
         self.direction = None
         self.attack = False
 
-
         self.pics_stay = ['images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkRight_3.png']
         self.pics_stay_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_stay]
 
@@ -676,6 +675,8 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 coin = Coin(x=240, y=33, width=27, height=27)
 coin_in_store = Coin(x=240, y=33, width=27, height=27)
 player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
+player.equip_weapon('no_weapon')
+player.equip_armor('no_armor')
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
 coin_group.add(coin_in_store)
 all_sprites.add(coin)
