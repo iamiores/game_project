@@ -6,6 +6,7 @@ from building import *
 from downloads import *
 from arrow import Arrow
 import math
+import numpy as np
 from random import randint
 pygame.init()
 
@@ -28,7 +29,7 @@ class Goblin(sprite.Sprite):
         self.counter_attack_right = 0
         self.counter_attack_left = 0
         self.direction = 'right'
-        self.health = 20
+        self.health = 40
         self.follow = False
         self.attack_range = 10
         self.attack_power = 1
@@ -378,7 +379,9 @@ class Player(sprite.Sprite):
         self.counter_forward = 0
         self.counter_backward = 0
         self.direction = None
-        self.attack = False
+        self.attacking = False
+        self.timer = 0
+        self.attack_amount = 0
 
         self.pics_stay = ['images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkRight_3.png']
         self.pics_stay_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_stay]
@@ -541,47 +544,39 @@ class Player(sprite.Sprite):
         arrow = Arrow(self, boss=monster)
         arrows.add(arrow)
 
-    def attack(self, group=None, target=None):
-        self.group = group if group is not None else float('-inf')
-        self.target = target if target is not None else float('-inf')
-        if self.weapon == "no_weapon":
-            print("You don't have any weapon equipped!")
-
+    def attack(self, monster):
         attack_properties = WEAPON_TABLE.get(self.weapon)
+        # print(attack_properties)
         if attack_properties:
             attack_power, attack_range = attack_properties
-            for monster in self.group:
-                if self.rect.colliderect(monster.rect):
-                    self.attack = True
-                if self.attack:
+            if self.rect.colliderect(monster.rect) and not self.attacking:
+                self.attacking = True
+                if self.attacking:
                     monster.health -= attack_power
                     print(f"You dealt {attack_power} damage to the target!")
                     print(monster.health)
-            if self.rect.colliderect(self.target.rect):
-                self.attack = True
-            if self.attack:
-                self.target.health -= attack_power
-                print(f"You dealt {attack_power} damage to the target!")
-                print(self.target.health)
+                    self.attack_amount = 1
+                elif self.attack_amount == 1:
+                    self.timer += 1
+                    self.attacking = False
+                    if self.timer >= 20:
+                        self.attack_amount = 0
+                        self.timer = 0
+                        self.attacking = True
         else:
             print("Weapon not found in the weapon table!")
 
-    def defend(self, monsters=None, monster=None):
-        self.monsters = monsters if monsters is not None else float('-inf')
-        self.monster = monster if monster is not None else float('-inf')
-        if self.armor == "no_armor":
-            print("You don't have any armor equipped!")
-
+    def defend(self, monsters):
         defense_properties = ARMOR_TABLE.get(self.armor)
         if defense_properties:
             defense_power = defense_properties
-            for monster in self.monsters:
+            for monster in monsters:
                 if monster.attack:
                     monster.attack_power -= defense_power
                     print(f"{self.armor} provides defense against the specified group of sprites!")
-            if self.monster.attack:
-                self.monster.attack_power -= defense_power
-                print(f"{self.armor} provides defense against the specified group of sprites!")
+                if monster.attack:
+                    monster.attack_power -= defense_power
+                    print(f"{self.armor} provides defense against the specified group of sprites!")
         else:
             print("Armor not found in the armor table!")
 
@@ -1047,6 +1042,7 @@ goblins_lvl1_2 = goblins((932, 175), (780, 80), (732, 112))
 goblins_lvl2_1 = goblins((352, 250), (293, 303), (125, 262))
 goblins_lvl2_2 = goblins((860, 237), (717, 275))
 
+key_get = pygame.key.get_pressed()
 # music.play()
 # MAIN CYCLE
 while game:
@@ -1357,6 +1353,7 @@ while game:
                 defeat_lvl2 = True
 
     if state == 'level 3':
+        player.attack(boss)
         if victory_lvl3:
             finished = True
             next_level('victory', kill_lvl3, 1, coins)
@@ -1389,7 +1386,8 @@ while game:
                 player.collide(collide_group_lvl3)
                 boss.show(window)
                 boss.update(player, player.rect.y, 345)
-                if boss.health == 0:
+                if boss.health <= 0:
+                    boss.kill()
                     if player.rect.colliderect(hatch_lvl3[0]):
                         w_hatch_collided_lvl3 = True
                         hatch_num_lvl3 = 1
@@ -1421,10 +1419,6 @@ while game:
             window.blit(lives_list[lives], (10, 0))
             window.blit(energy_list[energy], (120, 24))
             window.blit(money, (255, 20))
-    # if tut_x == player.rect.x and tut_y == player.rect.y:
-    #     print(True)
-    # else:
-    #     print(False)
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     text = font1.render(f"Mouse X: {mouse_x}, Mouse Y: {mouse_y}", True, pygame.color.Color('white'))

@@ -39,15 +39,13 @@ class Button:
         mouse_controller = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()
         if self.x < mouse_controller[0] < self.x + self.width and self.y < mouse_controller[1] < self.y + self.height:
-            pygame.draw.rect(screen, self.active_color_1, (self.x, self.y, self.width, self.height),
-                             border_radius=self.border_radius)
+            pygame.draw.rect(screen, self.active_color_1, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
             if click[0] and not self.is_clicked:
                 self.is_clicked = True
                 button_click_sound.play()
                 return True
         else:
-            pygame.draw.rect(screen, self.inactive_color_1, (self.x, self.y, self.width, self.height),
-                             border_radius=self.border_radius)
+            pygame.draw.rect(screen, self.inactive_color_1, (self.x, self.y, self.width, self.height), border_radius=self.border_radius)
             self.is_clicked = False
 
         create_text(screen, self.text, x=self.x + 15, y=self.y + 10)
