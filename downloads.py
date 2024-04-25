@@ -22,7 +22,7 @@ great_armor = transform.scale(pygame.image.load('store_items/great_armor.png'), 
 great_sword = transform.scale(pygame.image.load('store_items/great_sword.png'), (92, 92))
 steel_sword = transform.scale(pygame.image.load('store_items/steel_sword.png'), (92, 92))
 axe = transform.scale(pygame.image.load('store_items/axe.png'), (90, 92))
-bow = transform.scale(pygame.image.load('store_items/bow.png'), (92, 92))
+knife = transform.scale(pygame.image.load('store_items/knife.png'), (88, 90))
 health_potion = transform.scale(pygame.image.load('store_items/health_potion.png'), (66, 88))
 energy_potion = transform.scale(pygame.image.load('store_items/energy_potion.png'), (66, 88))
 

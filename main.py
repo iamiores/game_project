@@ -4,7 +4,6 @@ from coin import Coin
 from button import *
 from building import *
 from downloads import *
-from arrow import Arrow
 import math
 from random import randint
 pygame.init()
@@ -535,16 +534,6 @@ class Player(sprite.Sprite):
         self.weapon = weapon_name
         print(self.weapon)
 
-    def fire(self, group=None):
-        group = group if group is not None else float('-inf')
-        arrow = Arrow(self, targets_group=group)
-        arrows.add(arrow)
-
-    def fire_boss(self, monster=None):
-        monster = monster if monster is not None else float('-inf')
-        arrow = Arrow(self, boss=monster)
-        arrows.add(arrow)
-
     def attack(self, monster):
         attack_properties = WEAPON_TABLE.get(self.weapon)
         if attack_properties:
@@ -588,7 +577,6 @@ WEAPON_TABLE = {
     "knife": [5, 10],
     "great_sword": [10, 5],
     "steel_sword": [20, 10],
-    "bow": [20, 10],
     "axe": [12, 10]
 }
 
@@ -644,7 +632,6 @@ lives_list = [live_0, live_1, live_2, live_3, live_4, live_5]
 energy_list = [energy_0, energy_1, energy_2, energy_3, energy_4, energy_5]
 
 all_sprites = sprite.Group()
-arrows = sprite.Group()
 coin_group = sprite.Group()
 
 # STORE STUFF
@@ -653,7 +640,7 @@ price_num = {
     'great_armor_price_num': 4,
     'great_sword_price_num': 2,
     'steel_sword_price_num': 6,
-    'bow_price_num': 10,
+    'knife_price_num': 1,
     'axe_price_num': 3,
     'health_potion_price_num': [1, 1],
     'energy_potion_price_num': [1, 2]
@@ -663,7 +650,7 @@ armor_price = font1.render(str(price_num['armor_price_num']), True, pygame.color
 great_armor_price = font1.render(str(price_num['great_armor_price_num']), True, pygame.color.Color('white'))
 great_sword_price = font1.render(str(price_num['great_sword_price_num']), True, pygame.color.Color('white'))
 steel_sword_price = font1.render(str(price_num['steel_sword_price_num']), True, pygame.color.Color('white'))
-bow_price = font1.render(str(price_num['bow_price_num']), True, pygame.color.Color('white'))
+knife_price = font1.render(str(price_num['knife_price_num']), True, pygame.color.Color('white'))
 axe_price = font1.render(str(price_num['axe_price_num']), True, pygame.color.Color('white'))
 health_potion_price = font1.render(str(price_num['health_potion_price_num'][0]), True, pygame.color.Color('white'))
 energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]), True, pygame.color.Color('white'))
@@ -1046,8 +1033,9 @@ goblins_lvl2_1 = goblins((352, 250), (293, 303), (125, 262))
 goblins_lvl2_2 = goblins((860, 237), (717, 275))
 
 
-# music.play()
+music.play()
 # MAIN CYCLE
+coins += 20
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
@@ -1087,7 +1075,7 @@ while game:
             swords_showcase.update(screen=window)
         window.blit(great_sword, (207, 250))
         window.blit(axe, (373, 250))
-        window.blit(bow, (543, 250))
+        window.blit(knife, (543, 250))
         window.blit(steel_sword, (707, 250))
         if buy_great_sword_button.click_1(window):
             if coins >= price_num['great_sword_price_num']:
@@ -1095,16 +1083,16 @@ while game:
                 coins -= price_num['great_sword_price_num']
             else:
                 print('Not enough cash')
-        if buy_bow_button.click_1(window):
+        if buy_knife_button.click_1(window):
             if coins >= price_num['axe_price_num']:
                 player.equip_weapon('axe')
                 coins -= price_num['axe_price_num']
             else:
                 print('Not enough cash')
         if buy_axe_button.click_1(window):
-            if coins >= price_num['bow_price_num']:
-                player.equip_weapon('bow')
-                coins -= price_num['bow_price_num']
+            if coins >= price_num['knife_price_num']:
+                player.equip_weapon('knife')
+                coins -= price_num['knife_price_num']
             else:
                 print('Not enough cash')
         if buy_steel_sword_button.click_1(window):
@@ -1115,7 +1103,7 @@ while game:
                 print('Not enough cash')
         window.blit(great_sword_price, (245, 220))
         window.blit(axe_price, (410, 220))
-        window.blit(bow_price, (580, 220))
+        window.blit(knife_price, (580, 220))
         window.blit(steel_sword_price, (745, 220))
     if state == 'potions store':
         window.blit(bg_image, (0, 0))
