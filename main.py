@@ -610,6 +610,8 @@ fps = 60
 game = True
 bg_image = transform.scale(pygame.image.load('images/bg.png'), (w_width, w_height))
 pygame.display.set_caption('Roguelike')
+icon = pygame.image.load('images/icon.png')
+pygame.display.set_icon(icon)
 
 # ALTERNATES
 lives = 5
