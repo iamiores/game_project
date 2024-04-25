@@ -1035,7 +1035,6 @@ goblins_lvl2_2 = goblins((860, 237), (717, 275))
 
 music.play()
 # MAIN CYCLE
-coins += 20
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
