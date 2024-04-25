@@ -6,7 +6,6 @@ from building import *
 from downloads import *
 from arrow import Arrow
 import math
-import numpy as np
 from random import randint
 pygame.init()
 
@@ -29,11 +28,12 @@ class Goblin(sprite.Sprite):
         self.counter_attack_right = 0
         self.counter_attack_left = 0
         self.direction = 'right'
-        self.health = 40
+        self.health = 30
         self.follow = False
         self.attack_range = 10
-        self.attack_power = 1
-        self.attack = False
+        self.attack_power_num = 1
+        self.attack_power = self.attack_power_num
+        self.attacks = False
 
         self.pics_idle = ['images/monsters/goblin/goblin_idle_right_1.png', 'images/monsters/goblin/goblin_idle_right_2.png', 'images/monsters/goblin/goblin_idle_right_3.png', 'images/monsters/goblin/goblin_idle_right_4.png']
         self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
@@ -81,7 +81,7 @@ class Goblin(sprite.Sprite):
 
             elif self.counter_attack_right == 20:
                 self.counter_attack_right = 0
-                lives -= self.attack_power
+                # lives -= self.attack_power
         else:
             self.counter_attack_right = 0
 
@@ -97,7 +97,7 @@ class Goblin(sprite.Sprite):
                 self.image = self.pics_attack_left_obj[3]
             elif self.counter_attack_left == 20:
                 self.counter_attack_left = 0
-                lives -= self.attack_power
+                # lives -= self.attack_power
         else:
             self.counter_attack_left = 0
 
@@ -131,7 +131,7 @@ class Goblin(sprite.Sprite):
         else:
             self.counter_left = 0
 
-        if self.attack:
+        if self.attacks:
             self.speed = 2
         else:
             self.speed = randint(3, 6)
@@ -169,10 +169,10 @@ class Goblin(sprite.Sprite):
         if self.follow:
             if self.direction == 'right':
                 if dist <= self.attack_range:
-                    self.attack = True
+                    self.attacks = True
                     self.animate('attack right')
                 else:
-                    self.attack = False
+                    self.attacks = False
                     self.animate('right')
                 self.rect.x += dx * self.speed
                 if dy > 0:
@@ -184,10 +184,10 @@ class Goblin(sprite.Sprite):
 
             if self.direction == 'left':
                 if dist <= self.attack_range:
-                    self.attack = True
+                    self.attacks = True
                     self.animate('attack left')
                 else:
-                    self.attack = False
+                    self.attacks = False
                     self.animate('left')
                 self.rect.x += dx * self.speed
                 if dy > 0:
@@ -221,10 +221,11 @@ class Boss(sprite.Sprite):
         self.counter_attack_right = 0
         self.counter_attack_left = 0
         self.direction = 'left'
-        self.health = 100
+        self.health = 65
         self.dead = False
-        self.attack_power = 2
-        self.attack = False
+        self.attack_power_num = 3
+        self.attack_power = self.attack_power_num
+        self.attacks = False
 
         self.pics_idle = ['images/monsters/boss/boss_idle_left_1.png', 'images/monsters/boss/boss_idle_left_2.png', 'images/monsters/boss/boss_idle_left_3.png', 'images/monsters/boss/boss_idle_left_4.png']
         self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
@@ -270,7 +271,6 @@ class Boss(sprite.Sprite):
             elif 15 <= self.counter_attack_right < 20:
                 self.image = self.pics_attack_right_obj[3]
             elif self.counter_attack_right == 20:
-                lives -= self.attack_power
                 self.counter_attack_right = 0
         else:
             self.counter_attack_right = 0
@@ -287,7 +287,6 @@ class Boss(sprite.Sprite):
                 self.image = self.pics_attack_left_obj[3]
 
             elif self.counter_attack_left == 20:
-                lives -= self.attack_power
                 self.counter_attack_left = 0
         else:
             self.counter_attack_left = 0
@@ -322,7 +321,7 @@ class Boss(sprite.Sprite):
         else:
             self.counter_left = 0
 
-        if self.attack:
+        if self.attacks:
             self.speed = 2
 
         else:
@@ -332,20 +331,20 @@ class Boss(sprite.Sprite):
         if target_y >= y:
             if self.direction == 'left':
                 if self.rect.colliderect(target.rect):
-                    self.attack = True
+                    self.attacks = True
                     self.animate('attack left')
                 else:
-                    self.attack = False
+                    self.attacks = False
                     self.animate('left')
                 self.rect.x -= self.speed
                 if self.rect.x <= 340:
                     self.direction = 'right'
             elif self.direction == 'right':
                 if self.rect.colliderect(target.rect):
-                    self.attack = True
+                    self.attacks = True
                     self.animate('attack right')
                 else:
-                    self.attack = False
+                    self.attacks = False
                     self.animate('right')
                 self.rect.x += self.speed
                 if self.rect.x >= 610:
@@ -380,7 +379,9 @@ class Player(sprite.Sprite):
         self.counter_backward = 0
         self.direction = None
         self.attacking = False
-        self.timer = 0
+        self.defending = False
+        self.timer_attack = 0
+        self.timer_defend = 0
         self.attack_amount = 0
 
         self.pics_stay = ['images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkRight_3.png']
@@ -546,53 +547,52 @@ class Player(sprite.Sprite):
 
     def attack(self, monster):
         attack_properties = WEAPON_TABLE.get(self.weapon)
-        # print(attack_properties)
         if attack_properties:
             attack_power, attack_range = attack_properties
             if self.rect.colliderect(monster.rect) and not self.attacking:
                 self.attacking = True
-                if self.attacking:
-                    monster.health -= attack_power
-                    print(f"You dealt {attack_power} damage to the target!")
-                    print(monster.health)
-                    self.attack_amount = 1
-                elif self.attack_amount == 1:
-                    self.timer += 1
-                    self.attacking = False
-                    if self.timer >= 20:
-                        self.attack_amount = 0
-                        self.timer = 0
-                        self.attacking = True
+                monster.health -= attack_power
+                print(f"You dealt {attack_power} damage to the target!")
+                print(monster.health)
         else:
             print("Weapon not found in the weapon table!")
 
-    def defend(self, monsters):
+        if self.attacking:
+            self.timer_attack += 1
+            if self.timer_attack >= 20:
+                self.attacking = False
+                self.timer_attack = 0
+
+    def defend(self, monster):
+        global lives
         defense_properties = ARMOR_TABLE.get(self.armor)
-        if defense_properties:
+        if defense_properties and not self.defending:
             defense_power = defense_properties
-            for monster in monsters:
-                if monster.attack:
-                    monster.attack_power -= defense_power
-                    print(f"{self.armor} provides defense against the specified group of sprites!")
-                if monster.attack:
-                    monster.attack_power -= defense_power
-                    print(f"{self.armor} provides defense against the specified group of sprites!")
-        else:
-            print("Armor not found in the armor table!")
+            damage = max(monster.attack_power - defense_power, 0)
+            if self.rect.colliderect(monster.rect) and monster.attacks:
+                self.defending = True
+                lives -= damage
+                print(f"{self.armor} provides defense against the monster!")
+
+        if self.defending:
+            self.timer_defend += 1
+            if self.timer_defend >= 20:
+                self.defending = False
+                self.timer_defend = 0
+                monster.attack_power = monster.attack_power_num
 
 
 WEAPON_TABLE = {
     # attack, range
-    "no_weapon": [5, 5],
+    "no_weapon": [2, 5],
     "knife": [5, 10],
     "great_sword": [10, 5],
     "steel_sword": [20, 10],
     "bow": [20, 10],
-    "axe": [10, 10]
+    "axe": [12, 10]
 }
 
 ARMOR_TABLE = {
-    # defence, magic_defence
     "no_armor": 0,
     "armor": 1,
     "great_armor": 2
@@ -609,6 +609,7 @@ clock = pygame.time.Clock()
 fps = 60
 game = True
 bg_image = transform.scale(pygame.image.load('images/bg.png'), (w_width, w_height))
+pygame.display.set_caption('Roguelike')
 
 # ALTERNATES
 lives = 5
@@ -1042,7 +1043,7 @@ goblins_lvl1_2 = goblins((932, 175), (780, 80), (732, 112))
 goblins_lvl2_1 = goblins((352, 250), (293, 303), (125, 262))
 goblins_lvl2_2 = goblins((860, 237), (717, 275))
 
-key_get = pygame.key.get_pressed()
+
 # music.play()
 # MAIN CYCLE
 while game:
@@ -1130,7 +1131,7 @@ while game:
         if buy_energy_potion_button.click_1(window):
             if energy < 5:
                 if coins >= price_num['energy_potion_price_num'][0]:
-                    lives += price_num['energy_potion_price_num'][1]
+                    energy += price_num['energy_potion_price_num'][1]
                     coins -= price_num['energy_potion_price_num'][0]
                 else:
                     print('Not enough cash')
@@ -1205,11 +1206,16 @@ while game:
                         goblin_x.follow = True
                     if goblin_x.target_y <= goblin_x.end_y or goblin_x.target_x <= goblin_x.start_x:
                         goblin_x.follow = False
+                    player.attack(goblin_x)
+                    if goblin_x.health <= 0:
+                        goblin_x.kill()
+                        kill_tut += 1
+                    player.defend(goblin_x)
                     goblin_x.collide(collide_group_tut)
                     goblin_x.show(window)
                 if player.rect.colliderect(portal_tut.rect):
                     victory_tut = True
-                if lives == 0:
+                if lives <= 0:
                     defeat_tut = True
 
     if state == 'level 1':
@@ -1267,6 +1273,10 @@ while game:
                         goblin_x.follow = True
                     else:
                         goblin_x.follow = False
+                    player.attack(goblin_x)
+                    if goblin_x.health <= 0:
+                        goblin_x.kill()
+                        kill_lvl1 += 1
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
                 for goblin_x in goblins_lvl1_2:
@@ -1275,11 +1285,15 @@ while game:
                         goblin_x.follow = True
                     if goblin_x.target_x <= goblin_x.end_x or goblin_x.target_y >= goblin_x.start_y:
                         goblin_x.follow = False
+                    player.attack(goblin_x)
+                    if goblin_x.health <= 0:
+                        goblin_x.kill()
+                        kill_lvl1 += 1
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
             if player.rect.colliderect(portal_lvl1.rect):
                 victory_lvl1 = True
-            if lives == 0:
+            if lives <= 0:
                 defeat_lvl1 = True
 
     if state == 'level 2':
@@ -1337,6 +1351,10 @@ while game:
                         goblin_x.follow = True
                     if goblin_x.target_x >= goblin_x.end_x or goblin_x.target_y >= goblin_x.start_y:
                         goblin_x.follow = False
+                    player.attack(goblin_x)
+                    if goblin_x.health <= 0:
+                        goblin_x.kill()
+                        kill_lvl2 += 1
                     goblin_x.collide(collide_group_lvl2)
                     goblin_x.show(window)
                 for goblin_x in goblins_lvl2_2:
@@ -1345,15 +1363,18 @@ while game:
                         goblin_x.follow = True
                     if goblin_x.target_y >= goblin_x.end_y or goblin_x.target_x <= goblin_x.start_x:
                         goblin_x.follow = False
+                    player.attack(goblin_x)
+                    if goblin_x.health <= 0:
+                        kill_lvl2 += 1
+                        goblin_x.kill()
                     goblin_x.collide(collide_group_lvl2)
                     goblin_x.show(window)
             if player.rect.colliderect(portal_lvl2.rect):
                 victory_lvl2 = True
-            if lives == 0:
+            if lives <= 0:
                 defeat_lvl2 = True
 
     if state == 'level 3':
-        player.attack(boss)
         if victory_lvl3:
             finished = True
             next_level('victory', kill_lvl3, 1, coins)
@@ -1386,8 +1407,11 @@ while game:
                 player.collide(collide_group_lvl3)
                 boss.show(window)
                 boss.update(player, player.rect.y, 345)
+                player.attack(boss)
+                player.defend(boss)
                 if boss.health <= 0:
                     boss.kill()
+                    kill_lvl3 += 1
                     if player.rect.colliderect(hatch_lvl3[0]):
                         w_hatch_collided_lvl3 = True
                         hatch_num_lvl3 = 1

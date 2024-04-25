@@ -1,6 +1,19 @@
+from levels import item_lvl3, trap_lvl3
+from levels import wall_tuts
+from levels import wall_lvl1
+from levels import wall_lvl2
+from levels import wall_lvl3
+from levels import floor_lvl2
+from levels import floor_lvl1
+from levels import floor_tuts
+from levels import item_tuts, trap_tuts
+from levels import floor_lvl3
+from levels import item_lvl1, trap_lvl1
+from levels import item_lvl2, trap_lvl2
 import pygame
 from pygame import *
 pygame.init()
+
 
 hatch_tut = []
 hatch_lvl1 = []
@@ -36,7 +49,6 @@ portal_lvl3 = For_Level_Building(470, 585, 40, 60, 'images/items/portal.png')
 
 
 def walls_tut(screen):
-    from levels import wall_tuts
     for keys, value in wall_tuts.items():
         w = For_Level_Building(*value)
         collide_group_tut.add(w)
@@ -45,7 +57,6 @@ def walls_tut(screen):
 
 
 def walls_level1(screen):
-    from levels import wall_lvl1
     for keys, value in wall_lvl1.items():
         w = For_Level_Building(*value)
         collide_group_lvl1.add(w)
@@ -54,7 +65,6 @@ def walls_level1(screen):
 
 
 def walls_level2(screen):
-    from levels import wall_lvl2
     for keys, value in wall_lvl2.items():
         w = For_Level_Building(*value)
         collide_group_lvl2.add(w)
@@ -63,7 +73,6 @@ def walls_level2(screen):
 
 
 def walls_level3(screen):
-    from levels import wall_lvl3
     for keys, value in wall_lvl3.items():
         w = For_Level_Building(*value)
         collide_group_lvl3.add(w)
@@ -73,7 +82,6 @@ def walls_level3(screen):
 
 # FLOORS
 def floor_tut(screen):
-    from levels import floor_tuts
     for keys, value in floor_tuts.items():
         f = For_Level_Building(*value)
         f.update(screen=screen)
@@ -82,7 +90,7 @@ def floor_tut(screen):
 
 
 def floor_level1(screen):
-    from levels import floor_lvl1
+
     for keys, value in floor_lvl1.items():
         f = For_Level_Building(*value)
         f.update(screen=screen)
@@ -92,7 +100,6 @@ def floor_level1(screen):
 
 
 def floor_level2(screen):
-    from levels import floor_lvl2
     for keys, value in floor_lvl2.items():
         f = For_Level_Building(*value)
         f.update(screen=screen)
@@ -102,7 +109,6 @@ def floor_level2(screen):
 
 
 def floor_level3(screen):
-    from levels import floor_lvl3
     for keys, value in floor_lvl3.items():
         f = For_Level_Building(*value)
         f.update(screen=screen)
@@ -111,7 +117,6 @@ def floor_level3(screen):
 
 # ITEMS
 def items_tut(screen):
-    from levels import item_tuts, trap_tuts
     for keys, values in item_tuts.items():
         i = For_Level_Building(*values)
         i.update(screen=screen)
@@ -129,7 +134,6 @@ def items_tut(screen):
 
 
 def items_level1(screen):
-    from levels import item_lvl1, trap_lvl1
     for keys, values in item_lvl1.items():
         i = For_Level_Building(*values)
         i.update(screen=screen)
@@ -147,7 +151,6 @@ def items_level1(screen):
 
 
 def items_level2(screen):
-    from levels import item_lvl2, trap_lvl2
     for keys, values in item_lvl2.items():
         i = For_Level_Building(*values)
         i.update(screen=screen)
@@ -165,7 +168,6 @@ def items_level2(screen):
 
 
 def items_level3(screen):
-    from levels import item_lvl3, trap_lvl3
     for keys, value in item_lvl3.items():
         i = For_Level_Building(*value)
         collide_group_lvl3.add(i)
