@@ -33,6 +33,7 @@ class Goblin(sprite.Sprite):
         self.attack_power_num = 1
         self.attack_power = self.attack_power_num
         self.attacks = False
+        self.is_hitbox_active = False
 
         self.pics_idle = ['images/monsters/goblin/goblin_idle_right_1.png', 'images/monsters/goblin/goblin_idle_right_2.png', 'images/monsters/goblin/goblin_idle_right_3.png', 'images/monsters/goblin/goblin_idle_right_4.png']
         self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
@@ -61,7 +62,6 @@ class Goblin(sprite.Sprite):
                 self.image = self.pics_idle_obj[2]
             elif 15 <= self.counter_idle < 20:
                 self.image = self.pics_idle_obj[3]
-
             elif self.counter_idle == 20:
                 self.counter_idle = 0
         else:
@@ -71,13 +71,16 @@ class Goblin(sprite.Sprite):
             self.counter_attack_right += 1
             if self.counter_attack_right < 5:
                 self.image = self.pics_attack_right_obj[0]
+                self.is_hitbox_active = False
             elif 5 <= self.counter_attack_right < 10:
                 self.image = self.pics_attack_right_obj[1]
+                self.is_hitbox_active = False
             elif 10 <= self.counter_attack_right < 15:
                 self.image = self.pics_attack_right_obj[2]
+                self.is_hitbox_active = False
             elif 15 <= self.counter_attack_right < 20:
                 self.image = self.pics_attack_right_obj[3]
-
+                self.is_hitbox_active = True
             elif self.counter_attack_right == 20:
                 self.counter_attack_right = 0
                 # lives -= self.attack_power
@@ -88,12 +91,16 @@ class Goblin(sprite.Sprite):
             self.counter_attack_left += 1
             if self.counter_attack_left < 5:
                 self.image = self.pics_attack_left_obj[0]
+                self.is_hitbox_active = False
             elif 5 <= self.counter_attack_left < 10:
                 self.image = self.pics_attack_left_obj[1]
+                self.is_hitbox_active = False
             elif 10 <= self.counter_attack_left < 15:
                 self.image = self.pics_attack_left_obj[2]
+                self.is_hitbox_active = False
             elif 15 <= self.counter_attack_left < 20:
                 self.image = self.pics_attack_left_obj[3]
+                self.is_hitbox_active = True
             elif self.counter_attack_left == 20:
                 self.counter_attack_left = 0
                 # lives -= self.attack_power
@@ -220,11 +227,12 @@ class Boss(sprite.Sprite):
         self.counter_attack_right = 0
         self.counter_attack_left = 0
         self.direction = 'left'
-        self.health = 65
+        self.health = 60
         self.dead = False
         self.attack_power_num = 3
         self.attack_power = self.attack_power_num
         self.attacks = False
+        self.is_hitbox_active = False
 
         self.pics_idle = ['images/monsters/boss/boss_idle_left_1.png', 'images/monsters/boss/boss_idle_left_2.png', 'images/monsters/boss/boss_idle_left_3.png', 'images/monsters/boss/boss_idle_left_4.png']
         self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
@@ -263,12 +271,17 @@ class Boss(sprite.Sprite):
             self.counter_attack_right += 1
             if self.counter_attack_right < 5:
                 self.image = self.pics_attack_right_obj[0]
+                self.is_hitbox_active = False
             elif 5 <= self.counter_attack_right < 10:
                 self.image = self.pics_attack_right_obj[1]
+                self.is_hitbox_active = False
             elif 10 <= self.counter_attack_right < 15:
                 self.image = self.pics_attack_right_obj[2]
+                self.is_hitbox_active = False
             elif 15 <= self.counter_attack_right < 20:
                 self.image = self.pics_attack_right_obj[3]
+                print('boss attacked!!!!!!!!!1', self.counter_attack_right)
+                self.is_hitbox_active = True
             elif self.counter_attack_right == 20:
                 self.counter_attack_right = 0
         else:
@@ -278,12 +291,16 @@ class Boss(sprite.Sprite):
             self.counter_attack_left += 1
             if self.counter_attack_left < 5:
                 self.image = self.pics_attack_left_obj[0]
+                self.is_hitbox_active = False
             elif 5 <= self.counter_attack_left < 10:
                 self.image = self.pics_attack_left_obj[1]
+                self.is_hitbox_active = False
             elif 10 <= self.counter_attack_left < 15:
                 self.image = self.pics_attack_left_obj[2]
+                self.is_hitbox_active = False
             elif 15 <= self.counter_attack_left < 20:
                 self.image = self.pics_attack_left_obj[3]
+                self.is_hitbox_active = True
 
             elif self.counter_attack_left == 20:
                 self.counter_attack_left = 0
@@ -382,6 +399,7 @@ class Player(sprite.Sprite):
         self.timer_attack = 0
         self.timer_defend = 0
         self.attack_amount = 0
+        self.was_attacked_once = False
 
         self.pics_stay = ['images/player/male/male_WalkForward_1.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkLeft_1.png', 'images/player/male/male_WalkRight_3.png']
         self.pics_stay_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_stay]
@@ -555,24 +573,18 @@ class Player(sprite.Sprite):
     def defend(self, monster):
         global lives
         defense_properties = ARMOR_TABLE.get(self.armor)
-        if defense_properties and not self.defending:
-            defense_power = defense_properties
-            damage = max(monster.attack_power - defense_power, 0)
-            if self.rect.colliderect(monster.rect) and monster.attacks:
-                self.defending = True
+        defense_power = defense_properties
+        damage = max(monster.attack_power - defense_power, 0)
+        if self.rect.colliderect(monster.rect) and monster.attacks:
+            if monster.is_hitbox_active and not self.was_attacked_once:
                 lives -= damage
                 print(f"{self.armor} provides defense against the monster!")
-
-        if self.defending:
-            self.timer_defend += 1
-            if self.timer_defend >= 20:
-                self.defending = False
-                self.timer_defend = 0
-                monster.attack_power = monster.attack_power_num
+                self.was_attacked_once = True
+            if not monster.is_hitbox_active:
+                self.was_attacked_once = False
 
 
 WEAPON_TABLE = {
-    # attack, range
     "no_weapon": [2, 5],
     "knife": [5, 10],
     "great_sword": [10, 5],
@@ -663,6 +675,8 @@ player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 player.equip_weapon('no_weapon')
 player.equip_armor('no_armor')
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
+boss_group = sprite.Group()
+boss_group.add(boss)
 coin_group.add(coin_in_store)
 all_sprites.add(coin)
 all_sprites.add(player)
@@ -672,7 +686,7 @@ music = pygame.mixer.Sound('music/Crystal Caves v1_2.mp3')
 collect_coin_sound = pygame.mixer.Sound('sounds/coin_collect.wav')
 music_volume = 0.4
 
-
+coins += 20
 # MENU, STORE
 def menu():
     global state, music_volume, game
@@ -1033,7 +1047,7 @@ goblins_lvl2_1 = goblins((352, 250), (293, 303), (125, 262))
 goblins_lvl2_2 = goblins((860, 237), (717, 275))
 
 
-music.play()
+# music.play()
 # MAIN CYCLE
 while game:
     for e in pygame.event.get():
@@ -1266,6 +1280,7 @@ while game:
                     if goblin_x.health <= 0:
                         goblin_x.kill()
                         kill_lvl1 += 1
+                    player.defend(goblin_x)
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
                 for goblin_x in goblins_lvl1_2:
@@ -1278,6 +1293,7 @@ while game:
                     if goblin_x.health <= 0:
                         goblin_x.kill()
                         kill_lvl1 += 1
+                    player.defend(goblin_x)
                     goblin_x.collide(collide_group_lvl1)
                     goblin_x.show(window)
             if player.rect.colliderect(portal_lvl1.rect):
@@ -1344,6 +1360,7 @@ while game:
                     if goblin_x.health <= 0:
                         goblin_x.kill()
                         kill_lvl2 += 1
+                    player.defend(goblin_x)
                     goblin_x.collide(collide_group_lvl2)
                     goblin_x.show(window)
                 for goblin_x in goblins_lvl2_2:
@@ -1356,6 +1373,7 @@ while game:
                     if goblin_x.health <= 0:
                         kill_lvl2 += 1
                         goblin_x.kill()
+                    player.defend(goblin_x)
                     goblin_x.collide(collide_group_lvl2)
                     goblin_x.show(window)
             if player.rect.colliderect(portal_lvl2.rect):
@@ -1394,10 +1412,11 @@ while game:
                 player.spawn(480, 120)
                 player.trap(traps_group_lvl3)
                 player.collide(collide_group_lvl3)
-                boss.show(window)
-                boss.update(player, player.rect.y, 345)
-                player.attack(boss)
-                player.defend(boss)
+                boss_group.draw(window)
+                boss_group.update(player, player.rect.y, 345)
+                if boss.health > 0:
+                    player.attack(boss)
+                    player.defend(boss)
                 if boss.health <= 0:
                     boss.kill()
                     kill_lvl3 += 1
