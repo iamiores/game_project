@@ -826,7 +826,6 @@ def reset_tutorial():
     finished = False
     player.spawn(tut_x, tut_y)
     hatch_num_tut = 0
-    coins = 0
     kill_tut = 0
     lives = 5
     energy = 5
@@ -863,7 +862,6 @@ def reset_lvl1():
     player.spawn(lvl1_x, lvl1_y)
     finished = False
     hatch_num_lvl1 = 0
-    coins = 0
     kill_lvl1 = 0
     lives = 5
     energy = 5
@@ -906,7 +904,6 @@ def reset_lvl2():
     player.spawn(lvl2_x, lvl2_y)
     finished = False
     hatch_num_lvl2 = 0
-    coins = 0
     kill_lvl2 = 0
     lives = 5
     energy = 5
@@ -951,7 +948,6 @@ def reset_lvl3():
     boss.update(player, player.rect.y, 345)
     finished = False
     hatch_num_lvl3 = 0
-    coins = 0
     kill_lvl3 = 0
     lives = 5
     energy = 5
@@ -1044,8 +1040,8 @@ w_hatch_collided_lvl2 = False
 coins_lvl2 = create_coin((749, 560), (788, 577), (737, 615), (766, 590))
 coin_amount_lvl2 = 4
 w_hatch_collided_lvl3 = False
-coins_lvl3 = create_coin((749, 560), (788, 577), (737, 615), (766, 590))
-coin_amount_lvl3 = 3
+coins_lvl3 = create_coin((465, 470), (500, 455), (515, 475), (493, 507))
+coin_amount_lvl3 = 4
 
 # SHOWCASE STUFF
 armor_showcases = create_showcases((290, 200), (460, 200))
@@ -1173,10 +1169,11 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                victory_tut = False
+                # victory_tut = False
                 reset_tutorial()
             elif retry_button_1.click(window):
                 reset_tutorial()
+                coins = 0
                 state = 'level menu'
                 finished = False
                 victory_tut = False
@@ -1194,6 +1191,7 @@ while game:
                 reset_tutorial()
             elif retry_button_2.click(window):
                 reset_tutorial()
+                coins = 0
                 finished = False
                 defeat_tut = False
         if lives != 0:
@@ -1243,10 +1241,11 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                victory_lvl1 = False
+                # victory_lvl1 = False
                 reset_lvl1()
             elif retry_button_1.click(window):
                 reset_lvl1()
+                coins = 0
                 state = 'level menu'
                 finished = False
                 victory_lvl1 = False
@@ -1264,6 +1263,7 @@ while game:
                 reset_lvl1()
             elif retry_button_2.click(window):
                 reset_lvl1()
+                coins = 0
                 finished = False
                 defeat_lvl1 = False
         if lives != 0:
@@ -1326,10 +1326,11 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                victory_lvl2 = False
+                # victory_lvl2 = False
                 reset_lvl2()
             elif retry_button_1.click(window):
                 reset_lvl2()
+                coins = 0
                 state = 'level menu'
                 finished = False
                 victory_lvl2 = False
@@ -1347,6 +1348,7 @@ while game:
                 reset_lvl2()
             elif retry_button_2.click(window):
                 reset_lvl2()
+                coins = 0
                 finished = False
                 defeat_lvl2 = False
         if lives != 0:
@@ -1409,10 +1411,11 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                victory_lvl3 = False
+                # victory_lvl3 = False
                 reset_lvl3()
             elif retry_button_1.click(window):
                 reset_lvl3()
+                coins = 0
                 state = 'level menu'
                 finished = False
                 victory_lvl3 = False
@@ -1426,6 +1429,7 @@ while game:
                 reset_lvl3()
             elif retry_button_2.click(window):
                 reset_lvl3()
+                coins = 0
                 finished = False
                 defeat_lvl3 = False
         if lives != 0:
@@ -1440,8 +1444,8 @@ while game:
                     player.attack(boss)
                     player.defend(boss)
                 if boss.health <= 0:
-                    boss.kill()
                     kill_lvl3 += 1
+                    boss.kill()
                     if player.rect.colliderect(hatch_lvl3[0]):
                         w_hatch_collided_lvl3 = True
                         hatch_num_lvl3 = 1
