@@ -27,7 +27,7 @@ class Goblin(sprite.Sprite):
         self.counter_attack_right = 0
         self.counter_attack_left = 0
         self.direction = 'right'
-        self.health = 30
+        self.health = 20
         self.follow = False
         self.attack_range = 10
         self.attack_power_num = 1
@@ -227,12 +227,13 @@ class Boss(sprite.Sprite):
         self.counter_attack_right = 0
         self.counter_attack_left = 0
         self.direction = 'left'
-        self.health = 60
+        self.health = 80
         self.dead = False
         self.attack_power_num = 3
         self.attack_power = self.attack_power_num
         self.attacks = False
         self.is_hitbox_active = False
+        self.was_roar = False
 
         self.pics_idle = ['images/monsters/boss/boss_idle_left_1.png', 'images/monsters/boss/boss_idle_left_2.png', 'images/monsters/boss/boss_idle_left_3.png', 'images/monsters/boss/boss_idle_left_4.png']
         self.pics_idle_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_idle]
@@ -345,6 +346,9 @@ class Boss(sprite.Sprite):
 
     def update(self, target, target_y, y):
         if target_y >= y:
+            if not self.was_roar:
+                boss_sound.play()
+                self.was_roar = True
             if self.direction == 'left':
                 if self.rect.colliderect(target.rect):
                     self.attacks = True
@@ -367,6 +371,7 @@ class Boss(sprite.Sprite):
                     self.direction = 'left'
         else:
             self.animate('stay')
+            self.was_roar = False
 
     def show(self, screen):
         if not self.dead:
@@ -559,6 +564,7 @@ class Player(sprite.Sprite):
             if self.rect.colliderect(monster.rect) and not self.attacking:
                 self.attacking = True
                 monster.health -= attack_power
+                hit_sound.play()
                 print(f"You dealt {attack_power} damage to the target!")
                 print(monster.health)
         else:
@@ -684,9 +690,16 @@ all_sprites.add(player)
 # SOUNDS
 music = pygame.mixer.Sound('music/Crystal Caves v1_2.mp3')
 collect_coin_sound = pygame.mixer.Sound('sounds/coin_collect.wav')
+goblin_death_sound = pygame.mixer.Sound('sounds/goblin.mp3')
+hit_sound = pygame.mixer.Sound('sounds/hit.mp3')
+boss_sound = pygame.mixer.Sound('sounds/monster.mp3')
+
+boss_sound.set_volume(0.1)
+goblin_death_sound.set_volume(0.5)
+hit_sound.set_volume(0.5)
 music_volume = 0.4
 
-coins += 20
+
 # MENU, STORE
 def menu():
     global state, music_volume, game
@@ -1164,6 +1177,7 @@ while game:
                 reset_tutorial()
             elif retry_button_1.click(window):
                 reset_tutorial()
+                state = 'level menu'
                 finished = False
                 victory_tut = False
             elif next_button.click(window):
@@ -1212,6 +1226,7 @@ while game:
                     player.attack(goblin_x)
                     if goblin_x.health <= 0:
                         goblin_x.kill()
+                        goblin_death_sound.play()
                         kill_tut += 1
                     player.defend(goblin_x)
                     goblin_x.collide(collide_group_tut)
@@ -1232,6 +1247,7 @@ while game:
                 reset_lvl1()
             elif retry_button_1.click(window):
                 reset_lvl1()
+                state = 'level menu'
                 finished = False
                 victory_lvl1 = False
             elif next_button.click(window):
@@ -1279,6 +1295,7 @@ while game:
                     player.attack(goblin_x)
                     if goblin_x.health <= 0:
                         goblin_x.kill()
+                        goblin_death_sound.play()
                         kill_lvl1 += 1
                     player.defend(goblin_x)
                     goblin_x.collide(collide_group_lvl1)
@@ -1292,6 +1309,7 @@ while game:
                     player.attack(goblin_x)
                     if goblin_x.health <= 0:
                         goblin_x.kill()
+                        goblin_death_sound.play()
                         kill_lvl1 += 1
                     player.defend(goblin_x)
                     goblin_x.collide(collide_group_lvl1)
@@ -1312,6 +1330,7 @@ while game:
                 reset_lvl2()
             elif retry_button_1.click(window):
                 reset_lvl2()
+                state = 'level menu'
                 finished = False
                 victory_lvl2 = False
                 player.spawn(lvl2_x, lvl2_y)
@@ -1359,6 +1378,7 @@ while game:
                     player.attack(goblin_x)
                     if goblin_x.health <= 0:
                         goblin_x.kill()
+                        goblin_death_sound.play()
                         kill_lvl2 += 1
                     player.defend(goblin_x)
                     goblin_x.collide(collide_group_lvl2)
@@ -1371,6 +1391,7 @@ while game:
                         goblin_x.follow = False
                     player.attack(goblin_x)
                     if goblin_x.health <= 0:
+                        goblin_death_sound.play()
                         kill_lvl2 += 1
                         goblin_x.kill()
                     player.defend(goblin_x)
@@ -1392,6 +1413,7 @@ while game:
                 reset_lvl3()
             elif retry_button_1.click(window):
                 reset_lvl3()
+                state = 'level menu'
                 finished = False
                 victory_lvl3 = False
         if defeat_lvl3:
