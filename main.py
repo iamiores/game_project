@@ -706,46 +706,46 @@ def menu():
     window.blit(bg_image, (0, 0))
     music.set_volume(music_volume)
     if state == 'main menu' and state != 'shop':
-        if start_button.click(window):
+        if start_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'level menu'
-        elif settings_button.click(window):
+        elif settings_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'settings'
-        elif store_button.click(window):
+        elif store_button.click(window, (41, 47, 75), (21, 24, 38)):
             window.blit(bg_image, (0, 0))
             state = 'store'
-        elif exit_button.click(window):
+        elif exit_button.click(window, (41, 47, 75), (21, 24, 38)):
             game = False
             sys.exit()
     if state == 'settings':
-        if add_volume_button.click(window):
+        if add_volume_button.click(window, (41, 47, 75), (21, 24, 38)):
             music_volume += 0.1
-        elif reduce_volume_button.click(window):
+        elif reduce_volume_button.click(window, (41, 47, 75), (21, 24, 38)):
             music_volume -= 0.1
-        elif back_button.click(window):
+        elif back_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'main menu'
     if state == 'level menu':
-        if tutorial_button.click(window):
+        if tutorial_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'tutorial'
-        elif level_1_button.click(window):
+        elif level_1_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'level 1'
-        elif level_2_button.click(window):
+        elif level_2_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'level 2'
-        elif level_3_button.click(window):
+        elif level_3_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'level 3'
-        elif back_button.click(window):
+        elif back_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'main menu'
 
 
 def store():
     global state
     window.blit(bg_image, (0, 0))
-    if back_button.click(window):
+    if back_button.click(window, (41, 47, 75), (21, 24, 38)):
         state = 'main menu'
-    if armor_button.click(window):
+    if armor_button.click(window, (41, 47, 75), (21, 24, 38)):
         state = 'armor store'
-    elif swords_button.click(window):
+    elif swords_button.click(window, (41, 47, 75), (21, 24, 38)):
         state = 'swords store'
-    elif potions_button.click(window):
+    elif potions_button.click(window, (41, 47, 75), (21, 24, 38)):
         state = 'potions store'
     # elif other_button.click(window):
     #     state = 'other store'
@@ -1073,13 +1073,13 @@ while game:
             armor_showcase.update(screen=window)
         window.blit(armor, (373, 250))
         window.blit(great_armor, (543, 250))
-        if buy_armor_button.click_1(window):
+        if buy_armor_button.click(window, (51, 63, 92), (41, 47, 75)):
             if coins >= price_num['armor_price_num']:
                 player.equip_armor('armor')
                 coins -= price_num['armor_price_num']
             else:
                 print('Not enough cash')
-        if buy_great_armor_button.click_1(window):
+        if buy_great_armor_button.click(window, (51, 63, 92), (41, 47, 75)):
             if coins >= price_num['great_armor_price_num']:
                 player.equip_armor('great_armor')
                 coins -= price_num['great_armor_price_num']
@@ -1095,25 +1095,25 @@ while game:
         window.blit(axe, (373, 250))
         window.blit(knife, (543, 250))
         window.blit(steel_sword, (707, 250))
-        if buy_great_sword_button.click_1(window):
+        if buy_great_sword_button.click(window, (51, 63, 92), (41, 47, 75)):
             if coins >= price_num['great_sword_price_num']:
                 player.equip_weapon('great_sword')
                 coins -= price_num['great_sword_price_num']
             else:
                 print('Not enough cash')
-        if buy_knife_button.click_1(window):
+        if buy_knife_button.click(window, (51, 63, 92), (41, 47, 75)):
             if coins >= price_num['axe_price_num']:
                 player.equip_weapon('axe')
                 coins -= price_num['axe_price_num']
             else:
                 print('Not enough cash')
-        if buy_axe_button.click_1(window):
+        if buy_axe_button.click(window, (51, 63, 92), (41, 47, 75)):
             if coins >= price_num['knife_price_num']:
                 player.equip_weapon('knife')
                 coins -= price_num['knife_price_num']
             else:
                 print('Not enough cash')
-        if buy_steel_sword_button.click_1(window):
+        if buy_steel_sword_button.click(window, (51, 63, 92), (41, 47, 75)):
             if coins >= price_num['steel_sword_price_num']:
                 player.equip_weapon('steel_sword')
                 coins -= price_num['steel_sword_price_num']
@@ -1129,14 +1129,14 @@ while game:
             potions_showcase.update(screen=window)
         window.blit(health_potion, (385, 250))
         window.blit(energy_potion, (555, 250))
-        if buy_health_potion_button.click_1(window):
+        if buy_health_potion_button.click(window, (51, 63, 92), (41, 47, 75)):
             if lives < 5:
                 if coins >= price_num['health_potion_price_num'][0]:
                     lives += price_num['health_potion_price_num'][1]
                     coins -= price_num['health_potion_price_num'][0]
                 else:
                     print('Not enough cash')
-        if buy_energy_potion_button.click_1(window):
+        if buy_energy_potion_button.click_(window, (51, 63, 92), (41, 47, 75)):
             if energy < 5:
                 if coins >= price_num['energy_potion_price_num'][0]:
                     energy += price_num['energy_potion_price_num'][1]
@@ -1148,13 +1148,13 @@ while game:
     if state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
         coin_group.draw(window)
         coin_group.update()
-        if back_button.click(window):
+        if back_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'main menu'
-        if armor_button.click(window):
+        if armor_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'armor store'
-        elif swords_button.click(window):
+        elif swords_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'swords store'
-        elif potions_button.click(window):
+        elif potions_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'potions store'
 
     # LEVELS STATE
@@ -1162,31 +1162,31 @@ while game:
         if victory_tut:
             finished = True
             next_level('victory', kill_tut, 3, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # victory_tut = False
                 reset_tutorial()
-            elif retry_button_1.click(window):
+            elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_tutorial()
                 coins = 0
                 lives = 5
                 state = 'level menu'
                 finished = False
                 victory_tut = False
-            elif next_button.click(window):
+            elif next_button.click(window, (41, 47, 75), (21, 24, 38)):
                 finished = False
                 player.spawn(lvl1_x, lvl1_y)
                 state = 'level menu'
         if defeat_tut:
             finished = True
             next_level('defeat', kill_tut, 3, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # defeat_tut = False
                 reset_tutorial()
-            elif retry_button_2.click(window):
+            elif retry_button_2.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_tutorial()
                 lives = 5
                 coins = 0
@@ -1236,31 +1236,31 @@ while game:
         if victory_lvl1:
             finished = True
             next_level('victory', kill_lvl1, 5, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # victory_lvl1 = False
                 reset_lvl1()
-            elif retry_button_1.click(window):
+            elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl1()
                 coins = 0
                 lives = 5
                 state = 'level menu'
                 finished = False
                 victory_lvl1 = False
-            elif next_button.click(window):
+            elif next_button.click(window, (41, 47, 75), (21, 24, 38)):
                 finished = False
                 player.spawn(lvl2_x, lvl2_y)
                 state = 'level menu'
         if defeat_lvl1:
             finished = True
             next_level('defeat', kill_lvl1, 5, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # defeat_lvl1 = False
                 reset_lvl1()
-            elif retry_button_2.click(window):
+            elif retry_button_2.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl1()
                 coins = 0
                 lives = 5
@@ -1323,12 +1323,12 @@ while game:
         if victory_lvl2:
             finished = True
             next_level('victory', kill_lvl2, 5, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # victory_lvl2 = False
                 reset_lvl2()
-            elif retry_button_1.click(window):
+            elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl2()
                 lives = 5
                 coins = 0
@@ -1336,18 +1336,18 @@ while game:
                 finished = False
                 victory_lvl2 = False
                 player.spawn(lvl2_x, lvl2_y)
-            elif next_button.click(window):
+            elif next_button.click(window, (41, 47, 75), (21, 24, 38)):
                 finished = False
                 state = 'level menu'
         if defeat_lvl2:
             finished = True
             next_level('defeat', kill_lvl2, 5, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # defeat_lvl2 = False
                 reset_lvl2()
-            elif retry_button_2.click(window):
+            elif retry_button_2.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl2()
                 lives = 5
                 coins = 0
@@ -1410,12 +1410,12 @@ while game:
         if victory_lvl3:
             finished = True
             next_level('victory', kill_lvl3, 1, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # victory_lvl3 = False
                 reset_lvl3()
-            elif retry_button_1.click(window):
+            elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl3()
                 coins = 0
                 lives = 5
@@ -1425,7 +1425,7 @@ while game:
         if defeat_lvl3:
             finished = True
             next_level('defeat', kill_lvl3, 1, coins)
-            if menu_button.click(window):
+            if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
                 # defeat_lvl3 = False
@@ -1467,7 +1467,7 @@ while game:
         if not finished:
             all_sprites.update()
             all_sprites.draw(window)
-        if home_button.click(window):
+        if home_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'level menu'
         # print(lives)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3' or state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
