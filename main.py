@@ -1184,7 +1184,7 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                defeat_tut = False
+                # defeat_tut = False
                 reset_tutorial()
             elif retry_button_2.click(window):
                 reset_tutorial()
@@ -1258,7 +1258,7 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                defeat_lvl1 = False
+                # defeat_lvl1 = False
                 reset_lvl1()
             elif retry_button_2.click(window):
                 reset_lvl1()
@@ -1345,7 +1345,7 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                defeat_lvl2 = False
+                # defeat_lvl2 = False
                 reset_lvl2()
             elif retry_button_2.click(window):
                 reset_lvl2()
@@ -1428,7 +1428,7 @@ while game:
             if menu_button.click(window):
                 state = 'main menu'
                 finished = False
-                defeat_lvl3 = False
+                # defeat_lvl3 = False
                 reset_lvl3()
         if lives != 0:
             if not finished:
