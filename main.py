@@ -8,16 +8,19 @@ import math
 from random import randint
 pygame.init()
 
+'''CLASSES'''
+
 
 class Goblin(sprite.Sprite):
-    def __init__(self, goblin_image, goblin_x, goblin_y, width, height):
+    # CONSTRUCTOR
+    def __init__(self, goblin_image, x, y, width, height):
         super().__init__()
         self.width = width
         self.height = height
         self.image = transform.scale(pygame.image.load(goblin_image), (self.width, self.height))
         self.rect = self.image.get_rect()
-        self.rect.x = goblin_x
-        self.rect.y = goblin_y
+        self.rect.x = x
+        self.rect.y = y
         self.rect.width = width
         self.rect.height = height
         self.speed = randint(3, 6)
@@ -50,6 +53,7 @@ class Goblin(sprite.Sprite):
         self.pics_left = ['images/monsters/goblin/goblin_walk_left_1.png', 'images/monsters/goblin/goblin_walk_left_2.png', 'images/monsters/goblin/goblin_walk_left_3.png']
         self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_left]
 
+    # ANIMATED FRAMES FOR MOVEMENT
     def animate(self, kind):
         global lives
         if kind == 'stay':
@@ -142,6 +146,7 @@ class Goblin(sprite.Sprite):
         else:
             self.speed = randint(3, 6)
 
+    # COLLIDE WITH OBJECTS
     def collide(self, group):
         for group in group:
             if self.rect.colliderect(group.rect):
@@ -154,6 +159,7 @@ class Goblin(sprite.Sprite):
                 elif self.rect.right > group.rect.left > self.rect.left:
                     self.rect.x -= 1
 
+    # MOVEMENT
     def update(self, target, target_y=None, target_x=None, start_x=None, end_x=None, start_y=None, end_y=None):
         dx = target.rect.centerx - self.rect.centerx
         dy = target.rect.centery - self.rect.centery
@@ -205,11 +211,13 @@ class Goblin(sprite.Sprite):
         else:
             self.animate('stay')
 
+    # SHOW ON SCREEN
     def show(self, screen):
         screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
 class Boss(sprite.Sprite):
+    # CONSTRUCTOR
     def __init__(self, boss_image, boss_x, boss_y, width, height):
         super().__init__()
         self.width = width
@@ -250,6 +258,7 @@ class Boss(sprite.Sprite):
         self.pics_left = ['images/monsters/boss/boss_walk_left_1.png', 'images/monsters/boss/boss_walk_left_2.png', 'images/monsters/boss/boss_walk_left_3.png']
         self.pics_left_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_left]
 
+    # ANIMATED FRAMES FOR MOVEMENT
     def animate(self, kind):
         global lives
         if kind == 'stay':
@@ -344,6 +353,7 @@ class Boss(sprite.Sprite):
         else:
             self.speed = 5
 
+    # MOVEMENT
     def update(self, target, target_y, y):
         if target_y >= y:
             if not self.was_roar:
@@ -373,12 +383,14 @@ class Boss(sprite.Sprite):
             self.animate('stay')
             self.was_roar = False
 
+    # SHOW ON SCREEN
     def show(self, screen):
         if not self.dead:
             screen.blit(self.image, (self.rect.x, self.rect.y))
 
 
 class Player(sprite.Sprite):
+    # CONSTRUCTOR
     def __init__(self, player_image, player_x, player_y, player_speed, width, height):
         super().__init__()
         self.speed = player_speed
@@ -421,6 +433,7 @@ class Player(sprite.Sprite):
         self.pics_back = ['images/player/male/male_WalkBack_2.png', 'images/player/male/male_WalkBack_1.png', 'images/player/male/male_WalkBack_3.png', 'images/player/male/male_WalkBack_1.png']
         self.pics_back_obj = [transform.scale(pygame.image.load(pic), (self.width, self.height)) for pic in self.pics_back]
 
+    # ANIMATED FRAMES FOR MOVEMENT
     def animate(self, kind):
         if kind == 'stay':
             if self.direction == 'forward':
@@ -502,6 +515,7 @@ class Player(sprite.Sprite):
         else:
             self.counter_backward = 0
 
+    # MOVEMENT
     def update(self):
         keys = key.get_pressed()
         if keys[K_d]:
@@ -522,12 +536,14 @@ class Player(sprite.Sprite):
         else:
             self.animate('stay')
 
+    # SET SPAWN COORDINATES
     def spawn(self, x, y):
         if not self.is_spawned:
             self.rect.x = x
             self.rect.y = y
             self.is_spawned = True
 
+    # COLLIDE WITH OBJECTS
     def collide(self, group):
         for group in group:
             if self.rect.colliderect(group.rect):
@@ -540,6 +556,7 @@ class Player(sprite.Sprite):
                 elif self.rect.right > group.rect.left > self.rect.left:
                     self.rect.x -= 1
 
+    # TRAPS REACTION
     def trap(self, group):
         global lives
         if not self.was_colliding:
@@ -549,26 +566,26 @@ class Player(sprite.Sprite):
         elif not any(self.rect.colliderect(group.rect) for group in group):
             self.was_colliding = False
 
+    # EQUIP ARMOR
     def equip_armor(self, armor_name):
         self.armor = armor_name
         print(self.armor)
 
+    # EQUIP WEAPON
     def equip_weapon(self, weapon_name):
         self.weapon = weapon_name
         print(self.weapon)
 
+    # ATTACK FUNCTION
     def attack(self, monster):
         attack_properties = WEAPON_TABLE.get(self.weapon)
-        if attack_properties:
-            attack_power, attack_range = attack_properties
-            if self.rect.colliderect(monster.rect) and not self.attacking:
-                self.attacking = True
-                monster.health -= attack_power
-                hit_sound.play()
-                print(f"You dealt {attack_power} damage to the target!")
-                print(monster.health)
-        else:
-            print("Weapon not found in the weapon table!")
+        attack_power = attack_properties
+        if self.rect.colliderect(monster.rect) and not self.attacking:
+            self.attacking = True
+            monster.health -= attack_power
+            hit_sound.play()
+            print(f"You dealt {attack_power} damage to the target!")
+            print(monster.health)
 
         if self.attacking:
             self.timer_attack += 1
@@ -576,6 +593,7 @@ class Player(sprite.Sprite):
                 self.attacking = False
                 self.timer_attack = 0
 
+    # DEFENCE FUNCTION
     def defend(self, monster):
         global lives
         defense_properties = ARMOR_TABLE.get(self.armor)
@@ -590,25 +608,27 @@ class Player(sprite.Sprite):
                 self.was_attacked_once = False
 
 
+# WEAPONS
 WEAPON_TABLE = {
-    "no_weapon": [2, 5],
-    "knife": [5, 10],
-    "great_sword": [10, 5],
-    "steel_sword": [20, 10],
-    "axe": [12, 10]
+    "no_weapon": 2,
+    "knife": 5,
+    "great_sword": 10,
+    "steel_sword": 20,
+    "axe": 12
 }
 
+# ARMORS
 ARMOR_TABLE = {
     "no_armor": 0,
     "armor": 1,
     "great_armor": 2
 }
 
-# FONTS
+'''FONTS'''
 font1 = pygame.font.Font('fonts/Retro Gaming.ttf', 20)
 font2 = pygame.font.Font('fonts/Retro Gaming.ttf', 14)
 
-# SETTINGS
+'''SETTINGS'''
 w_width, w_height = 1000, 700
 window = pygame.display.set_mode((w_width, w_height))
 clock = pygame.time.Clock()
@@ -618,11 +638,14 @@ bg_image = transform.scale(pygame.image.load('images/bg.png'), (w_width, w_heigh
 pygame.display.set_caption('Roguelike')
 icon = pygame.image.load('images/icon.png')
 pygame.display.set_icon(icon)
+state = 'main menu'
 
-# ALTERNATES
+'''ALTERNATES'''
 lives = 5
 energy = 5
 coins = 0
+
+# BOOL ALTERNATE
 finished = False
 
 victory_tut = False
@@ -634,6 +657,7 @@ defeat_lvl2 = False
 victory_lvl3 = False
 defeat_lvl3 = False
 
+# COUNTERS
 kill_tut = 0
 kill_lvl1 = 0
 kill_lvl2 = 0
@@ -643,16 +667,15 @@ hatch_num_lvl1 = 0
 hatch_num_lvl2 = 0
 hatch_num_lvl3 = 0
 
-state = 'main menu'
-
-# GROUPS, LISTS ETC
+'''GROUPS AND LISTS'''
 lives_list = [live_0, live_1, live_2, live_3, live_4, live_5]
 energy_list = [energy_0, energy_1, energy_2, energy_3, energy_4, energy_5]
 
 all_sprites = sprite.Group()
 coin_group = sprite.Group()
+boss_group = sprite.Group()
 
-# STORE STUFF
+'''STORE STUFF'''
 price_num = {
     'armor_price_num': 2,
     'great_armor_price_num': 4,
@@ -674,20 +697,19 @@ health_potion_price = font1.render(str(price_num['health_potion_price_num'][0]),
 energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]), True, pygame.color.Color('white'))
 
 
-# OBJECTS
+'''CREATE OBJECTS'''
 coin = Coin(x=240, y=33, width=27, height=27)
 coin_in_store = Coin(x=240, y=33, width=27, height=27)
-player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
+player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 10, 28, 33)
 player.equip_weapon('no_weapon')
 player.equip_armor('no_armor')
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
-boss_group = sprite.Group()
 boss_group.add(boss)
 coin_group.add(coin_in_store)
 all_sprites.add(coin)
 all_sprites.add(player)
 
-# SOUNDS
+'''SOUNDS & MUSIC'''
 music = pygame.mixer.Sound('music/Crystal Caves v1_2.mp3')
 collect_coin_sound = pygame.mixer.Sound('sounds/coin_collect.wav')
 goblin_death_sound = pygame.mixer.Sound('sounds/goblin.mp3')
@@ -699,8 +721,9 @@ goblin_death_sound.set_volume(0.5)
 hit_sound.set_volume(0.5)
 music_volume = 0.4
 
+'''MENU'''
 
-# MENU, STORE
+
 def menu():
     global state, music_volume, game
     window.blit(bg_image, (0, 0))
@@ -735,6 +758,8 @@ def menu():
         elif back_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'main menu'
 
+'''STORE'''
+
 
 def store():
     global state
@@ -753,8 +778,10 @@ def store():
     pygame.display.update()
     clock.tick(fps)
 
+'''LEVELS'''
 
-def tutorial(screen, clock, fps):
+
+def tutorial(screen):
     screen.fill((0, 0, 0))
 
     floor_tut(screen=screen)
@@ -766,7 +793,7 @@ def tutorial(screen, clock, fps):
     clock.tick(fps)
 
 
-def level_1(screen, clock, fps):
+def level_1(screen):
     screen.fill((0, 0, 0))
 
     floor_level1(screen=screen)
@@ -778,7 +805,7 @@ def level_1(screen, clock, fps):
     clock.tick(fps)
 
 
-def level_2(screen, clock, fps):
+def level_2(screen):
     screen.fill((0, 0, 0))
 
     floor_level2(screen=screen)
@@ -790,7 +817,7 @@ def level_2(screen, clock, fps):
     clock.tick(fps)
 
 
-def level_3(screen, clock, fps):
+def level_3(screen):
     screen.fill((0, 0, 0))
 
     floor_level3(screen=screen)
@@ -801,6 +828,8 @@ def level_3(screen, clock, fps):
     pygame.display.update()
     clock.tick(fps)
 
+
+# TUTORIAL TIPS
 
 def tutorial_text():
     howto_walk_fb = font2.render('Press W and S to walk forward and back.', True, pygame.color.Color('white'))
@@ -813,11 +842,14 @@ def tutorial_text():
     window.blit(careful_line2, (660, 385))
 
 
-# RESET GAME
+# COORDINATES FOR PLAYER SPAWN
 tut_x, tut_y = 130, 550
 lvl1_x, lvl1_y = 860, 460
 lvl2_x, lvl2_y = 210, 590
 lvl3_x, lvl3_y = 480, 120
+
+
+'''RESET'''
 
 
 def reset_tutorial():
@@ -964,7 +996,9 @@ def reset_lvl3():
                     w_hatch_collided_lvl3 = False
 
 
-# SOME FUNCTIONS
+'''OTHER FUNCTIONS'''
+
+
 def create_coin(*coordinates):
     coins_x = sprite.Group()
     for x, y in coordinates:
@@ -976,24 +1010,24 @@ def create_coin(*coordinates):
 def goblins(*coordinates):
     goblins_x = sprite.Group()
     for x, y in coordinates:
-        goblin_x = Goblin('images/monsters/goblin/goblin_idle_right_1.png', x, y, 30, 35)
-        goblins_x.add(goblin_x)
+        goblin = Goblin('images/monsters/goblin/goblin_idle_right_1.png', x, y, 30, 35)
+        goblins_x.add(goblin)
     return goblins_x
 
 
 def create_showcases(*coordinates):
-    showcasess = []
+    showcases_x = []
     for x, y in coordinates:
         showcase = For_Level_Building(x, y, 250, 230, 'store_items/showcase.png')
-        showcasess.append(showcase)
-    return showcasess
+        showcases_x.append(showcase)
+    return showcases_x
 
 
-def next_level(kind, killed, inall, coin_amount):
+def next_level(kind, killed, in_all, coin_amount):
     global finished, state
     window.blit(black_scr, (0, 0))
     coin_n = Coin(540, 312, 27, 27)
-    mid_kills = inall // 2
+    mid_kills = in_all // 2
 
     if kind == 'defeat':
         if killed < mid_kills:
@@ -1021,9 +1055,10 @@ def next_level(kind, killed, inall, coin_amount):
     coin_n.update()
     window.blit(skull_killed, (415, 300))
     coins_end = font1.render(': ' + str(coin_amount), True, pygame.color.Color('white'))
-    killed_end = font1.render(': ' + str(killed) + '/' + str(inall), True, pygame.color.Color('white'))
+    killed_end = font1.render(': ' + str(killed) + '/' + str(in_all), True, pygame.color.Color('white'))
     window.blit(coins_end, (555, 300))
     window.blit(killed_end, (452, 300))
+
 
 # COIN STUFF
 w_hatch_collided_tut = False
@@ -1053,19 +1088,23 @@ goblins_lvl2_2 = goblins((860, 237), (717, 275))
 
 
 # music.play()
-# MAIN CYCLE
+'''GAME CYCLE'''
+
+
 while game:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             game = False
             sys.exit()
     money = font1.render(": " + str(coins), True, pygame.color.Color('white'))
+
     # MENU STATE
     if state == 'main menu' or state == 'level menu' or state == 'settings':
         menu()
         player.is_spawned = False
     elif state == 'store':
         store()
+
     # SHOP STATE
     if state == 'armor store':
         window.blit(bg_image, (0, 0))
@@ -1165,15 +1204,14 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # victory_tut = False
                 reset_tutorial()
             elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_tutorial()
                 coins = 0
                 lives = 5
-                state = 'level menu'
                 finished = False
                 victory_tut = False
+                state = 'level menu'
             elif next_button.click(window, (41, 47, 75), (21, 24, 38)):
                 finished = False
                 player.spawn(lvl1_x, lvl1_y)
@@ -1184,7 +1222,6 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # defeat_tut = False
                 reset_tutorial()
             elif retry_button_2.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_tutorial()
@@ -1194,7 +1231,7 @@ while game:
                 defeat_tut = False
         if lives != 0:
             if not finished:
-                tutorial(window, clock, fps)
+                tutorial(window)
                 tutorial_text()
                 player.spawn(tut_x, tut_y)
                 player.trap(traps_group_tut)
@@ -1239,7 +1276,6 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # victory_lvl1 = False
                 reset_lvl1()
             elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl1()
@@ -1258,7 +1294,6 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # defeat_lvl1 = False
                 reset_lvl1()
             elif retry_button_2.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl1()
@@ -1268,7 +1303,7 @@ while game:
                 defeat_lvl1 = False
         if lives != 0:
             if not finished:
-                level_1(window, clock, fps)
+                level_1(window)
                 player.spawn(lvl1_x, lvl1_y)
                 player.trap(traps_group_lvl1)
                 player.collide(collide_group_lvl1)
@@ -1326,7 +1361,6 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # victory_lvl2 = False
                 reset_lvl2()
             elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl2()
@@ -1345,7 +1379,6 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # defeat_lvl2 = False
                 reset_lvl2()
             elif retry_button_2.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl2()
@@ -1355,7 +1388,7 @@ while game:
                 defeat_lvl2 = False
         if lives != 0:
             if not finished:
-                level_2(window, clock, fps)
+                level_2(window)
                 player.spawn(210, 590)
                 player.trap(traps_group_lvl2)
                 player.collide(collide_group_lvl2)
@@ -1413,7 +1446,6 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # victory_lvl3 = False
                 reset_lvl3()
             elif retry_button_1.click(window, (41, 47, 75), (21, 24, 38)):
                 reset_lvl3()
@@ -1428,11 +1460,10 @@ while game:
             if menu_button.click(window, (41, 47, 75), (21, 24, 38)):
                 state = 'main menu'
                 finished = False
-                # defeat_lvl3 = False
                 reset_lvl3()
         if lives != 0:
             if not finished:
-                level_3(window, clock, fps)
+                level_3(window)
                 player.spawn(480, 120)
                 player.trap(traps_group_lvl3)
                 player.collide(collide_group_lvl3)
@@ -1469,7 +1500,6 @@ while game:
             all_sprites.draw(window)
         if home_button.click(window, (41, 47, 75), (21, 24, 38)):
             state = 'level menu'
-        # print(lives)
     if state == 'tutorial' or state == 'level 1' or state == 'level 2' or state == 'level 3' or state == 'store' or state == 'armor store' or state == 'swords store' or state == 'potions store':
         if not finished:
             window.blit(lives_list[lives], (10, 0))
