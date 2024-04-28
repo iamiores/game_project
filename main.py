@@ -700,7 +700,7 @@ energy_potion_price = font1.render(str(price_num['energy_potion_price_num'][0]),
 '''CREATE OBJECTS'''
 coin = Coin(x=240, y=33, width=27, height=27)
 coin_in_store = Coin(x=240, y=33, width=27, height=27)
-player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 10, 28, 33)
+player = Player('images/player/male/male_WalkBack_1.png', 490, 133, 5, 28, 33)
 player.equip_weapon('no_weapon')
 player.equip_armor('no_armor')
 boss = Boss('images/monsters/boss/boss_idle_left_1.png', 465, 500, 50, 60)
@@ -1175,7 +1175,7 @@ while game:
                     coins -= price_num['health_potion_price_num'][0]
                 else:
                     print('Not enough cash')
-        if buy_energy_potion_button.click_(window, (51, 63, 92), (41, 47, 75)):
+        if buy_energy_potion_button.click(window, (51, 63, 92), (41, 47, 75)):
             if energy < 5:
                 if coins >= price_num['energy_potion_price_num'][0]:
                     energy += price_num['energy_potion_price_num'][1]
